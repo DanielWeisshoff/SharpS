@@ -2,6 +2,13 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/src/Goethe.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/src/com/danielweisshoff/nodesystem/BinaryOperator.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/com/danielweisshoff/nodesystem/BinaryOperatorNode.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/com/danielweisshoff/nodesystem/Data.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/com/danielweisshoff/nodesystem/DataType.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/com/danielweisshoff/nodesystem/EntryNode.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/com/danielweisshoff/nodesystem/Node.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/com/danielweisshoff/nodesystem/NumberNode.java" charset="UTF-8" />
     <file url="PROJECT" charset="windows-1252" />
   </component>
 </project>
