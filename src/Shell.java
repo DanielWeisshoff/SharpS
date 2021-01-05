@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -15,38 +14,36 @@ import com.danielweisshoff.parser.Parser;
  */
 
 /**
- * 
  * @author danie
- *
  */
 public class Shell {
 
-	public Shell() {
-		System.out.println("Version 0.2");
-		Scanner scanner = new Scanner(System.in);
+    public Shell() {
+        System.out.println("Version 0.2");
+        Scanner scanner = new Scanner(System.in);
 
-		
-		while (true) {
-			String text = scanner.nextLine();
-			validate(text);
-		}
-	}
 
-	public void validate(String text) {
-		Lexer lexer = new Lexer(text);
-		Token t = null;
-		ArrayList<Token> tokens = new ArrayList<Token>();
-		do {
-			t = lexer.nextToken();
-			tokens.add(t);
-			 t.print();
-		} while (t.type() != TokenType.EOF);
+        while (true) {
+            String text = scanner.nextLine();
+            validate(text);
+        }
+    }
 
-		Parser parser = new Parser();
-		parser.parse(tokens);
-	}
+    public void validate(String text) {
+        Lexer lexer = new Lexer(text);
+        Token t = null;
+        ArrayList<Token> tokens = new ArrayList<Token>();
+        do {
+            t = lexer.nextToken();
+            tokens.add(t);
+            t.print();
+        } while (t.type() != TokenType.EOF);
 
-	public static void main(String[] args) {
-		new Shell();
-	}
+        Parser parser = new Parser();
+        parser.parse(tokens);
+    }
+
+    public static void main(String[] args) {
+        new Shell();
+    }
 }

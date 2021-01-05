@@ -2,7 +2,7 @@ package com.danielweisshoff.parser;
 
 public class NumberNode {
 
-    private double value;
+    private final double value;
 
     public NumberNode(double d) {
         this.value = d;
