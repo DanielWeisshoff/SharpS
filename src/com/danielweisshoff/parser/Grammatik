@@ -1,0 +1,34 @@
+BeispielCode:
+
+cls Grammar:
+-	int i = 0
+-	int j
+	j = 0
+		fnc test():
+			pass
+		con ():
+			pass
+
+
+Klasse
+cls <IDENTIFIER>:
+
+Variable
+int i = 0
+i = 0
+int i
+-int i = 0
+-*int i
+...
+
+
+Es handelt sich immer um eine Rechnung wenn:
+
+- Der erste Token eine Zahl ist
+- Der erste Token ein -/+ OP ist und der darauffolgende eine Zahl
+
+zusätzlich handelt es sich um eine Gleichung wenn:
+
+- Zwei aufeinander folgende '=' vorhanden sind
+
+
