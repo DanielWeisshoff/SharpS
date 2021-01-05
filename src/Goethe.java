@@ -17,8 +17,8 @@ public class Goethe {
 					filePath + "/" + fileName + ".txt");
 			myWriter.write(text);
 			myWriter.close();
-
 		} catch (IOException e) {
+			System.out.println("Fehler beim schreiben der Outputdatei");
 		}
 	}
 
