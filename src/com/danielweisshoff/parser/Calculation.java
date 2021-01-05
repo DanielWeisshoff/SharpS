@@ -14,15 +14,14 @@ public class Calculation {
         if (calculation.length == 1) {
             result = new NumberNode(Double.parseDouble(calculation[0].getValue()));
         } else {
-            int splitPosition = findSplitPosition(
-                    calculation);
+            int splitPosition = findSplitPosition(calculation);
             splitCalculation(calculation, splitPosition);
         }
     }
 
     private int findSplitPosition(Token[] calculation) {
         int firstDotOpPosition = -1;
-        for (int i = calculation.length - 2; i > 0; i--) {
+        for (int i = 0; i < calculation.length - 1; i++) {
             if (calculation[i].isDotOP()
                     && firstDotOpPosition == -1) {
                 firstDotOpPosition = i;

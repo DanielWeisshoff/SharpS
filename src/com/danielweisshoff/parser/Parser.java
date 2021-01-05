@@ -4,8 +4,11 @@ import java.util.ArrayList;
 
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
+import com.danielweisshoff.nodesystem.EntryNode;
 
 public class Parser {
+
+    private EntryNode entry;
 
     public void parse(ArrayList<Token> tokens) {
 
