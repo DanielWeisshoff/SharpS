@@ -13,7 +13,7 @@ public class NumberNode extends Node {
         this.value = new Data<Double>(value, DataType.DOUBLE);
     }
 
-    public Data<Double> getValue(){
+    public Data<Double> getValue() {
         return value;
     }
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 /**
  * abstract in normal unmwandeln
+ *
  * @author daniel
  */
 public class Node {
@@ -30,7 +31,7 @@ public class Node {
         children.add(n);
     }
 
-    public Data<?> execute(){
-    return new Data<>(null,null);
+    public Data<?> execute() {
+        return new Data<>(null, null);
     }
 }

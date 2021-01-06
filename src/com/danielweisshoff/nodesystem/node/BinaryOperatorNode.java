@@ -1,6 +1,11 @@
-package com.danielweisshoff.nodesystem;
+package com.danielweisshoff.nodesystem.node;
 
-public class BinaryOperatorNode <factor extends Node> extends Node {
+import com.danielweisshoff.nodesystem.BinaryOperator;
+import com.danielweisshoff.nodesystem.Data;
+import com.danielweisshoff.nodesystem.DataType;
+import com.danielweisshoff.nodesystem.Node;
+
+public class BinaryOperatorNode<factor extends Node> extends Node {
 
     private Data result;
 
