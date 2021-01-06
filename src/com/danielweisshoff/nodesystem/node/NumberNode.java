@@ -1,6 +1,5 @@
 package com.danielweisshoff.nodesystem.node;
 
-
 import com.danielweisshoff.nodesystem.Data;
 import com.danielweisshoff.nodesystem.DataType;
 

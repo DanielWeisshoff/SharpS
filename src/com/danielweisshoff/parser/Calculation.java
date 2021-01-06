@@ -3,90 +3,81 @@ package com.danielweisshoff.parser;
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.nodesystem.BinaryOperator;
 import com.danielweisshoff.nodesystem.node.BinaryOperatorNode;
+import com.danielweisshoff.nodesystem.node.Node;
 import com.danielweisshoff.nodesystem.node.NumberNode;
 
 import java.util.ArrayList;
 
 public class Calculation {
 
-    private NumberNode result;
-    private Token[] tokens;
+    private final Token[] tokens;
 
     public Calculation(Token[] tokens) {
         this.tokens = tokens;
-       /* if (tokens.length == 1) {
-            result = new NumberNode(Double.parseDouble(tokens[0].getValue()));
-        }*/
     }
 
     public BinaryOperatorNode toAST() {
         ArrayList<Token> buffer = new ArrayList<>();
-        ArrayList<BinaryOperator> termOperations = new ArrayList<>();
-        ArrayList<BinaryOperatorNode> terms = new ArrayList<>();
+        ArrayList<BinaryOperator> termOperators = new ArrayList<>();
+        ArrayList<Node> terms = new ArrayList<>();
 
         for (Token t : tokens) {
             if (t.isLineOP()) {
-                termOperations.add(convertToOperator(t));
-                if (buffer.size() == 1)
-                    terms.add(createSubTree(buffer));
+                termOperators.add(convertToOperator(t));
+                terms.add(createSubTree(buffer));
                 buffer.clear();
-            } else {
+            } else
                 buffer.add(t);
-            }
         }
+        //Term, der rechts vom letzten operator verbleibt hinzufügen
         if (!buffer.isEmpty()) {
             terms.add(createSubTree(buffer));
-            buffer.clear();
         }
-        for (BinaryOperatorNode t : terms)
-            System.out.println("term: " + t);
+        if (termOperators.isEmpty()) {
+            return (BinaryOperatorNode) terms.get(0);
+        }
 
         BinaryOperatorNode lastTerm = null;
-        for (int i = termOperations.size() - 1; i > 0; i--) {
+        for (int i = termOperators.size() - 1; i >= 0; i--) {
             BinaryOperatorNode operation;
             if (lastTerm == null) {
-                operation = new BinaryOperatorNode(terms.get(i), termOperations.get(i), terms.get(i + 1));
-                lastTerm = operation;
+                lastTerm = new BinaryOperatorNode(terms.get(i), termOperators.get(i), terms.get(i + 1));
             } else {
-                operation = new BinaryOperatorNode(terms.get(i), termOperations.get(i), lastTerm);
-                lastTerm = operation;
+                lastTerm = new BinaryOperatorNode(terms.get(i), termOperators.get(i), lastTerm);
             }
         }
         return lastTerm;
     }
 
-    private BinaryOperatorNode createSubTree(ArrayList<Token> buffer) {
+    private Node createSubTree(ArrayList<Token> buffer) {
+        if (buffer.size() == 1)
+            return new NumberNode(Double.parseDouble(buffer.get(0).getValue()));
         BinaryOperatorNode lastNode = null;
         for (int i = 0; i < buffer.size(); i++) {
             if (buffer.get(i).isDotOP()) {
                 BinaryOperator op = convertToOperator(buffer.get(i));
                 NumberNode right = new NumberNode(Double.parseDouble(buffer.get(i + 1).getValue()));
+                BinaryOperatorNode operation;
                 if (lastNode == null) {
                     NumberNode left = new NumberNode(Double.parseDouble(buffer.get(i - 1).getValue()));
-                    BinaryOperatorNode operation = new BinaryOperatorNode(left, op, right);
+                    operation = new BinaryOperatorNode(left, op, right);
                     lastNode = operation;
                 } else {
-                    BinaryOperatorNode operation = new BinaryOperatorNode(lastNode, op, right);
+                    operation = new BinaryOperatorNode(lastNode, op, right);
                     lastNode = operation;
                 }
             }
         }
-        System.out.println("created term: " + lastNode);
         return lastNode;
     }
 
     private BinaryOperator convertToOperator(Token t) {
-        switch (t.type()) {
-            case ADD:
-                return BinaryOperator.ADD;
-            case SUB:
-                return BinaryOperator.SUB;
-            case MUL:
-                return BinaryOperator.MUL;
-            case DIV:
-                return BinaryOperator.DIV;
-            default:
-                return null;
-        }
+        return switch (t.type()) {
+            case ADD -> BinaryOperator.ADD;
+            case SUB -> BinaryOperator.SUB;
+            case MUL -> BinaryOperator.MUL;
+            case DIV -> BinaryOperator.DIV;
+            default -> null;
+        };
     }
 }
