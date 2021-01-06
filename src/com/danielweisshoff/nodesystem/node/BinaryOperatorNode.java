@@ -9,9 +9,9 @@ public class BinaryOperatorNode extends Node {
 
     private Data<Double> result;
 
-    private final Node leftNode;
-    private final BinaryOperator operator;
-    private final Node rightNode;
+    private Node leftNode;
+    private BinaryOperator operator;
+    private Node rightNode;
 
     public BinaryOperatorNode(Node leftNode, BinaryOperator operator, Node rightNode) {
         super(new DataType[]{DataType.DOUBLE, DataType.DOUBLE}, DataType.DOUBLE);
@@ -30,15 +30,12 @@ public class BinaryOperatorNode extends Node {
     private void calculateResult() {
         double left = leftNode.execute().toDouble();
         double right = rightNode.execute().toDouble();
+
         switch (operator) {
-            case ADD:
-                result = new Data<Double>(left + right, DataType.DOUBLE);
-            case SUB:
-                result = new Data<Double>(left - right, DataType.DOUBLE);
-            case MUL:
-                result = new Data<Double>(left * right, DataType.DOUBLE);
-            case DIV:
-                result = new Data<Double>(left / right, DataType.DOUBLE);
+            case ADD -> result = new Data<Double>(left + right, DataType.DOUBLE);
+            case SUB -> result = new Data<Double>(left - right, DataType.DOUBLE);
+            case MUL -> result = new Data<Double>(left * right, DataType.DOUBLE);
+            case DIV -> result = new Data<Double>(left / right, DataType.DOUBLE);
         }
     }
 }

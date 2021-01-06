@@ -16,6 +16,13 @@ public class Calculation {
         this.tokens = tokens;
     }
 
+    /**
+     * Kompliziertere Methode, welche kein Lookahead benötigt und stattdessen
+     * unverarbeitete Token buffered.
+     * Das Prinzip ist gut, der Code könnte besser sein
+     *
+     * @return The root Node of the calculation
+     */
     public BinaryOperatorNode toAST() {
         ArrayList<Token> buffer = new ArrayList<>();
         ArrayList<BinaryOperator> termOperators = new ArrayList<>();
@@ -38,13 +45,11 @@ public class Calculation {
         }
 
         BinaryOperatorNode lastTerm = null;
-        for (int i = termOperators.size() - 1; i >= 0; i--) {
-            BinaryOperatorNode operation;
-            if (lastTerm == null) {
+        for (int i = 0; i < termOperators.size(); i++) {
+            if (lastTerm == null)
                 lastTerm = new BinaryOperatorNode(terms.get(i), termOperators.get(i), terms.get(i + 1));
-            } else {
-                lastTerm = new BinaryOperatorNode(terms.get(i), termOperators.get(i), lastTerm);
-            }
+            else
+                lastTerm = new BinaryOperatorNode(lastTerm, termOperators.get(i), terms.get(i + 1));
         }
         return lastTerm;
     }

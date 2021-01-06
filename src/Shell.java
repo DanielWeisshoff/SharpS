@@ -1,9 +1,13 @@
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import com.danielweisshoff.lexer.Lexer;
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
+import com.danielweisshoff.nodesystem.node.Node;
+import com.danielweisshoff.parser.Calculation;
 import com.danielweisshoff.parser.Parser;
 
 /*TODO
@@ -14,6 +18,8 @@ import com.danielweisshoff.parser.Parser;
  */
 
 /**
+ * input bis jetzt nur zeilenweise
+ *
  * @author danie
  */
 public class Shell {
@@ -22,11 +28,22 @@ public class Shell {
         System.out.println("Version 0.2");
         Scanner scanner = new Scanner(System.in);
 
+        /* PERFORMANCE TESTING
+        *
+        Instant start = Instant.now();
+        for (int i = 0; i < 20000000; i++) {
 
-        while (true) {
-            String text = scanner.nextLine();
-            validate(text);
         }
+        Instant end = Instant.now();
+        System.out.println("Done in " + Duration.between(start, end).toMillis() + " ms");
+        */
+
+        String input;
+        do {
+            input = scanner.nextLine();
+            validate(input);
+        } while (!input.equals("shut"));
+        System.out.println("Process Terminated");
     }
 
     public void validate(String text) {
