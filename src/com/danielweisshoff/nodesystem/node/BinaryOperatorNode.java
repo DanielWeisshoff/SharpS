@@ -7,7 +7,7 @@ import com.danielweisshoff.nodesystem.Node;
 
 public class BinaryOperatorNode<factor extends Node> extends Node {
 
-    private Data result;
+    private Data<Double> result;
 
     private final factor leftNode;
     private final BinaryOperator operator;
