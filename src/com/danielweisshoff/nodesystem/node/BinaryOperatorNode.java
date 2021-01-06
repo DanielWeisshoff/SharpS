@@ -3,17 +3,17 @@ package com.danielweisshoff.nodesystem.node;
 import com.danielweisshoff.nodesystem.BinaryOperator;
 import com.danielweisshoff.nodesystem.Data;
 import com.danielweisshoff.nodesystem.DataType;
-import com.danielweisshoff.nodesystem.Node;
 
-public class BinaryOperatorNode<factor extends Node> extends Node {
+
+public class BinaryOperatorNode extends Node {
 
     private Data<Double> result;
 
-    private final factor leftNode;
+    private final Node leftNode;
     private final BinaryOperator operator;
-    private final factor rightNode;
+    private final Node rightNode;
 
-    public BinaryOperatorNode(factor leftNode, BinaryOperator operator, factor rightNode) {
+    public BinaryOperatorNode(Node leftNode, BinaryOperator operator, Node rightNode) {
         super(new DataType[]{DataType.DOUBLE, DataType.DOUBLE}, DataType.DOUBLE);
         this.leftNode = leftNode;
         this.operator = operator;
@@ -21,7 +21,7 @@ public class BinaryOperatorNode<factor extends Node> extends Node {
     }
 
     @Override
-    public Data execute() {
+    public Data<Double> execute() {
         if (result == null)
             calculateResult();
         return result;

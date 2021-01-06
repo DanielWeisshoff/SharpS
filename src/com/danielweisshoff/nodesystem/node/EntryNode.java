@@ -1,9 +1,22 @@
-package com.danielweisshoff.nodesystem;
+package com.danielweisshoff.nodesystem.node;
+
+
+import com.danielweisshoff.nodesystem.Data;
+import com.danielweisshoff.nodesystem.DataType;
+
+import java.util.ArrayList;
 
 public class EntryNode extends Node {
 
+    private final ArrayList<Node> children;
+
     public EntryNode() {
         super(new DataType[]{DataType.ANY}, DataType.INT);
+        children = new ArrayList<>();
+    }
+
+    public void add(Node n) {
+        children.add(n);
     }
 
     @Override
@@ -11,9 +24,7 @@ public class EntryNode extends Node {
         for (Node n : children) {
             n.execute().print();
         }
-        //Später sollte der Interpreter die gesendete 1 Abfangen und selber
-        //Die Meldung ausgeben
-        System.out.println("Task finished");
         return new Data<Integer>(1, DataType.INT);
     }
 }
+

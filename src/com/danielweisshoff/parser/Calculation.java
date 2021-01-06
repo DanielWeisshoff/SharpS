@@ -1,93 +1,92 @@
 package com.danielweisshoff.parser;
 
 import com.danielweisshoff.lexer.Token;
+import com.danielweisshoff.nodesystem.BinaryOperator;
+import com.danielweisshoff.nodesystem.node.BinaryOperatorNode;
 import com.danielweisshoff.nodesystem.node.NumberNode;
+
+import java.util.ArrayList;
 
 public class Calculation {
 
     private NumberNode result;
+    private Token[] tokens;
 
-    private Calculation leftTerm;
-    private Token operator;
-    private Calculation rightTerm;
-
-    public Calculation(Token[] calculation) {
-        if (calculation.length == 1) {
-            result = new NumberNode(Double.parseDouble(calculation[0].getValue()));
-        } else {
-            int splitPosition = findSplitPosition(calculation);
-            splitCalculation(calculation, splitPosition);
-        }
+    public Calculation(Token[] tokens) {
+        this.tokens = tokens;
+       /* if (tokens.length == 1) {
+            result = new NumberNode(Double.parseDouble(tokens[0].getValue()));
+        }*/
     }
 
-    private int findSplitPosition(Token[] calculation) {
-        int firstDotOpPosition = -1;
-        for (int i = 0; i < calculation.length - 1; i++) {
-            if (calculation[i].isDotOP()
-                    && firstDotOpPosition == -1) {
-                firstDotOpPosition = i;
-            } else if (calculation[i].isLineOP()) {
-                return i;
+    public BinaryOperatorNode toAST() {
+        ArrayList<Token> buffer = new ArrayList<>();
+        ArrayList<BinaryOperator> termOperations = new ArrayList<>();
+        ArrayList<BinaryOperatorNode> terms = new ArrayList<>();
+
+        for (Token t : tokens) {
+            if (t.isLineOP()) {
+                termOperations.add(convertToOperator(t));
+                if (buffer.size() == 1)
+                    terms.add(createSubTree(buffer));
+                buffer.clear();
+            } else {
+                buffer.add(t);
             }
         }
-        return firstDotOpPosition;
-    }
+        if (!buffer.isEmpty()) {
+            terms.add(createSubTree(buffer));
+            buffer.clear();
+        }
+        for (BinaryOperatorNode t : terms)
+            System.out.println("term: " + t);
 
-    private void splitCalculation(Token[] calculation,
-                                  int splitPosition) {
-        // Splitposition ist immer ein Operator
-        operator = calculation[splitPosition];
-
-        int leftSideTokenAmount = splitPosition;
-        int rightSideTokenAmount = calculation.length
-                - splitPosition - 1;
-
-        // linken u rechten Term füllen
-        Token[] leftSide = new Token[leftSideTokenAmount];
-        Token[] rightSide = new Token[rightSideTokenAmount];
-
-        for (int i = 0; i < calculation.length; i++) {
-            if (i == splitPosition)
-                continue;
-            else if (i < splitPosition)
-                leftSide[i] = calculation[i];
-            else {
-                rightSide[i - splitPosition
-                        - 1] = calculation[i];
+        BinaryOperatorNode lastTerm = null;
+        for (int i = termOperations.size() - 1; i > 0; i--) {
+            BinaryOperatorNode operation;
+            if (lastTerm == null) {
+                operation = new BinaryOperatorNode(terms.get(i), termOperations.get(i), terms.get(i + 1));
+                lastTerm = operation;
+            } else {
+                operation = new BinaryOperatorNode(terms.get(i), termOperations.get(i), lastTerm);
+                lastTerm = operation;
             }
         }
-        leftTerm = new Calculation(leftSide);
-        rightTerm = new Calculation(rightSide);
+        return lastTerm;
     }
 
-    public double getResult() {
-        if (result == null)
-            calculateResult();
-        return result.getValue().toDouble();
+    private BinaryOperatorNode createSubTree(ArrayList<Token> buffer) {
+        BinaryOperatorNode lastNode = null;
+        for (int i = 0; i < buffer.size(); i++) {
+            if (buffer.get(i).isDotOP()) {
+                BinaryOperator op = convertToOperator(buffer.get(i));
+                NumberNode right = new NumberNode(Double.parseDouble(buffer.get(i + 1).getValue()));
+                if (lastNode == null) {
+                    NumberNode left = new NumberNode(Double.parseDouble(buffer.get(i - 1).getValue()));
+                    BinaryOperatorNode operation = new BinaryOperatorNode(left, op, right);
+                    lastNode = operation;
+                } else {
+                    BinaryOperatorNode operation = new BinaryOperatorNode(lastNode, op, right);
+                    lastNode = operation;
+                }
+            }
+        }
+        System.out.println("created term: " + lastNode);
+        return lastNode;
     }
 
-    private void calculateResult() {
-        double result;
-        switch (operator.type()) {
+    private BinaryOperator convertToOperator(Token t) {
+        switch (t.type()) {
             case ADD:
-                result = leftTerm.getResult()
-                        + rightTerm.getResult();
-                break;
+                return BinaryOperator.ADD;
             case SUB:
-                result = leftTerm.getResult()
-                        - rightTerm.getResult();
-                break;
+                return BinaryOperator.SUB;
             case MUL:
-                result = leftTerm.getResult()
-                        * rightTerm.getResult();
-                break;
+                return BinaryOperator.MUL;
             case DIV:
-                result = leftTerm.getResult()
-                        / rightTerm.getResult();
-                break;
+                return BinaryOperator.DIV;
             default:
-                result = -1337;
+                return null;
         }
-        this.result = new NumberNode(result);
     }
 }

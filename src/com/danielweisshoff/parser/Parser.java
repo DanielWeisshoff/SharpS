@@ -4,11 +4,9 @@ import java.util.ArrayList;
 
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
-import com.danielweisshoff.nodesystem.EntryNode;
+import com.danielweisshoff.nodesystem.node.BinaryOperatorNode;
 
 public class Parser {
-
-    private EntryNode entry;
 
     public void parse(ArrayList<Token> tokens) {
 
@@ -42,7 +40,9 @@ public class Parser {
         // Ansonsten normale Rechnung ausführen
         Calculation calculation = new Calculation(
                 tokenArray);
-        System.out.println(calculation.getResult());
+        BinaryOperatorNode rootCalculation = calculation.toAST();
+        rootCalculation.execute().print();
+        // System.out.println(calculation.getResult());
     }
 
     // Wandelt passende Operatoren in Vorzeichen um

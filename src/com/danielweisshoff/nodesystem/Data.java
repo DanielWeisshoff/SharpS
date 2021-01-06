@@ -6,6 +6,11 @@ public class Data<T extends Number> {
     private final DataType dataType;
     private final T data;
 
+    public Data() {
+        dataType = DataType.NULL;
+        data = null;
+    }
+
     public Data(T data, DataType dataType) {
         this.data = data;
         this.dataType = dataType;
