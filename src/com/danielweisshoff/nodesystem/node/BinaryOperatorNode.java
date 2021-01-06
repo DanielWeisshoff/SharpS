@@ -9,9 +9,9 @@ public class BinaryOperatorNode extends Node {
 
     private Data<Double> result;
 
-    private final Node leftNode;
-    private final BinaryOperator operator;
-    private final Node rightNode;
+    private Node leftNode;
+    private BinaryOperator operator;
+    private Node rightNode;
 
     public BinaryOperatorNode(Node leftNode, BinaryOperator operator, Node rightNode) {
         super(new DataType[]{DataType.DOUBLE, DataType.DOUBLE}, DataType.DOUBLE);
