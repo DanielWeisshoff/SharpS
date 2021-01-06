@@ -5,18 +5,21 @@ import java.util.ArrayList;
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.nodesystem.node.BinaryOperatorNode;
-import com.danielweisshoff.nodesystem.node.EquationNode;
+import com.danielweisshoff.nodesystem.node.Node;
 
 public class Parser {
 
     public void parse(ArrayList<Token> tokens) {
-
-        if (tokens.get(0).isNumeric())
-            onNumberInput(tokens);
-        if (tokens.size() >= 2) {
-            if (tokens.get(0).isOP()
-                    && tokens.get(1).isNumeric())
+        try {
+            if (tokens.get(0).isNumeric())
                 onNumberInput(tokens);
+            if (tokens.size() >= 2) {
+                if (tokens.get(0).isOP()
+                        && tokens.get(1).isNumeric())
+                    onNumberInput(tokens);
+            }
+        } catch (Exception pickachu) {
+            System.out.println("Fehler beim parsen");
         }
     }
 
@@ -40,9 +43,8 @@ public class Parser {
         // Ansonsten normale Rechnung ausführen
         Calculation calculation = new Calculation(
                 tokenArray);
-        BinaryOperatorNode rootCalculation = calculation.toAST();
+        Node rootCalculation = calculation.toAST();
         rootCalculation.execute().print();
-        // System.out.println(calculation.getResult());
     }
 
     // Wandelt passende Operatoren in Vorzeichen um

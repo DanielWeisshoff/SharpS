@@ -23,7 +23,11 @@ public class Calculation {
      *
      * @return The root Node of the calculation
      */
-    public BinaryOperatorNode toAST() {
+    public Node toAST() {
+
+        if (tokens.length == 1)
+            return new NumberNode(Double.parseDouble(tokens[0].getValue()));
+
         ArrayList<Token> buffer = new ArrayList<>();
         ArrayList<BinaryOperator> termOperators = new ArrayList<>();
         ArrayList<Node> terms = new ArrayList<>();
