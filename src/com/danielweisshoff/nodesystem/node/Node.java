@@ -2,7 +2,11 @@ package com.danielweisshoff.nodesystem;
 
 import java.util.ArrayList;
 
-public abstract class Node {
+/**
+ * abstract in normal unmwandeln
+ * @author daniel
+ */
+public class Node {
 
 
     //Werden nur für Fehlersuche benötigt
@@ -26,5 +30,7 @@ public abstract class Node {
         children.add(n);
     }
 
-    public abstract Data<?> execute();
+    public Data<?> execute(){
+    return new Data<>(null,null);
+    }
 }

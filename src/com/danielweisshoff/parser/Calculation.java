@@ -1,6 +1,7 @@
 package com.danielweisshoff.parser;
 
 import com.danielweisshoff.lexer.Token;
+import com.danielweisshoff.nodesystem.node.NumberNode;
 
 public class Calculation {
 
@@ -62,7 +63,7 @@ public class Calculation {
     public double getResult() {
         if (result == null)
             calculateResult();
-        return result.getValue();
+        return result.getValue().toDouble();
     }
 
     private void calculateResult() {

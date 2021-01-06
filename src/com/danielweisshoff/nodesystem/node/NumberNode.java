@@ -1,4 +1,8 @@
-package com.danielweisshoff.nodesystem;
+package com.danielweisshoff.nodesystem.node;
+
+import com.danielweisshoff.nodesystem.Data;
+import com.danielweisshoff.nodesystem.DataType;
+import com.danielweisshoff.nodesystem.Node;
 
 public class NumberNode extends Node {
 
@@ -7,6 +11,10 @@ public class NumberNode extends Node {
     public NumberNode(double value) {
         super(new DataType[]{DataType.DOUBLE}, DataType.DOUBLE);
         this.value = new Data<Double>(value, DataType.DOUBLE);
+    }
+
+    public Data<Double> getValue(){
+        return value;
     }
 
     @Override

@@ -93,13 +93,13 @@ public class Parser {
                 leftEquationTokens);
         Calculation rightEquation = new Calculation(
                 rightEquationTokens);
-        compare(leftEquation, rightEquation);
+        //compare(leftEquation, rightEquation);
     }
-
+/*
     private void compare(Calculation a, Calculation b) {
         if (a.getResult() == b.getResult())
             System.out.println("TRUE");
         else
             System.out.println("FALSE");
-    }
+    }*/
 }

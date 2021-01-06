@@ -1,14 +1,14 @@
 package com.danielweisshoff.nodesystem;
 
-public class BinaryOperatorNode extends Node {
+public class BinaryOperatorNode <factor extends Node> extends Node {
 
     private Data result;
 
-    private final Node leftNode;
+    private final factor leftNode;
     private final BinaryOperator operator;
-    private final Node rightNode;
+    private final factor rightNode;
 
-    public BinaryOperatorNode(Node leftNode, BinaryOperator operator, Node rightNode) {
+    public BinaryOperatorNode(factor leftNode, BinaryOperator operator, factor rightNode) {
         super(new DataType[]{DataType.DOUBLE, DataType.DOUBLE}, DataType.DOUBLE);
         this.leftNode = leftNode;
         this.operator = operator;
