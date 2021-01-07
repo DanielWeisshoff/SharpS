@@ -70,11 +70,9 @@ public class Calculation {
                 if (lastNode == null) {
                     NumberNode left = new NumberNode(Double.parseDouble(buffer.get(i - 1).getValue()));
                     operation = new BinaryOperatorNode(left, op, right);
-                    lastNode = operation;
-                } else {
+                } else
                     operation = new BinaryOperatorNode(lastNode, op, right);
-                    lastNode = operation;
-                }
+                lastNode = operation;
             }
         }
         return lastNode;

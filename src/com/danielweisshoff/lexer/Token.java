@@ -1,5 +1,7 @@
 package com.danielweisshoff.lexer;
 
+import java.util.ArrayList;
+
 public class Token {
 
     private final TokenType type;
@@ -39,35 +41,28 @@ public class Token {
     }
 
     public boolean isOP() {
-        return type == TokenType.ADD || type == TokenType.SUB
+        return type == TokenType.ADD
+                || type == TokenType.SUB
                 || type == TokenType.MUL
                 || type == TokenType.DIV;
     }
 
-    /**
-     * True, wenn der Token ein + oder - Operator ist
-     *
-     * @return
-     */
+
     public boolean isLineOP() {
-        return type == TokenType.ADD || type == TokenType.SUB;
+        return type == TokenType.ADD
+                || type == TokenType.SUB;
     }
 
-    /**
-     * True, wenn der Token ein * oder / Operator ist
-     *
-     * @return
-     */
     public boolean isDotOP() {
-        return type == TokenType.MUL || type == TokenType.DIV;
+        return type == TokenType.MUL
+                || type == TokenType.DIV;
     }
 
     public boolean isEOF() {
         return type == TokenType.EOF;
     }
 
-    public static boolean areSameCategoryOP(Token t1,
-                                            Token t2) {
+    public static boolean areSameCategoryOP(Token t1, Token t2) {
         return t1.isLineOP() && t2.isLineOP()
                 || t1.isDotOP() && t2.isDotOP();
     }
@@ -75,5 +70,11 @@ public class Token {
     public boolean isNumeric() {
         return type == TokenType.NUMBER
                 || type == TokenType.FLOAT;
+    }
+
+    public static Token[] toArray(ArrayList<Token> list) {
+        Token[] tokens = new Token[list.size()];
+        tokens = list.toArray(tokens);
+        return tokens;
     }
 }

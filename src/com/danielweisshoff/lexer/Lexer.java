@@ -3,9 +3,6 @@ package com.danielweisshoff.lexer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * @author danie
- */
 public class Lexer {
 
     public static String VERSION = "V 0.7";
@@ -20,32 +17,27 @@ public class Lexer {
         initializeSingleCharacterTokens();
     }
 
-    public ArrayList<Token> tokenizeText() {
+    public Token[] tokenizeText() {
         ArrayList<Token> tokens = new ArrayList<Token>();
 
         while (charIndex < text.length()) {
             currentChar = text.charAt(charIndex);
-            if (tokenMap.containsKey(currentChar)) {
-                tokens.add(new Token(
-                        tokenMap.get(currentChar), null));
-            } else if (Character
-                    .isAlphabetic(currentChar)) {
+            if (tokenMap.containsKey(currentChar))
+                tokens.add(new Token(tokenMap.get(currentChar), null));
+            else if (Character.isAlphabetic(currentChar))
                 tokens.add(buildIdentifierToken());
-            } else if (Character.isDigit(currentChar)) {
+            else if (Character.isDigit(currentChar))
                 tokens.add(buildNumberToken());
-            } else if (currentChar == '"') {
+            else if (currentChar == '"')
                 tokens.add(buildStringToken());
-            } else if (currentChar == '#') {
+            else if (currentChar == '#')
                 skipComment();
-            }
-
             charIndex++;
         }
-        return tokens;
+        return Token.toArray(tokens);
     }
 
     public Token nextToken() {
-
         if (charIndex >= text.length())
             return new Token(TokenType.EOF, null);
 
@@ -53,20 +45,16 @@ public class Lexer {
 
         while (token == null) {
             currentChar = text.charAt(charIndex);
-            if (tokenMap.containsKey(currentChar)) {
-                token = new Token(
-                        tokenMap.get(currentChar),
-                        null);
-            } else if (Character
-                    .isAlphabetic(currentChar)) {
+            if (tokenMap.containsKey(currentChar))
+                token = new Token(tokenMap.get(currentChar), null);
+            else if (Character.isAlphabetic(currentChar))
                 token = buildIdentifierToken();
-            } else if (Character.isDigit(currentChar)) {
+            else if (Character.isDigit(currentChar))
                 token = buildNumberToken();
-            } else if (currentChar == '"') {
+            else if (currentChar == '"')
                 token = buildStringToken();
-            } else if (currentChar == '#') {
+            else if (currentChar == '#')
                 skipComment();
-            }
             charIndex++;
         }
         return token;
@@ -82,8 +70,7 @@ public class Lexer {
             } else
                 break;
         }
-        return new Token(TokenType.IDENTIFIER,
-                text.substring(start, charIndex + 1));
+        return new Token(TokenType.IDENTIFIER, text.substring(start, charIndex + 1));
     }
 
     private Token buildNumberToken() {
@@ -91,8 +78,7 @@ public class Lexer {
         boolean isFloat = false;
         while (charIndex < text.length() - 1) {
             nextChar = text.charAt(charIndex + 1);
-            if (Character.isDigit(nextChar)
-                    || nextChar == '.') {
+            if (Character.isDigit(nextChar) || nextChar == '.') {
                 if (nextChar == '.')
                     isFloat = true;
                 charIndex++;

@@ -4,47 +4,73 @@ import java.util.ArrayList;
 
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
-import com.danielweisshoff.nodesystem.node.BinaryOperatorNode;
+import com.danielweisshoff.nodesystem.node.EntryNode;
 import com.danielweisshoff.nodesystem.node.Node;
 
 public class Parser {
 
+    private EntryNode root;
+    private int position = -1;
+    private ArrayList<Token> tokens;
+    private Token t;
+
     public void parse(ArrayList<Token> tokens) {
-        try {
-            if (tokens.get(0).isNumeric())
-                onNumberInput(tokens);
-            if (tokens.size() >= 2) {
-                if (tokens.get(0).isOP()
-                        && tokens.get(1).isNumeric())
-                    onNumberInput(tokens);
-            }
-        } catch (Exception pickachu) {
-            System.out.println("Fehler beim parsen");
+        this.tokens = tokens;
+
+        enhance();
+        while (!t.isEOF()) {
+            //try {
+            if (t.isNumeric())
+                buildCalculation();
+            else
+                enhance();
+            // } catch (Exception pickachu) {
+            //   System.out.println("Fehler beim parsen: " + pickachu);
+            // }
         }
+        System.out.println("---EOF---");
+    }
+
+    private void enhance() {
+        position++;
+        t = tokens.get(position);
     }
 
     //Right now the parser is also the interpreter xD
-    private void onNumberInput(ArrayList<Token> tokens) {
-        // EOF entfernen
-        tokens.remove(tokens.size() - 1);
-
-
-        // passende Operatoren in Vorzeichen umwandeln
-        Token[] tokenArray = signNumbers(tokens);
-
-        // falls == enthalten ist, gleichung checken
-        for (int i = 0; i < tokens.size() - 1; i++) {
-            if (tokenArray[i].type() == TokenType.EQUALS && tokenArray[i + 1].type() == TokenType.EQUALS) {
-                Equation e = new Equation(tokens, i);
-                e.toAST().execute().print();
-                return;
+    private void buildCalculation() {
+        ArrayList<Token> buffer = new ArrayList<>();
+        boolean lastTokenWasOp = false;
+        boolean lastTokenWasEquals = false;
+        boolean isEquation = false;
+        int firstEqualsPosition = -1;
+        while (t.isNumeric() && !lastTokenWasOp || t.isOP() || t.type() == TokenType.EQUALS) {
+            if (lastTokenWasEquals)
+                isEquation = true;
+            if (t.type() == TokenType.EQUALS) {
+                firstEqualsPosition = position;
+                lastTokenWasEquals = true;
+            } else
+                lastTokenWasEquals = false;
+            if (t.isNumeric()) {
+                lastTokenWasOp = true;
+            } else {
+                lastTokenWasOp = false;
             }
+            buffer.add(t);
+            enhance();
         }
-        // Ansonsten normale Rechnung ausführen
-        Calculation calculation = new Calculation(
-                tokenArray);
-        Node rootCalculation = calculation.toAST();
-        rootCalculation.execute().print();
+        // passende Operatoren in Vorzeichen umwandeln
+        Token[] tokenArray = signNumbers(buffer);
+
+        if (isEquation) {
+            Equation e = new Equation(buffer, firstEqualsPosition - 1);
+            e.toAST().execute().print();
+
+        } else {
+            Calculation calculation = new Calculation(tokenArray);
+            Node rootCalculation = calculation.toAST();
+            rootCalculation.execute().print();
+        }
     }
 
     // Wandelt passende Operatoren in Vorzeichen um
@@ -66,8 +92,7 @@ public class Parser {
                 }
             }
         }
-        Token[] tokenArray = new Token[tokens
-                .size()];
+        Token[] tokenArray = new Token[tokens.size()];
         for (int i = 0; i < tokens.size(); i++)
             tokenArray[i] = tokens.get(i);
 

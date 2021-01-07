@@ -24,12 +24,11 @@ public class Equation {
         Token[] rightEquationTokens = new Token[rightEquationTokenAmount];
 
         for (int i = 0; i < tokens.size(); i++) {
-            if (i == splitPosition || i == splitPosition + 1)
-                continue;
-            else if (i < splitPosition)
-                leftEquationTokens[i] = tokens.get(i);
-            else {
-                rightEquationTokens[i - 2 - splitPosition] = tokens.get(i);
+            if (i != splitPosition && i != splitPosition + 1) {
+                if (i < splitPosition)
+                    leftEquationTokens[i] = tokens.get(i);
+                else
+                    rightEquationTokens[i - 2 - splitPosition] = tokens.get(i);
             }
         }
         Node leftEquation = new Calculation(leftEquationTokens).toAST();

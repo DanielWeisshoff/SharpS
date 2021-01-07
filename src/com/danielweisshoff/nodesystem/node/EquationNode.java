@@ -15,7 +15,8 @@ public class EquationNode extends Node {
 
     @Override
     public Data<Integer> execute() {
-        if (left.execute().getData().intValue() == right.execute().getData().intValue())
+        if (left.execute().getData().intValue() ==
+                right.execute().getData().intValue())
             return new Data<Integer>(1, DataType.INT);
         else
             return new Data<Integer>(0, DataType.INT);

@@ -15,7 +15,6 @@ public class Node {
         // this.outputType = outputType;
     }
 
-
     public Data<?> execute() {
         return new Data<Integer>(1, DataType.INT);
     }
