@@ -21,10 +21,10 @@ public class Shell {
         System.out.println("Version 0.2");
         Scanner scanner = new Scanner(System.in);
 
-        /* PERFORMANCE TESTING
-        *
-        Instant start = Instant.now();
-        for (int i = 0; i < 20000000; i++) {
+
+
+        /*Instant start = Instant.now();
+        for (int i = 0; i < 1000; i++) {
 
         }
         Instant end = Instant.now();
@@ -41,7 +41,7 @@ public class Shell {
 
     public void validate(String text) {
         Lexer lexer = new Lexer(text);
-        Token t = null;
+        Token t;
         ArrayList<Token> tokens = new ArrayList<Token>();
         do {
             t = lexer.nextToken();

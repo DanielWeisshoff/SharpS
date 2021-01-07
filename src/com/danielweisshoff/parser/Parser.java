@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.nodesystem.node.EntryNode;
-import com.danielweisshoff.nodesystem.node.Node;
 
 public class Parser {
 
@@ -32,7 +31,6 @@ public class Parser {
             //   System.out.println("Fehler beim parsen: " + pickachu);
             // }
         }
-        System.out.println("---EOF---");
         return root;
     }
 
@@ -64,7 +62,7 @@ public class Parser {
         Token[] tokenArray = signNumbers(buffer);
 
         if (isEquation) {
-            Equation e = new Equation(buffer, firstEqualsPosition - 1);
+            Equation e = new Equation(tokenArray, firstEqualsPosition - 1);
             root.add(e.toAST());
 
         } else {

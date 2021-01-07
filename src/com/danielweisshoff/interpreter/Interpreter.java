@@ -12,6 +12,7 @@ public class Interpreter {
     }
 
     public void run() {
-        root.execute().print();
+        root.execute();
+        //root.execute().print();
     }
 }
