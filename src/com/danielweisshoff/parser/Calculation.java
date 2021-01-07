@@ -45,7 +45,7 @@ public class Calculation {
             terms.add(createSubTree(buffer));
         }
         if (termOperators.isEmpty()) {
-            return (BinaryOperatorNode) terms.get(0);
+            return terms.get(0);
         }
 
         BinaryOperatorNode lastTerm = null;

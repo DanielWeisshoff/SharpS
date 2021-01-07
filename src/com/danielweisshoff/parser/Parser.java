@@ -11,12 +11,16 @@ public class Parser {
 
     private EntryNode root;
     private int position = -1;
-    private ArrayList<Token> tokens;
+    private final ArrayList<Token> tokens;
     private Token t;
 
-    public void parse(ArrayList<Token> tokens) {
-        this.tokens = tokens;
 
+    public Parser(ArrayList<Token> tokens) {
+        this.tokens = tokens;
+    }
+
+    public EntryNode parse() {
+        root = new EntryNode();
         enhance();
         while (!t.isEOF()) {
             //try {
@@ -29,6 +33,7 @@ public class Parser {
             // }
         }
         System.out.println("---EOF---");
+        return root;
     }
 
     private void enhance() {
@@ -51,11 +56,7 @@ public class Parser {
                 lastTokenWasEquals = true;
             } else
                 lastTokenWasEquals = false;
-            if (t.isNumeric()) {
-                lastTokenWasOp = true;
-            } else {
-                lastTokenWasOp = false;
-            }
+            lastTokenWasOp = t.isNumeric();
             buffer.add(t);
             enhance();
         }
@@ -64,12 +65,11 @@ public class Parser {
 
         if (isEquation) {
             Equation e = new Equation(buffer, firstEqualsPosition - 1);
-            e.toAST().execute().print();
+            root.add(e.toAST());
 
         } else {
             Calculation calculation = new Calculation(tokenArray);
-            Node rootCalculation = calculation.toAST();
-            rootCalculation.execute().print();
+            root.add(calculation.toAST());
         }
     }
 

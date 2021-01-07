@@ -3,11 +3,11 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import com.danielweisshoff.interpreter.Interpreter;
 import com.danielweisshoff.lexer.Lexer;
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
-import com.danielweisshoff.nodesystem.node.Node;
-import com.danielweisshoff.parser.Calculation;
+import com.danielweisshoff.nodesystem.node.EntryNode;
 import com.danielweisshoff.parser.Parser;
 
 /*TODO
@@ -15,11 +15,6 @@ import com.danielweisshoff.parser.Parser;
  * - Equation funktioniert nicht
  */
 
-/**
- * input bis jetzt nur zeilenweise
- *
- * @author danie
- */
 public class Shell {
 
     public Shell() {
@@ -54,8 +49,11 @@ public class Shell {
             t.print();
         } while (t.type() != TokenType.EOF);
 
-        Parser parser = new Parser();
-        parser.parse(tokens);
+        Parser parser = new Parser(tokens);
+        EntryNode entry = parser.parse();
+
+        Interpreter interpreter = new Interpreter(entry);
+        interpreter.run();
     }
 
     public static void main(String[] args) {

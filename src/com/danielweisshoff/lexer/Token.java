@@ -36,7 +36,7 @@ public class Token {
     }
 
     public void setValue(String value) {
-        // Error checking einfügen
+        // evtl. Error checking einfügen
         this.value = value;
     }
 
@@ -46,7 +46,6 @@ public class Token {
                 || type == TokenType.MUL
                 || type == TokenType.DIV;
     }
-
 
     public boolean isLineOP() {
         return type == TokenType.ADD
@@ -74,7 +73,6 @@ public class Token {
 
     public static Token[] toArray(ArrayList<Token> list) {
         Token[] tokens = new Token[list.size()];
-        tokens = list.toArray(tokens);
-        return tokens;
+        return list.toArray(tokens);
     }
 }
