@@ -12,6 +12,7 @@ public class Lexer {
 
     private final HashMap<Character, TokenType> tokenMap = new HashMap<>();
     private final String[] keywords = new String[]{"int", "dbl", "str", "if", "else", "for", "while"};
+    private Token lastToken;
 
     public Lexer(String text) {
         this.text = text;
@@ -71,10 +72,13 @@ public class Lexer {
                 token = buildMoreThanToken();
             } else if (currentChar == '!') {
                 token = buildNotEqualToken();
+            } else if (currentChar == '-') {
+                token = buildUnaryNumberToken();
             } else {
                 advance();
             }
         }
+        lastToken = token;
         return token;
     }
 
@@ -111,6 +115,23 @@ public class Lexer {
                     text.substring(start, charIndex));
         return new Token(TokenType.NUMBER,
                 text.substring(start, charIndex));
+    }
+
+    private Token buildUnaryNumberToken() {
+        boolean canBeUnary = false;
+        if (lastToken == null)
+            canBeUnary = true;
+        else if (lastToken.isOP())
+            canBeUnary = true;
+
+        if (canBeUnary) {
+            advance();
+            if (Character.isDigit(currentChar)) {
+                Token t = buildNumberToken();
+                return new Token(t.type(), "" + -Double.parseDouble(t.getValue()));
+            }
+        }
+        return new Token(TokenType.SUB, null);
     }
 
     private Token buildEqualsToken() {
@@ -188,7 +209,6 @@ public class Lexer {
      */
     private void initializeSingleCharacterTokens() {
         tokenMap.put('+', TokenType.ADD);
-        tokenMap.put('-', TokenType.SUB);
         tokenMap.put('*', TokenType.MUL);
         tokenMap.put('/', TokenType.DIV);
         tokenMap.put('(', TokenType.O_ROUND_BRACKET);
