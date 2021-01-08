@@ -1,17 +1,16 @@
 package com.danielweisshoff.parser;
 
-import java.util.ArrayList;
-
 import com.danielweisshoff.lexer.Token;
-import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.nodesystem.node.EntryNode;
+
+import java.util.ArrayList;
 
 public class Parser {
 
     private final EntryNode root;
     private int position = -1;
     private final ArrayList<Token> tokens;
-    private Token t;
+    private Token currentToken;
 
 
     public Parser(ArrayList<Token> tokens) {
@@ -20,55 +19,32 @@ public class Parser {
         advance();
     }
 
+    private void advance() {
+        position++;
+        currentToken = tokens.get(position);
+    }
+
     public EntryNode parse() {
-        while (!t.isEOF()) {
-            if (t.isNumeric())
-                buildCalculation();
+        while (!currentToken.isEOF()) {
+            if (currentToken.isNumeric())
+                buildExpression();
             else
                 advance();
         }
         return root;
     }
 
-    private void advance() {
-        position++;
-        t = tokens.get(position);
-    }
-
-    // replaces buildCalculation and buildEquation
-    private void buildExpression(){
-
-    }
-
-    //Right now the parser is also the interpreter xD
-    private void buildCalculation() {
+    private void buildExpression() {
         ArrayList<Token> buffer = new ArrayList<>();
-        boolean lastTokenWasOp = false;
-        boolean lastTokenWasEquals = false;
-        boolean isEquation = false;
-        int firstEqualsPosition = -1;
-        while (t.isNumeric() && !lastTokenWasOp || t.isOP() || t.type() == TokenType.EQUALS) {
-            if (lastTokenWasEquals)
-                isEquation = true;
-            if (t.type() == TokenType.EQUALS) {
-                firstEqualsPosition = position;
-                lastTokenWasEquals = true;
-            } else
-                lastTokenWasEquals = false;
-            lastTokenWasOp = t.isNumeric();
-            buffer.add(t);
-            advance();
-        }
-        Token[] tokenArray = new Token[buffer.size()];
-        tokenArray = buffer.toArray(tokenArray);
 
-        if (isEquation) {
-            Equation e = new Equation(tokenArray, firstEqualsPosition - 1);
-            root.add(e.toAST());
-
-        } else {
-            Calculation calculation = new Calculation(tokenArray);
-            root.add(calculation.toAST());
+        while (!currentToken.isEOF()) {
+            if (currentToken.isOP() || currentToken.isNumeric()) {
+                buffer.add(currentToken);
+                advance();
+            } else break;
         }
+        Token[] arr = new Token[buffer.size()];
+        arr = buffer.toArray(arr);
+        root.add(new Expression(arr).toAST());
     }
 }

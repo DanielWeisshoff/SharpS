@@ -8,17 +8,17 @@ import com.danielweisshoff.nodesystem.node.NumberNode;
 
 import java.util.ArrayList;
 
-public class Calculation {
+public class Expression {
 
     private final Token[] tokens;
 
-    public Calculation(Token[] tokens) {
+    public Expression(Token[] tokens) {
         this.tokens = tokens;
     }
 
     /**
      * Kompliziertere Methode, welche kein Lookahead benötigt und stattdessen
-     * unverarbeitete Token buffered.
+     * unverarbeitete Token buffert.
      * Das Prinzip ist gut, der Code könnte besser sein
      *
      * @return The root Node of the calculation
