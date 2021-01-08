@@ -65,13 +65,13 @@ public class Lexer {
             } else if (currentChar == '#') {
                 skipComment();
             } else if (currentChar == '=') {
-                token = buildEqualsToken();
+                token = buildComparisonToken('=');
             } else if (currentChar == '<') {
-                token = buildLessThanToken();
+                token = buildComparisonToken('<');
             } else if (currentChar == '>') {
-                token = buildMoreThanToken();
+                token = buildComparisonToken('>');
             } else if (currentChar == '!') {
-                token = buildNotEqualToken();
+                token = buildComparisonToken('!');
             } else if (currentChar == '-') {
                 token = buildUnaryNumberToken();
             } else {
@@ -135,48 +135,15 @@ public class Lexer {
         return new Token(TokenType.SUB, null);
     }
 
-    private Token buildEqualsToken() {
+    private Token buildComparisonToken(char c) {
         advance();
         if (charIndex < text.length()) {
             if (currentChar == '=') {
                 advance();
-                return new Token(TokenType.EQUALS, null);
+                return new Token(TokenType.COMPARISON, c + "=");
             }
         }
-        return new Token(TokenType.ASSIGN, null);
-    }
-
-    private Token buildLessThanToken() {
-        advance();
-        if (charIndex < text.length()) {
-            if (currentChar == '=') {
-                advance();
-                return new Token(TokenType.LESSOREQUAL, null);
-            }
-        }
-        return new Token(TokenType.LESSTHAN, null);
-    }
-
-    private Token buildMoreThanToken() {
-        advance();
-        if (charIndex < text.length()) {
-            if (currentChar == '=') {
-                advance();
-                return new Token(TokenType.MOREOREQUAL, null);
-            }
-        }
-        return new Token(TokenType.MORETHAN, null);
-    }
-
-    private Token buildNotEqualToken() {
-        advance();
-        if (charIndex < text.length()) {
-            if (currentChar == '=') {
-                advance();
-                return new Token(TokenType.NOTEQUAL, null);
-            }
-        }
-        return new Token(TokenType.NOT, null);
+        return new Token(TokenType.ASSIGN, "" + c);
     }
 
     private Token buildStringToken() {
