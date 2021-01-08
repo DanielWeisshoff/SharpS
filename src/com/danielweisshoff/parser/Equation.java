@@ -29,8 +29,8 @@ public class Equation {
                     rightEquationTokens[i - 2 - splitPosition] = tokens[i];
             }
         }
-        Node leftEquation = new Calculation(leftEquationTokens).toAST();
-        Node rightEquation = new Calculation(rightEquationTokens).toAST();
+        Node leftEquation = new Expression(leftEquationTokens).toAST();
+        Node rightEquation = new Expression(rightEquationTokens).toAST();
         return new EquationNode(leftEquation, rightEquation);
     }
 }
