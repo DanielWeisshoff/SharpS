@@ -11,7 +11,7 @@ public class Lexer {
     private char currentChar;
 
     private final HashMap<Character, TokenType> tokenMap = new HashMap<>();
-    private final String[] keywords = new String[]{"int", "dbl", "str", "if", "else", "for", "while"};
+    private final String[] keywords = new String[]{"int", "flt"};
     private Token lastToken;
 
     public Lexer(String text) {
@@ -131,6 +131,7 @@ public class Lexer {
                 return new Token(t.type(), "" + -Double.parseDouble(t.getValue()));
             }
         }
+        advance();
         return new Token(TokenType.SUB, null);
     }
 

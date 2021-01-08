@@ -43,6 +43,7 @@ public class Shell {
         Lexer lexer = new Lexer(text);
         Token t;
         ArrayList<Token> tokens = new ArrayList<Token>();
+
         do {
             t = lexer.nextToken();
             tokens.add(t);
