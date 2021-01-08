@@ -8,7 +8,7 @@ import com.danielweisshoff.nodesystem.node.EntryNode;
 
 public class Parser {
 
-    private EntryNode root;
+    private final EntryNode root;
     private int position = -1;
     private final ArrayList<Token> tokens;
     private Token t;
@@ -16,23 +16,28 @@ public class Parser {
 
     public Parser(ArrayList<Token> tokens) {
         this.tokens = tokens;
+        root = new EntryNode();
+        advance();
     }
 
     public EntryNode parse() {
-        root = new EntryNode();
-        enhance();
         while (!t.isEOF()) {
             if (t.isNumeric())
                 buildCalculation();
             else
-                enhance();
+                advance();
         }
         return root;
     }
 
-    private void enhance() {
+    private void advance() {
         position++;
         t = tokens.get(position);
+    }
+
+    // replaces buildCalculation and buildEquation
+    private void buildExpression(){
+
     }
 
     //Right now the parser is also the interpreter xD
@@ -52,7 +57,7 @@ public class Parser {
                 lastTokenWasEquals = false;
             lastTokenWasOp = t.isNumeric();
             buffer.add(t);
-            enhance();
+            advance();
         }
         Token[] tokenArray = new Token[buffer.size()];
         tokenArray = buffer.toArray(tokenArray);
