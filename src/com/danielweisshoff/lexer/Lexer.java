@@ -5,34 +5,43 @@ import java.util.HashMap;
 
 public class Lexer {
 
-    public static String VERSION = "V 0.7";
-    private final HashMap<Character, TokenType> tokenMap = new HashMap<Character, TokenType>();
+    public static String VERSION = "V 0.8";
     private final String text;
-    private int charIndex = 0;
+    private int charIndex = -1;
     private char currentChar;
-    private char nextChar;
+
+    private final HashMap<Character, TokenType> tokenMap = new HashMap<>();
+    private final String[] keywords = new String[]{"int", "dbl", "str", "if", "else", "for", "while"};
 
     public Lexer(String text) {
         this.text = text;
         initializeSingleCharacterTokens();
+        advance();
     }
 
-    public Token[] tokenizeText() {
-        ArrayList<Token> tokens = new ArrayList<Token>();
-
-        while (charIndex < text.length()) {
+    private void advance() {
+        charIndex++;
+        if (charIndex < text.length())
             currentChar = text.charAt(charIndex);
-            if (tokenMap.containsKey(currentChar))
+    }
+
+    @Deprecated
+    public Token[] tokenizeText() {
+        ArrayList<Token> tokens = new ArrayList<>();
+
+        advance();
+        System.out.println(charIndex);
+        while (charIndex < text.length()) {
+            if (tokenMap.containsKey(currentChar)) {
                 tokens.add(new Token(tokenMap.get(currentChar), null));
-            else if (Character.isAlphabetic(currentChar))
+            } else if (Character.isAlphabetic(currentChar)) {
                 tokens.add(buildIdentifierToken());
-            else if (Character.isDigit(currentChar))
+            } else if (Character.isDigit(currentChar))
                 tokens.add(buildNumberToken());
             else if (currentChar == '"')
                 tokens.add(buildStringToken());
             else if (currentChar == '#')
                 skipComment();
-            charIndex++;
         }
         return Token.toArray(tokens);
     }
@@ -42,70 +51,126 @@ public class Lexer {
             return new Token(TokenType.EOF, null);
 
         Token token = null;
-
-        while (token == null) {
-            currentChar = text.charAt(charIndex);
-            if (tokenMap.containsKey(currentChar))
+        while (token == null && charIndex < text.length()) {
+            if (tokenMap.containsKey(currentChar)) {
                 token = new Token(tokenMap.get(currentChar), null);
-            else if (Character.isAlphabetic(currentChar))
+                advance();
+            } else if (Character.isAlphabetic(currentChar)) {
                 token = buildIdentifierToken();
-            else if (Character.isDigit(currentChar))
+            } else if (Character.isDigit(currentChar)) {
                 token = buildNumberToken();
-            else if (currentChar == '"')
+            } else if (currentChar == '"') {
                 token = buildStringToken();
-            else if (currentChar == '#')
+            } else if (currentChar == '#') {
                 skipComment();
-            charIndex++;
+            } else if (currentChar == '=') {
+                token = buildEqualsToken();
+            } else if (currentChar == '<') {
+                token = buildLessThanToken();
+            } else if (currentChar == '>') {
+                token = buildMoreThanToken();
+            } else if (currentChar == '!') {
+                token = buildNotEqualToken();
+            } else {
+                advance();
+            }
         }
         return token;
     }
 
     private Token buildIdentifierToken() {
         int start = charIndex;
-
-        while (charIndex < text.length() - 1) {
-            nextChar = text.charAt(charIndex + 1);
-            if (Character.isLetterOrDigit(nextChar)) {
-                charIndex++;
+        advance();
+        while (charIndex < text.length()) {
+            if (Character.isLetterOrDigit(currentChar)) {
+                advance();
             } else
                 break;
         }
-        return new Token(TokenType.IDENTIFIER, text.substring(start, charIndex + 1));
+        String subString = text.substring(start, charIndex);
+        for (String s : keywords)
+            if (subString.equals(s))
+                return new Token(TokenType.KEYWORD, subString);
+        return new Token(TokenType.IDENTIFIER, subString);
     }
 
     private Token buildNumberToken() {
         int start = charIndex;
         boolean isFloat = false;
-        while (charIndex < text.length() - 1) {
-            nextChar = text.charAt(charIndex + 1);
-            if (Character.isDigit(nextChar) || nextChar == '.') {
-                if (nextChar == '.')
+        advance();
+        while (charIndex < text.length()) {
+            if (Character.isDigit(currentChar) || currentChar == '.') {
+                if (currentChar == '.')
                     isFloat = true;
-                charIndex++;
+                advance();
             } else
                 break;
         }
         if (isFloat)
             return new Token(TokenType.FLOAT,
-                    text.substring(start, charIndex + 1));
+                    text.substring(start, charIndex));
         return new Token(TokenType.NUMBER,
-                text.substring(start, charIndex + 1));
+                text.substring(start, charIndex));
+    }
+
+    private Token buildEqualsToken() {
+        advance();
+        if (charIndex < text.length()) {
+            if (currentChar == '=') {
+                advance();
+                return new Token(TokenType.ISSAME, null);
+            }
+        }
+        return new Token(TokenType.EQUALS, null);
+    }
+
+    private Token buildLessThanToken() {
+        advance();
+        if (charIndex < text.length()) {
+            if (currentChar == '=') {
+                advance();
+                return new Token(TokenType.LESSOREQUAL, null);
+            }
+        }
+        return new Token(TokenType.LESSTHAN, null);
+    }
+
+    private Token buildMoreThanToken() {
+        advance();
+        if (charIndex < text.length()) {
+            if (currentChar == '=') {
+                advance();
+                return new Token(TokenType.MOREOREQUAL, null);
+            }
+        }
+        return new Token(TokenType.MORETHAN, null);
+    }
+
+    private Token buildNotEqualToken() {
+        advance();
+        if (charIndex < text.length()) {
+            if (currentChar == '=') {
+                advance();
+                return new Token(TokenType.NOTEQUAL, null);
+            }
+        }
+        return new Token(TokenType.NOT, null);
     }
 
     private Token buildStringToken() {
+        advance();
         int start = charIndex;
 
-        while (charIndex < text.length() - 1) {
-            nextChar = text.charAt(charIndex + 1);
-            if (nextChar != '"') {
-                charIndex++;
+        while (charIndex < text.length()) {
+            if (currentChar != '"') {
+                advance();
             } else {
-                charIndex++;
+                advance();
                 break;
             }
         }
         return new Token(TokenType.STRING,
-                text.substring(start + 1, charIndex));
+                text.substring(start, charIndex - 1));
     }
 
     private void skipComment() {
@@ -120,26 +185,17 @@ public class Lexer {
 
     /**
      * Hier können alle Einzeltokens eingetragen werden
-     *
-     * @return
      */
     private void initializeSingleCharacterTokens() {
         tokenMap.put('+', TokenType.ADD);
         tokenMap.put('-', TokenType.SUB);
         tokenMap.put('*', TokenType.MUL);
         tokenMap.put('/', TokenType.DIV);
-        tokenMap.put('=', TokenType.EQUALS);
         tokenMap.put('(', TokenType.O_ROUND_BRACKET);
         tokenMap.put(')', TokenType.C_ROUND_BRACKET);
         tokenMap.put('\n', TokenType.NEWLINE);
         tokenMap.put('.', TokenType.DOT);
         tokenMap.put(',', TokenType.COMMA);
         tokenMap.put(':', TokenType.COLON);
-
-//		tokenMap.put('[', TokenType.O_SQUARE_BRACKET);
-//		tokenMap.put(']', TokenType.C_SQUARE_BRACKET);
-//		tokenMap.put('<', TokenType.O_ANGLE_BRACKET);
-//		tokenMap.put('>', TokenType.C_ANGLE_BRACKET);
     }
-
 }
