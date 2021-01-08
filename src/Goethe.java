@@ -1,9 +1,11 @@
-import java.io.File; // Import the File class
-import java.io.FileWriter;
-import java.io.IOException; // Import the IOException class to handle errors
-import java.util.List;
-
 import com.danielweisshoff.lexer.Token;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
+import java.util.Scanner;
 
 public class Goethe {
 
@@ -31,5 +33,22 @@ public class Goethe {
         Goethe.writeToFile("output",
                 "C:\\Users\\danie\\Desktop\\",
                 converted.toString());
+    }
+
+    public static String ReadFile() {
+        StringBuilder stringy = new StringBuilder();
+        try {
+            File myObj = new File("C:\\Users\\danie\\Desktop\\program.txt");
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                stringy.append(data);
+            }
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+        return stringy.toString();
     }
 }
