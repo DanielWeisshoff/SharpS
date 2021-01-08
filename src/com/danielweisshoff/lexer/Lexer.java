@@ -118,10 +118,10 @@ public class Lexer {
         if (charIndex < text.length()) {
             if (currentChar == '=') {
                 advance();
-                return new Token(TokenType.ISSAME, null);
+                return new Token(TokenType.EQUALS, null);
             }
         }
-        return new Token(TokenType.EQUALS, null);
+        return new Token(TokenType.ASSIGN, null);
     }
 
     private Token buildLessThanToken() {
