@@ -12,6 +12,10 @@ public class Interpreter {
     }
 
     public void run() {
+        if (root == null) {
+            System.out.println("Keinen Einstiegspunkt gefunden");
+            return;
+        }
         root.execute();
         //root.execute().print();
     }

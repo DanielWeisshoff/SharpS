@@ -31,7 +31,7 @@ public class Goethe {
                 converted.toString());
     }
 
-    public static String ReadFile() {
+    public static String readFile() {
         StringBuilder stringy = new StringBuilder();
         try {
             File myObj = new File("C:\\Users\\danie\\Desktop\\program.txt");
