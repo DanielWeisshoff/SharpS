@@ -3,6 +3,9 @@ package com.danielweisshoff.lexer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/*TODO
+ * Wenn der Text mit Leerzeichen endet, gibt es Fehler
+ */
 public class Lexer {
 
     public static String VERSION = "V 0.8";

@@ -18,8 +18,6 @@ public class Shell {
     public Shell() {
         System.out.println("Version 0.2");
 
-        validate(Goethe.ReadFile());
-
         Scanner scanner = new Scanner(System.in);
 
         /*Instant start = Instant.now();
