@@ -8,6 +8,8 @@ import java.util.HashMap;
  *
  * Problem mit Unaryoperator
  * 1-1  wird falsch gewertet
+ *
+ * lasttoken entfernen und ll(1) einführen
  */
 public class Lexer {
 
@@ -15,7 +17,6 @@ public class Lexer {
     private final String text;
     private int charIndex = -1;
     private char currentChar;
-
     private final HashMap<Character, TokenType> tokenMap = new HashMap<>();
     private final String[] keywords = new String[]{"int", "flt"};
     private Token lastToken;
@@ -43,22 +44,17 @@ public class Lexer {
                 tokens.add(buildIdentifierToken());
             } else if (Character.isDigit(currentChar)) {
                 tokens.add(buildNumberToken());
-            } else if (currentChar == '"') {
-                tokens.add(buildStringToken());
-            } else if (currentChar == '#') {
-                skipComment();
-            } else if (currentChar == '=') {
-                tokens.add(buildComparisonToken('='));
-            } else if (currentChar == '<') {
-                tokens.add(buildComparisonToken('<'));
-            } else if (currentChar == '>') {
-                tokens.add(buildComparisonToken('>'));
-            } else if (currentChar == '!') {
-                tokens.add(buildComparisonToken('!'));
-            } else if (currentChar == '-') {
-                tokens.add(buildUnaryNumberToken());
             } else {
-                advance();
+                switch (currentChar) {
+                    case '"' -> tokens.add(buildStringToken());
+                    case '#' -> skipComment();
+                    case '=' -> tokens.add(buildComparisonToken('='));
+                    case '<' -> tokens.add(buildComparisonToken('<'));
+                    case '>' -> tokens.add(buildComparisonToken('>'));
+                    case '!' -> tokens.add(buildComparisonToken('!'));
+                    case '-' -> tokens.add(buildUnaryNumberToken());
+                    default -> advance();
+                }
             }
         }
         tokens.add(new Token(TokenType.EOF, null));
@@ -78,22 +74,17 @@ public class Lexer {
                 token = buildIdentifierToken();
             } else if (Character.isDigit(currentChar)) {
                 token = buildNumberToken();
-            } else if (currentChar == '"') {
-                token = buildStringToken();
-            } else if (currentChar == '#') {
-                skipComment();
-            } else if (currentChar == '=') {
-                token = buildComparisonToken('=');
-            } else if (currentChar == '<') {
-                token = buildComparisonToken('<');
-            } else if (currentChar == '>') {
-                token = buildComparisonToken('>');
-            } else if (currentChar == '!') {
-                token = buildComparisonToken('!');
-            } else if (currentChar == '-') {
-                token = buildUnaryNumberToken();
             } else {
-                advance();
+                switch (currentChar) {
+                    case '"' -> token = (buildStringToken());
+                    case '#' -> skipComment();
+                    case '=' -> token = buildComparisonToken('=');
+                    case '<' -> token = buildComparisonToken('<');
+                    case '>' -> token = buildComparisonToken('>');
+                    case '!' -> token = buildComparisonToken('!');
+                    case '-' -> token = buildUnaryNumberToken();
+                    default -> advance();
+                }
             }
         }
         lastToken = token;
