@@ -5,6 +5,7 @@ import com.danielweisshoff.nodesystem.BinaryOperator;
 import com.danielweisshoff.nodesystem.node.BinaryOperatorNode;
 import com.danielweisshoff.nodesystem.node.Node;
 import com.danielweisshoff.nodesystem.node.NumberNode;
+import com.danielweisshoff.nodesystem.node.VariableNode;
 
 import java.util.ArrayList;
 
@@ -26,7 +27,11 @@ public class Expression {
     public Node toAST() {
 
         if (tokens.length == 1)
-            return new NumberNode(Double.parseDouble(tokens[0].getValue()));
+            if (tokens[0].isNumeric())
+                return new NumberNode(Double.parseDouble(tokens[0].getValue()));
+            else
+                return new VariableNode(tokens[0].getValue());
+
 
         ArrayList<Token> buffer = new ArrayList<>();
         ArrayList<BinaryOperator> termOperators = new ArrayList<>();
@@ -60,15 +65,26 @@ public class Expression {
 
     private Node createSubTree(ArrayList<Token> buffer) {
         if (buffer.size() == 1)
-            return new NumberNode(Double.parseDouble(buffer.get(0).getValue()));
+            if (buffer.get(0).isNumeric())
+                return new NumberNode(Double.parseDouble(buffer.get(0).getValue()));
+            else
+                return new VariableNode(buffer.get(0).getValue());
         BinaryOperatorNode lastNode = null;
         for (int i = 0; i < buffer.size(); i++) {
             if (buffer.get(i).isDotOP()) {
                 BinaryOperator op = convertToOperator(buffer.get(i));
-                NumberNode right = new NumberNode(Double.parseDouble(buffer.get(i + 1).getValue()));
+                Node right;
+                if (buffer.get(i + 1).isNumeric())
+                    right = new NumberNode(Double.parseDouble(buffer.get(i + 1).getValue()));
+                else
+                    right = new VariableNode(buffer.get(i + 1).getValue());
                 BinaryOperatorNode operation;
                 if (lastNode == null) {
-                    NumberNode left = new NumberNode(Double.parseDouble(buffer.get(i - 1).getValue()));
+                    Node left;
+                    if (buffer.get(i - 1).isNumeric())
+                        left = new NumberNode(Double.parseDouble(buffer.get(i - 1).getValue()));
+                    else
+                        left = new VariableNode(buffer.get(i - 1).getValue());
                     operation = new BinaryOperatorNode(left, op, right);
                 } else
                     operation = new BinaryOperatorNode(lastNode, op, right);

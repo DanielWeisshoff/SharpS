@@ -5,6 +5,7 @@ import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.nodesystem.Data;
 import com.danielweisshoff.nodesystem.DataType;
 import com.danielweisshoff.nodesystem.node.EntryNode;
+import com.danielweisshoff.nodesystem.node.EquationNode;
 import com.danielweisshoff.nodesystem.node.Node;
 
 import java.util.ArrayList;
@@ -43,7 +44,6 @@ public class Parser {
         error = true;
     }
 
-
     public EntryNode parse() {
         while (!currentToken.isEOF() && !error) {
             if (currentToken.isNumeric())
@@ -62,7 +62,7 @@ public class Parser {
         ArrayList<Token> buffer = new ArrayList<>();
 
         while (!currentToken.isEOF()) {
-            if (currentToken.isOP() || currentToken.isNumeric()) {
+            if (currentToken.isOP() || currentToken.isNumeric() || currentToken.type() == TokenType.IDENTIFIER) {
                 buffer.add(currentToken);
                 advance();
             } else break;
@@ -70,8 +70,20 @@ public class Parser {
         Token[] arr = new Token[buffer.size()];
         arr = buffer.toArray(arr);
         Node calc = new Expression(arr).toAST();
+        if (currentToken.type() == TokenType.COMPARISON) {
+            calc = buildEquation(calc);
+        }
+        //Nur temporär
+        //Wird auch beim rechten Teil einer gleichung ausgeführt (nicht erwünscht)
         root.add(calc);
         return calc;
+    }
+
+    private Node buildEquation(Node leftExpression) {
+        Token compareType = currentToken;
+        advance();
+        Node rightExpression = buildExpression();
+        return new EquationNode(leftExpression, rightExpression);
     }
 
     private void initializeVariable() {
@@ -97,7 +109,7 @@ public class Parser {
 
     private void assignVariable() {
         if (next().type() != TokenType.ASSIGN) {
-            printVariable();
+            buildExpression();
             return;
         }
         String varName = currentToken.getValue();
@@ -111,18 +123,5 @@ public class Parser {
         Node expr = buildExpression();
         Data<?> result = expr.execute();
         variables.put(varName, result);
-    }
-
-    //Nur zum testen
-    private void printVariable() {
-        String varName = currentToken.getValue();
-        if (!variables.containsKey(varName)) {
-            System.out.println("Variable existiert nicht");
-            quit();
-            return;
-        }
-        Data<?> var = variables.get(varName);
-        System.out.println(var.toDouble());
-        advance();
     }
 }
