@@ -7,19 +7,24 @@ import com.danielweisshoff.nodesystem.DataType;
 import com.danielweisshoff.nodesystem.node.EntryNode;
 import com.danielweisshoff.nodesystem.node.EquationNode;
 import com.danielweisshoff.nodesystem.node.Node;
+import com.danielweisshoff.parser.Expression;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Parser {
 
     private final Token[] tokens;
     private int position = -1;
-    private final boolean error = false;
     private Token currentToken;
     //Nur zum testen
     public static HashMap<String, Data<?>> variables = new HashMap<>();
     private EntryNode rootNode;
+
+    private final List<Class> classes = new ArrayList<>();
+    private Class currentClass = null;
+    private Node currentFunction = null;
 
     public Parser(Token[] tokens) {
         this.tokens = tokens;
@@ -29,62 +34,134 @@ public class Parser {
 
     private void advance() {
         position++;
-        if (position < tokens.length) {
+        if (position < tokens.length)
             currentToken = tokens[position];
-        }
     }
 
     private Token next() {
         if (position < tokens.length - 1)
             return tokens[position + 1];
-        return new Token(TokenType.EOF, null);
+        return new Token(TokenType.EOF, "");
     }
 
     public EntryNode parse() {
-        rootNode = findConstructor();
-        if (rootNode == null)
-            return null;
-        while (!currentToken.isEOF() && !error) {
-            if (currentToken.isNumeric())
-                buildExpression();
-            else if (currentToken.type() == TokenType.KEYWORD)
-                evaluateKeyword();
-            else if (currentToken.type() == TokenType.IDENTIFIER)
-                assignVariable();
-            else
+        while (!currentToken.isEOF()) {
+            if (currentToken.getValue().equals("cls")) {
                 advance();
+                buildClass();
+            } else if (currentClass != null) {
+                if (currentToken.type() == TokenType.TAB) {
+                    switch (currentToken.getValue()) {
+                        //Attribute Lane
+                        case "1":
+                            advance();
+                            if (currentToken.type() == TokenType.KEYWORD) {
+                                advance();
+                                initializeVariable();
+                            } else
+                                assignVariable();
+                            break;
+                        //Function Lane
+                        case "2":
+                            advance();
+                            buildFunction();
+                            break;
+                    }
+                } else advance();
+            } else advance();
         }
-        return rootNode;
+        return rootNode; //PLatzhalter
     }
 
-    private EntryNode findConstructor() {
-        EntryNode conNode = null;
-        while (!currentToken.isEOF() && !error) {
-            if (currentToken.type() == TokenType.KEYWORD) {
-                if (currentToken.getValue().equals("con")) {
-                    conNode = buildConstructor();
-                    if (conNode != null)
-                        return conNode;
-                } else
-                    advance();
-            }
-        }
-        return null;
+    private void buildClass() {
+        if (currentToken.type() != TokenType.IDENTIFIER)
+            return;
+        String className = currentToken.getValue();
+        if (!checkNextTokens(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON))
+            return;
+        advance();
+        System.out.println("Klasse erkannt");
+
+        Class c = new Class(className);
+        classes.add(c);
+        currentClass = c;
     }
 
-    private EntryNode buildConstructor() {
+    private void buildFunction() {
+        boolean isEntry = false;
+        boolean isCon = false;
+        String functionName;
+        if (currentToken.getValue().equals("ntr")) {
+            isEntry = true;
+            functionName = "entry";
+        } else if (currentToken.getValue().equals("con")) {
+            isCon = true;
+            functionName = "constructor";
+        } else {
+            advance();
+            functionName = currentToken.getValue();
+        }
+        if (!checkNextTokens(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON))
+            return;
         advance();
-        if (currentToken.type() != TokenType.O_ROUND_BRACKET)
-            return null;
-        advance();
-        if (currentToken.type() != TokenType.C_ROUND_BRACKET)
-            return null;
-        advance();
-        if (currentToken.type() != TokenType.COLON)
-            return null;
-        advance();
-        return new EntryNode();
+
+        if (isEntry)
+            System.out.println("Entry erkannt");
+        else if (isCon)
+            System.out.println("Konstruktor erkannt");
+        else
+            System.out.println("Funktion erkannt ");
+
+        //Platzhalter
+        EntryNode functionRoot = new EntryNode();
+        currentClass.addMethod(functionName, functionRoot);
     }
+
+    private Node buildEquation(Node leftExpression) {
+        Token compareType = currentToken;
+        advance();
+        Node rightExpression = buildExpression();
+        System.out.println("Gleichung erstellt");
+        return new EquationNode(leftExpression, compareType.getValue(), rightExpression);
+    }
+
+    private void initializeVariable() {
+        String varName = "";
+        if (currentToken.type() == TokenType.IDENTIFIER)
+            varName = currentToken.getValue();
+        else
+            return;
+        advance();
+        if (currentToken.type() == TokenType.ASSIGN) {
+            advance();
+            Node expr = buildExpression();
+            Data<?> result = expr.execute();
+            variables.put(varName, result);
+            System.out.println("Variable initialisiert");
+        } else {
+            variables.put(varName, new Data<>(0, DataType.DOUBLE));
+            System.out.println("Variable deklariert");
+        }
+    }
+
+    private void assignVariable() {
+        if (next().type() != TokenType.ASSIGN) {
+            buildExpression();
+            return;
+        }
+        String varName = currentToken.getValue();
+        if (!variables.containsKey(varName)) {
+            System.out.println("Variable existiert nicht");
+            return;
+        }
+        advance();
+        advance();
+        Node expr = buildExpression();
+        Data<?> result = expr.execute();
+        variables.put(varName, result);
+        System.out.println("Variablenwert veraendert");
+    }
+
 
     private Node buildExpression() {
         ArrayList<Token> buffer = new ArrayList<>();
@@ -107,55 +184,12 @@ public class Parser {
         return calc;
     }
 
-    private Node buildEquation(Node leftExpression) {
-        Token compareType = currentToken;
-        advance();
-        Node rightExpression = buildExpression();
-        return new EquationNode(leftExpression, compareType.getValue(), rightExpression);
-    }
-
-    private void evaluateKeyword() {
-        switch (currentToken.getValue()) {
-            case "int" -> initializeVariable();
-            case "con" -> buildConstructor();
-        }
-    }
-
-    private void initializeVariable() {
-        advance();
-        String varName = "";
-        if (currentToken.type() == TokenType.IDENTIFIER)
-            varName = currentToken.getValue();
-        else {
-            System.out.println("Falsches Format");
-            return;
-        }
-        advance();
-        if (currentToken.type() != TokenType.ASSIGN) {
-            variables.put(varName, new Data<>(0, DataType.DOUBLE));
-            System.out.println("variable erstellt");
-        } else {
+    private boolean checkNextTokens(TokenType... type) {
+        for (TokenType t : type) {
             advance();
-            Node expr = buildExpression();
-            Data<?> result = expr.execute();
-            variables.put(varName, result);
+            if (currentToken.type() != t)
+                return false;
         }
-    }
-
-    private void assignVariable() {
-        if (next().type() != TokenType.ASSIGN) {
-            buildExpression();
-            return;
-        }
-        String varName = currentToken.getValue();
-        if (!variables.containsKey(varName)) {
-            System.out.println("Variable existiert nicht");
-            return;
-        }
-        advance();
-        advance();
-        Node expr = buildExpression();
-        Data<?> result = expr.execute();
-        variables.put(varName, result);
+        return true;
     }
 }

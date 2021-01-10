@@ -38,7 +38,7 @@ public class Lexer {
 
         while (charIndex < text.length()) {
             if (tokenMap.containsKey(currentChar)) {
-                tokens.add(new Token(tokenMap.get(currentChar), null));
+                tokens.add(new Token(tokenMap.get(currentChar), ""));
                 advance();
             } else if (Character.isAlphabetic(currentChar)) {
                 tokens.add(buildIdentifierToken());
@@ -61,18 +61,18 @@ public class Lexer {
                 }
             }
         }
-        tokens.add(new Token(TokenType.EOF, null));
+        tokens.add(new Token(TokenType.EOF, ""));
         return Token.toArray(tokens);
     }
 
     public Token nextToken() {
         if (charIndex >= text.length())
-            return new Token(TokenType.EOF, null);
+            return new Token(TokenType.EOF, "");
 
         Token token = null;
         while (token == null && charIndex < text.length()) {
             if (tokenMap.containsKey(currentChar)) {
-                token = new Token(tokenMap.get(currentChar), null);
+                token = new Token(tokenMap.get(currentChar), "");
                 advance();
             } else if (Character.isAlphabetic(currentChar)) {
                 token = buildIdentifierToken();
@@ -158,7 +158,7 @@ public class Lexer {
             }
         }
         advance();
-        return new Token(TokenType.SUB, null);
+        return new Token(TokenType.SUB, "");
     }
 
     private Token buildComparisonToken(char c) {
