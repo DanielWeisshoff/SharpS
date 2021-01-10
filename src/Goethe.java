@@ -9,17 +9,13 @@ import java.util.Scanner;
 
 public class Goethe {
 
-    public static void writeToFile(String fileName,
-                                   String filePath, String text) {
+    public static void writeToFile(String fileName, String filePath, String text) {
         try {
             new File(filePath + "/" + fileName + ".txt");
-
-            FileWriter myWriter = new FileWriter(
-                    filePath + "/" + fileName + ".txt");
+            FileWriter myWriter = new FileWriter(filePath + "/" + fileName + ".txt");
             myWriter.write(text);
             myWriter.close();
-
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
     }
 
@@ -28,7 +24,7 @@ public class Goethe {
         StringBuilder converted = new StringBuilder();
 
         for (Token t : tokens)
-            converted.append(t.getDescription() + "\n");
+            converted.append(t.getDescription()).append("\n");
         converted.append("ß");
         Goethe.writeToFile("output",
                 "C:\\Users\\danie\\Desktop\\",
@@ -43,6 +39,7 @@ public class Goethe {
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
                 stringy.append(data);
+                stringy.append('\n');
             }
             myReader.close();
         } catch (FileNotFoundException e) {

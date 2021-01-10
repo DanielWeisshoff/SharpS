@@ -1,14 +1,12 @@
-import java.time.Duration;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Scanner;
-
 import com.danielweisshoff.interpreter.Interpreter;
 import com.danielweisshoff.lexer.Lexer;
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.nodesystem.node.EntryNode;
 import com.danielweisshoff.parser.Parser;
+
+import java.util.ArrayList;
+import java.util.Scanner;
 
 /*TODO
  * - Rechnen mit Klammern soll möglich sein
@@ -19,9 +17,10 @@ public class Shell {
 
     public Shell() {
         System.out.println("Version 0.2");
+
+        validate(Goethe.ReadFile());
+
         Scanner scanner = new Scanner(System.in);
-
-
 
         /*Instant start = Instant.now();
         for (int i = 0; i < 1000; i++) {
@@ -35,8 +34,7 @@ public class Shell {
         do {
             input = scanner.nextLine();
             validate(input);
-        } while (!input.equals("shut"));
-        System.out.println("Process Terminated");
+        } while (!input.equals("exit"));
     }
 
     public void validate(String text) {

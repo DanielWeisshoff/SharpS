@@ -1,35 +1,17 @@
-BeispielCode:
-
-cls Grammar:
--	int i = 0
--	int j
-	j = 0
-		fnc test():
-			pass
-		con ():
-			pass
 
 
-Klasse
-cls <IDENTIFIER>:
-
-Variable
+Initialisieren
 int i = 0
-i = 0
+<keyword> <identifier> <assign> <expression>
+
+Deklarieren
 int i
--int i = 0
--*int i
-...
+<keyword|identifier> <identifier>
 
+Zuweisen
+i = 0
+<identifier> <assign> <expression>
 
-Es handelt sich immer um eine Rechnung wenn:
+Obj i = new Obj()
 
-- Der erste Token eine Zahl ist
-- Der erste Token ein -/+ OP ist und der darauffolgende eine Zahl
-
-zusätzlich handelt es sich um eine Gleichung wenn:
-
-- Zwei aufeinander folgende '=' vorhanden sind
-
-
-test
+if(i<10+toDouble(a))...
