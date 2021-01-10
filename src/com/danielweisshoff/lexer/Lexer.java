@@ -44,6 +44,10 @@ public class Lexer {
                 tokens.add(buildIdentifierToken());
             } else if (Character.isDigit(currentChar)) {
                 tokens.add(buildNumberToken());
+            } else if (currentChar == ' ') {
+                Token t = buildTabToken();
+                if (t != null)
+                    tokens.add(t);
             } else {
                 switch (currentChar) {
                     case '"' -> tokens.add(buildStringToken());
@@ -105,6 +109,19 @@ public class Lexer {
             if (subString.equals(s))
                 return new Token(TokenType.KEYWORD, subString);
         return new Token(TokenType.IDENTIFIER, subString);
+    }
+
+    private Token buildTabToken() {
+        Token t = null;
+        int whitespaceCount = 1;
+        advance();
+        while (currentChar == ' ') {
+            whitespaceCount++;
+            advance();
+        }
+        if (whitespaceCount >= 4)
+            t = new Token(TokenType.TAB, "" + (int) Math.floor(whitespaceCount / 4));
+        return t;
     }
 
     private Token buildNumberToken() {
@@ -174,8 +191,7 @@ public class Lexer {
     private void skipComment() {
         while (charIndex < text.length() - 1) {
             if (currentChar != '\n') {
-                charIndex++;
-                currentChar = text.charAt(charIndex);
+                advance();
             } else
                 return;
         }
