@@ -5,6 +5,9 @@ import java.util.HashMap;
 
 /*TODO
  * Wenn der Text mit Leerzeichen endet, gibt es Fehler
+ *
+ * Problem mit Unaryoperator
+ * 1-1  wird falsch gewertet
  */
 public class Lexer {
 
@@ -29,24 +32,36 @@ public class Lexer {
             currentChar = text.charAt(charIndex);
     }
 
-    @Deprecated
     public Token[] tokenizeText() {
         ArrayList<Token> tokens = new ArrayList<>();
 
-        advance();
-        System.out.println(charIndex);
         while (charIndex < text.length()) {
             if (tokenMap.containsKey(currentChar)) {
                 tokens.add(new Token(tokenMap.get(currentChar), null));
+                advance();
             } else if (Character.isAlphabetic(currentChar)) {
                 tokens.add(buildIdentifierToken());
-            } else if (Character.isDigit(currentChar))
+            } else if (Character.isDigit(currentChar)) {
                 tokens.add(buildNumberToken());
-            else if (currentChar == '"')
+            } else if (currentChar == '"') {
                 tokens.add(buildStringToken());
-            else if (currentChar == '#')
+            } else if (currentChar == '#') {
                 skipComment();
+            } else if (currentChar == '=') {
+                tokens.add(buildComparisonToken('='));
+            } else if (currentChar == '<') {
+                tokens.add(buildComparisonToken('<'));
+            } else if (currentChar == '>') {
+                tokens.add(buildComparisonToken('>'));
+            } else if (currentChar == '!') {
+                tokens.add(buildComparisonToken('!'));
+            } else if (currentChar == '-') {
+                tokens.add(buildUnaryNumberToken());
+            } else {
+                advance();
+            }
         }
+        tokens.add(new Token(TokenType.EOF, null));
         return Token.toArray(tokens);
     }
 
