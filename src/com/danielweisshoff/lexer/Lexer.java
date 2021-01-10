@@ -13,7 +13,13 @@ public class Lexer {
     private String text;
     private int charIndex = 0;
     private char currentChar;
+<<<<<<< Updated upstream
     private char nextChar;
+=======
+    private final HashMap<Character, TokenType> tokenMap = new HashMap<>();
+    private final String[] keywords = new String[]{"int", "ntr", "cls"};
+    private Token lastToken;
+>>>>>>> Stashed changes
 
     public Lexer(String text) {
         this.text = text;
@@ -26,10 +32,16 @@ public class Lexer {
         while (charIndex < text.length()) {
             currentChar = text.charAt(charIndex);
             if (tokenMap.containsKey(currentChar)) {
+<<<<<<< Updated upstream
                 tokens.add(new Token(
                         tokenMap.get(currentChar), null));
             } else if (Character
                     .isAlphabetic(currentChar)) {
+=======
+                tokens.add(new Token(tokenMap.get(currentChar), ""));
+                advance();
+            } else if (Character.isAlphabetic(currentChar)) {
+>>>>>>> Stashed changes
                 tokens.add(buildIdentifierToken());
             } else if (Character.isDigit(currentChar)) {
                 tokens.add(buildNumberToken());
@@ -41,24 +53,35 @@ public class Lexer {
 
             charIndex++;
         }
+<<<<<<< Updated upstream
         return tokens;
+=======
+        tokens.add(new Token(TokenType.EOF, ""));
+        return Token.toArray(tokens);
+>>>>>>> Stashed changes
     }
 
     public Token nextToken() {
 
         if (charIndex >= text.length())
-            return new Token(TokenType.EOF, null);
+            return new Token(TokenType.EOF, "");
 
         Token token = null;
 
         while (token == null) {
             currentChar = text.charAt(charIndex);
             if (tokenMap.containsKey(currentChar)) {
+<<<<<<< Updated upstream
                 token = new Token(
                         tokenMap.get(currentChar),
                         null);
             } else if (Character
                     .isAlphabetic(currentChar)) {
+=======
+                token = new Token(tokenMap.get(currentChar), "");
+                advance();
+            } else if (Character.isAlphabetic(currentChar)) {
+>>>>>>> Stashed changes
                 token = buildIdentifierToken();
             } else if (Character.isDigit(currentChar)) {
                 token = buildNumberToken();
@@ -103,7 +126,40 @@ public class Lexer {
             return new Token(TokenType.FLOAT,
                     text.substring(start, charIndex + 1));
         return new Token(TokenType.NUMBER,
+<<<<<<< Updated upstream
                 text.substring(start, charIndex + 1));
+=======
+                text.substring(start, charIndex));
+    }
+
+    private Token buildUnaryNumberToken() {
+        boolean canBeUnary = false;
+        if (lastToken == null)
+            canBeUnary = true;
+        else if (lastToken.isOP())
+            canBeUnary = true;
+
+        if (canBeUnary) {
+            advance();
+            if (Character.isDigit(currentChar)) {
+                Token t = buildNumberToken();
+                return new Token(t.type(), "" + -Double.parseDouble(t.getValue()));
+            }
+        }
+        advance();
+        return new Token(TokenType.SUB, "");
+    }
+
+    private Token buildComparisonToken(char c) {
+        advance();
+        if (charIndex < text.length()) {
+            if (currentChar == '=') {
+                advance();
+                return new Token(TokenType.COMPARISON, c + "=");
+            }
+        }
+        return new Token(TokenType.ASSIGN, "" + c);
+>>>>>>> Stashed changes
     }
 
     private Token buildStringToken() {

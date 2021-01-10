@@ -1,0 +1,27 @@
+Expr: INT|FLOAT  +|-|*|/ INT|FLOAT
+
+int i = 0
+int i
+i = 0
+
+Initialisieren
+	<keyword> <identifier> <assign> <expression>
+Deklarieren
+	<keyword|identifier> <identifier>
+Zuweisen
+	<identifier> <assign> <expression>
+
+//Expression kann auch variable sein
+
+
+
+
+
+
+
+//So soll es am Ende sein
+
+Initialisieren
+	<keyword|identifier> <identifier> <assign> <anything with return value>
+Zuweisen
+	<identifier> <assign> <anything with return value>
