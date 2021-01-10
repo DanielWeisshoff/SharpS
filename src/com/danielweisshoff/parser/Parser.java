@@ -15,15 +15,15 @@ public class Parser {
 
     private final Token[] tokens;
     private int position = -1;
-    private EntryNode root;
+    private final boolean error = false;
     private Token currentToken;
     //Nur zum testen
     public static HashMap<String, Data<?>> variables = new HashMap<>();
-    private boolean error = false;
+    private EntryNode rootNode;
 
     public Parser(Token[] tokens) {
         this.tokens = tokens;
-        root = new EntryNode();
+        rootNode = new EntryNode();
         advance();
     }
 
@@ -40,13 +40,9 @@ public class Parser {
         return new Token(TokenType.EOF, null);
     }
 
-    private void quit() {
-        error = true;
-    }
-
     public EntryNode parse() {
-        root = findConstructor();
-        if (root == null)
+        rootNode = findConstructor();
+        if (rootNode == null)
             return null;
         while (!currentToken.isEOF() && !error) {
             if (currentToken.isNumeric())
@@ -58,7 +54,7 @@ public class Parser {
             else
                 advance();
         }
-        return root;
+        return rootNode;
     }
 
     private EntryNode findConstructor() {
@@ -73,8 +69,7 @@ public class Parser {
                     advance();
             }
         }
-        System.out.println("node:" + conNode);
-        return conNode;
+        return null;
     }
 
     private EntryNode buildConstructor() {
@@ -89,20 +84,6 @@ public class Parser {
             return null;
         advance();
         return new EntryNode();
-    }
-
-    public EntryNode oldParse() {
-        while (!currentToken.isEOF() && !error) {
-            if (currentToken.isNumeric())
-                buildExpression();
-            if (currentToken.type() == TokenType.KEYWORD)
-                evaluateKeyword();
-            else if (currentToken.type() == TokenType.IDENTIFIER)
-                assignVariable();
-            else
-                advance();
-        }
-        return root;
     }
 
     private Node buildExpression() {
@@ -122,7 +103,7 @@ public class Parser {
         }
         //Nur temporär
         //Wird auch beim rechten Teil einer gleichung ausgeführt (nicht erwünscht)
-        root.add(calc);
+        rootNode.add(calc);
         return calc;
     }
 
@@ -169,7 +150,6 @@ public class Parser {
         String varName = currentToken.getValue();
         if (!variables.containsKey(varName)) {
             System.out.println("Variable existiert nicht");
-            quit();
             return;
         }
         advance();

@@ -4,8 +4,6 @@ import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.nodesystem.node.EntryNode;
 import com.danielweisshoff.parser.Parser;
 
-import java.util.Scanner;
-
 /*TODO
  * - Rechnen mit Klammern soll möglich sein
  */
@@ -14,32 +12,25 @@ public class Shell {
 
     public Shell() {
         System.out.println("Version 0.2");
-
-        Scanner scanner = new Scanner(System.in);
+        validate(Goethe.readFile());
+        /*
         String input = "";
+        Scanner scanner = new Scanner(System.in);
         do {
             input = scanner.nextLine();
             validate(input);
         }
-        while (!input.equals("quit"));
-        /* Instant start = Instant.now();
-        for (int i = 0; i < 1000; i++) {
-        }
-        Instant end = Instant.now();
-        System.out.println("Done in " + Duration.between(start, end).toMillis() + " ms"); */
+        while (!input.equals("quit"));*/
     }
 
     public void validate(String text) {
-        Lexer lexer = new Lexer(text);
-        Token[] tokens = lexer.tokenizeText();
+        Token[] tokens = new Lexer(text).tokenizeText();
 
         for (Token t : tokens)
             t.print();
-        Parser parser = new Parser(tokens);
-        EntryNode entry = parser.parse();
 
-        Interpreter interpreter = new Interpreter(entry);
-        interpreter.run();
+        EntryNode entry = new Parser(tokens).parse();
+        new Interpreter(entry).run();
     }
 
     public static void main(String[] args) {
