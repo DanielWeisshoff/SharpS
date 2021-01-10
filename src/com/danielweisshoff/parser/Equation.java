@@ -1,4 +1,4 @@
-package com.danielweisshoff.parser;
+/*package com.danielweisshoff.parser;
 
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.nodesystem.node.EquationNode;
@@ -33,4 +33,4 @@ public class Equation {
         Node rightEquation = new Expression(rightEquationTokens).toAST();
         return new EquationNode(leftEquation, rightEquation);
     }
-}
+}*/

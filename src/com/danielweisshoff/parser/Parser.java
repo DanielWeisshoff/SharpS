@@ -13,15 +13,15 @@ import java.util.HashMap;
 
 public class Parser {
 
-    private final EntryNode root;
+    private final Token[] tokens;
     private int position = -1;
-    private final ArrayList<Token> tokens;
+    private EntryNode root;
     private Token currentToken;
     //Nur zum testen
     public static HashMap<String, Data<?>> variables = new HashMap<>();
     private boolean error = false;
 
-    public Parser(ArrayList<Token> tokens) {
+    public Parser(Token[] tokens) {
         this.tokens = tokens;
         root = new EntryNode();
         advance();
@@ -29,14 +29,14 @@ public class Parser {
 
     private void advance() {
         position++;
-        if (position < tokens.size()) {
-            currentToken = tokens.get(position);
+        if (position < tokens.length) {
+            currentToken = tokens[position];
         }
     }
 
     private Token next() {
-        if (position < tokens.size() - 1)
-            return tokens.get(position + 1);
+        if (position < tokens.length - 1)
+            return tokens[position + 1];
         return new Token(TokenType.EOF, null);
     }
 
@@ -45,11 +45,58 @@ public class Parser {
     }
 
     public EntryNode parse() {
+        root = findConstructor();
+        if (root == null)
+            return null;
+        while (!currentToken.isEOF() && !error) {
+            if (currentToken.isNumeric())
+                buildExpression();
+            else if (currentToken.type() == TokenType.KEYWORD)
+                evaluateKeyword();
+            else if (currentToken.type() == TokenType.IDENTIFIER)
+                assignVariable();
+            else
+                advance();
+        }
+        return root;
+    }
+
+    private EntryNode findConstructor() {
+        EntryNode conNode = null;
+        while (!currentToken.isEOF() && !error) {
+            if (currentToken.type() == TokenType.KEYWORD) {
+                if (currentToken.getValue().equals("con")) {
+                    conNode = buildConstructor();
+                    if (conNode != null)
+                        return conNode;
+                } else
+                    advance();
+            }
+        }
+        System.out.println("node:" + conNode);
+        return conNode;
+    }
+
+    private EntryNode buildConstructor() {
+        advance();
+        if (currentToken.type() != TokenType.O_ROUND_BRACKET)
+            return null;
+        advance();
+        if (currentToken.type() != TokenType.C_ROUND_BRACKET)
+            return null;
+        advance();
+        if (currentToken.type() != TokenType.COLON)
+            return null;
+        advance();
+        return new EntryNode();
+    }
+
+    public EntryNode oldParse() {
         while (!currentToken.isEOF() && !error) {
             if (currentToken.isNumeric())
                 buildExpression();
             if (currentToken.type() == TokenType.KEYWORD)
-                initializeVariable();
+                evaluateKeyword();
             else if (currentToken.type() == TokenType.IDENTIFIER)
                 assignVariable();
             else
@@ -83,7 +130,14 @@ public class Parser {
         Token compareType = currentToken;
         advance();
         Node rightExpression = buildExpression();
-        return new EquationNode(leftExpression, rightExpression);
+        return new EquationNode(leftExpression, compareType.getValue(), rightExpression);
+    }
+
+    private void evaluateKeyword() {
+        switch (currentToken.getValue()) {
+            case "int" -> initializeVariable();
+            case "con" -> buildConstructor();
+        }
     }
 
     private void initializeVariable() {
