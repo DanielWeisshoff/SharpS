@@ -33,4 +33,3 @@ public class EntryNode extends Node {
         return new Data<>(1, DataType.INT);
     }
 }
-

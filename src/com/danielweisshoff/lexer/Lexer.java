@@ -18,7 +18,7 @@ public class Lexer {
     private int charIndex = -1;
     private char currentChar;
     private final HashMap<Character, TokenType> tokenMap = new HashMap<>();
-    private final String[] keywords = new String[]{"int", "con", "fnc", "ntr"};
+    private final String[] keywords = new String[]{"int", "con", "fnc", "ntr", "cls"};
     private Token lastToken;
 
     public Lexer(String text) {

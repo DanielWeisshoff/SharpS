@@ -2,6 +2,9 @@ package com.danielweisshoff.parser;
 
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
+import com.danielweisshoff.parser.container.Class;
+import com.danielweisshoff.parser.container.Program;
+import com.danielweisshoff.parser.container.Variable;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.EntryNode;
@@ -25,6 +28,7 @@ public class Parser {
 
     private final List<Class> classes = new ArrayList<>();
     private final List<EntryNode> entries = new ArrayList<>();
+
     private Class currentClass = null;
     private Node currentFunction = null;
 
@@ -45,84 +49,115 @@ public class Parser {
         return new Token(TokenType.EOF, "");
     }
 
-    public Class[] parse() {
-        while (!currentToken.isEOF()) {
-            if (currentToken.getValue().equals("cls")) {
-                advance();
-                buildClass();
-            } else if (currentClass != null) {
-                if (currentToken.type() == TokenType.TAB) {
-                    switch (currentToken.getValue()) {
-                        //Attribute Lane
-                        case "1":
-                            advance();
-                            if (currentToken.type() == TokenType.KEYWORD) {
-                                advance();
-                                initializeVariable();
-                            } else
-                                assignVariable();
-                            break;
-                        //Function Lane
-                        case "2":
-                            advance();
-                            buildFunction();
-                            break;
-                        default:
-                            //Muss eine Lane einer Funktion sein, ansonsten Error
-                            break;
-                    }
-                } else advance();
-            } else advance();
+    private void nextLine() {
+        while (currentToken.type() != TokenType.EOF && currentToken.type() != TokenType.NEWLINE) {
+            advance();
         }
+        advance();
+    }
+
+    public Program parse() {
+
+        while (!currentToken.isEOF()) {
+            if (currentToken.type() == TokenType.TAB) {
+                switch (currentToken.getValue()) {
+                    case "1" -> validateAttributeLane();
+                    case "2" -> validateMethodLane();
+                    default -> validateScopeLane();
+                }
+            } else {
+                validateClassLane();
+            }
+        }
+
         Class[] classArray = new Class[classes.size()];
         classArray = classes.toArray(classArray);
-        return classArray;
+        Program program = new Program(classArray);
+        return program;
     }
 
-    private void buildClass() {
+    public void validateClassLane() {
+        //Class, Enum, Interface, Struct
+        switch (currentToken.getValue()) {
+            case "cls":
+                advance();
+                Class c = buildClass();
+                classes.add(c);
+                currentClass = c;
+                break;
+            default:
+                new Error("Classlane falsch");
+        }
+    }
+
+    public void validateAttributeLane() {
+        advance();
+        if (currentToken.type() == TokenType.KEYWORD) {
+            advance();
+            Variable v = initializeVariable();
+            currentClass.addAttribute(v);
+        } else
+            assignVariable();
+    }
+
+    public void validateMethodLane() {
+        advance();
+        currentFunction = buildFunction();
+    }
+
+    public void validateScopeLane() {
+        advance();
+        if (currentToken.type() == TokenType.KEYWORD) {
+            advance();
+            initializeVariable();
+        } else
+            assignVariable();
+    }
+
+    /* BUILD
+     *
+     */
+    private Class buildClass() {
         if (currentToken.type() != TokenType.IDENTIFIER)
-            return;
+            new Error("Klassenname fehlt");
+
         String className = currentToken.getValue();
         if (!checkNextTokens(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON))
-            return;
-        advance();
-        System.out.println("Klasse erkannt");
+            new Error("Methodenstruktur falsch");
 
-        Class c = new Class(className);
-        classes.add(c);
-        currentClass = c;
+        nextLine();
+
+        System.out.println("Klasse erkannt");
+        return new Class(className);
     }
 
-    private void buildFunction() {
+    private EntryNode buildFunction() {
         boolean isEntry = false;
-        boolean isCon = false;
         String functionName;
         if (currentToken.getValue().equals("ntr")) {
             isEntry = true;
             functionName = "entry";
         } else if (currentToken.getValue().equals("con")) {
-            isCon = true;
             functionName = "constructor";
         } else {
             advance();
             functionName = currentToken.getValue();
         }
         if (!checkNextTokens(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON))
-            return;
+            new Error("Falsches Format");
+
         advance();
 
         EntryNode functionRoot = new EntryNode(functionName);
         if (isEntry) {
             currentClass.addEntry(functionRoot);
-            System.out.println("Entry erkannt");
-        } else if (isCon) {
-            currentClass.addFunction(functionName, functionRoot);
-            System.out.println("Konstruktor erkannt");
+            System.out.println("Entry '" + functionName + "' erkannt");
         } else {
             currentClass.addFunction(functionName, functionRoot);
-            System.out.println("Funktion erkannt ");
+            System.out.println("Funktion '" + functionName + "' erkannt ");
         }
-        currentFunction = functionRoot;
+        nextLine();
+        return functionRoot;
     }
 
     private Node buildEquation(Node leftExpression) {
@@ -133,23 +168,27 @@ public class Parser {
         return new EquationNode(leftExpression, compareType.getValue(), rightExpression);
     }
 
-    private void initializeVariable() {
+    private Variable initializeVariable() {
         String varName = "";
         if (currentToken.type() == TokenType.IDENTIFIER)
             varName = currentToken.getValue();
         else
-            return;
+            new Error("Fehler beim initialisieren einer Variable");
+
         advance();
+        Variable v;
         if (currentToken.type() == TokenType.ASSIGN) {
             advance();
             Node expr = buildExpression();
             Data<?> result = expr.execute();
-            variables.put(varName, result);
+            v = new Variable(varName, result);
             System.out.println("Variable initialisiert");
         } else {
-            variables.put(varName, new Data<>(0, DataType.DOUBLE));
+            v = new Variable(varName, new Data<>(0, DataType.DOUBLE));
             System.out.println("Variable deklariert");
         }
+        nextLine();
+        return v;
     }
 
     private void assignVariable() {
@@ -158,16 +197,16 @@ public class Parser {
             return;
         }
         String varName = currentToken.getValue();
-        if (!variables.containsKey(varName)) {
-            System.out.println("Variable existiert nicht");
-            return;
-        }
+        if (!variables.containsKey(varName))
+            new Error("Variable existiert nicht");
+
         advance();
         advance();
         Node expr = buildExpression();
         Data<?> result = expr.execute();
         variables.put(varName, result);
         System.out.println("Variablenwert veraendert");
+        nextLine();
     }
 
     private Node buildExpression() {

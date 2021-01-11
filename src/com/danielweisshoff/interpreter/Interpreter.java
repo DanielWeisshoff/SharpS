@@ -1,15 +1,11 @@
 package com.danielweisshoff.interpreter;
 
-import com.danielweisshoff.parser.nodesystem.node.EntryNode;
-import com.danielweisshoff.parser.Class;
+import com.danielweisshoff.parser.container.Program;
 
 import java.util.*;
 
 
 public class Interpreter {
-
-    private final HashMap<String, Class> classes;
-    private final List<EntryNode> entries;
 
     /*TODO
      * - Anstatt Entrienodes sollte der Parser dem Interpreter alle Klassen als Array schicken,
@@ -17,46 +13,19 @@ public class Interpreter {
      * den Klassen gespeichert
      * - Alle Entries aus allen Klassen suchen
      */
-    public Interpreter(Class[] classArr) {
-        classes = new HashMap<>();
-        for (Class c : classArr)
-            classes.put(c.getName(), c);
-        entries = new ArrayList<>();
+    private final Program program;
 
-        registerEntries(classArr);
+    public Interpreter(Program program) {
+        this.program = program;
     }
 
-    private void registerEntries(Class[] classes) {
-        for (Class c : classes) {
-            EntryNode[] entries = c.getEntries();
-            this.entries.addAll(Arrays.asList(entries));
-        }
-    }
 
     public void run() {
-        if (entries == null || entries.size() == 0) {
-            System.out.println("Keinen Einstiegspunkt gefunden");
-            return;
-        }
-        if (entries.size() == 1)
-            entries.get(0).execute();
-        else
-            entryPointSelection().execute();
-    }
-
-    public EntryNode entryPointSelection() {
-        int counter = 1;
-        System.out.println("Entrypoints:");
-        for (EntryNode n : entries) {
-            System.out.println("[" + counter + "] " + n.getName());
-            counter++;
-        }
+        program.printEntries();
         Scanner scanner = new Scanner(System.in);
-        int input = -1;
-        while (input < 0 || input > counter) {
-            System.out.print("\nselect: ");
-            input = scanner.nextInt();
-        }
-        return entries.get(input - 1);
+        System.out.print("\nselect: ");
+        int input = scanner.nextInt();
+        program.getEntry(input).execute();
     }
 }
+
