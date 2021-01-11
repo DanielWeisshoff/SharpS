@@ -1,11 +1,11 @@
 package com.danielweisshoff.parser;
 
 import com.danielweisshoff.lexer.Token;
-import com.danielweisshoff.nodesystem.BinaryOperator;
-import com.danielweisshoff.nodesystem.node.BinaryOperatorNode;
-import com.danielweisshoff.nodesystem.node.Node;
-import com.danielweisshoff.nodesystem.node.NumberNode;
-import com.danielweisshoff.nodesystem.node.VariableNode;
+import com.danielweisshoff.interpreter.nodesystem.BinaryOperator;
+import com.danielweisshoff.interpreter.nodesystem.node.BinaryOperatorNode;
+import com.danielweisshoff.interpreter.nodesystem.node.Node;
+import com.danielweisshoff.interpreter.nodesystem.node.NumberNode;
+import com.danielweisshoff.interpreter.nodesystem.node.VariableNode;
 
 import java.util.ArrayList;
 

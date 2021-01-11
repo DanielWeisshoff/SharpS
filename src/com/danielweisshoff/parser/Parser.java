@@ -2,17 +2,19 @@ package com.danielweisshoff.parser;
 
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
-import com.danielweisshoff.nodesystem.Data;
-import com.danielweisshoff.nodesystem.DataType;
-import com.danielweisshoff.nodesystem.node.EntryNode;
-import com.danielweisshoff.nodesystem.node.EquationNode;
-import com.danielweisshoff.nodesystem.node.Node;
-import com.danielweisshoff.parser.Expression;
+import com.danielweisshoff.interpreter.nodesystem.Data;
+import com.danielweisshoff.interpreter.nodesystem.DataType;
+import com.danielweisshoff.interpreter.nodesystem.node.EntryNode;
+import com.danielweisshoff.interpreter.nodesystem.node.EquationNode;
+import com.danielweisshoff.interpreter.nodesystem.node.Node;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/*TODO
+ * - Entries können auch Namen haben
+ */
 public class Parser {
 
     private final Token[] tokens;
@@ -20,15 +22,14 @@ public class Parser {
     private Token currentToken;
     //Nur zum testen
     public static HashMap<String, Data<?>> variables = new HashMap<>();
-    private EntryNode rootNode;
 
     private final List<Class> classes = new ArrayList<>();
+    private final List<EntryNode> entries = new ArrayList<>();
     private Class currentClass = null;
     private Node currentFunction = null;
 
     public Parser(Token[] tokens) {
         this.tokens = tokens;
-        rootNode = new EntryNode();
         advance();
     }
 
@@ -44,7 +45,7 @@ public class Parser {
         return new Token(TokenType.EOF, "");
     }
 
-    public EntryNode parse() {
+    public Class[] parse() {
         while (!currentToken.isEOF()) {
             if (currentToken.getValue().equals("cls")) {
                 advance();
@@ -66,11 +67,16 @@ public class Parser {
                             advance();
                             buildFunction();
                             break;
+                        default:
+                            //Muss eine Lane einer Funktion sein, ansonsten Error
+                            break;
                     }
                 } else advance();
             } else advance();
         }
-        return rootNode; //PLatzhalter
+        Class[] classArray = new Class[classes.size()];
+        classArray = classes.toArray(classArray);
+        return classArray;
     }
 
     private void buildClass() {
@@ -113,8 +119,9 @@ public class Parser {
             System.out.println("Funktion erkannt ");
 
         //Platzhalter
-        EntryNode functionRoot = new EntryNode();
-        currentClass.addMethod(functionName, functionRoot);
+        EntryNode functionRoot = new EntryNode(functionName);
+        currentClass.addFunction(functionName, functionRoot);
+        currentFunction = functionRoot;
     }
 
     private Node buildEquation(Node leftExpression) {
@@ -162,7 +169,6 @@ public class Parser {
         System.out.println("Variablenwert veraendert");
     }
 
-
     private Node buildExpression() {
         ArrayList<Token> buffer = new ArrayList<>();
 
@@ -175,12 +181,11 @@ public class Parser {
         Token[] arr = new Token[buffer.size()];
         arr = buffer.toArray(arr);
         Node calc = new Expression(arr).toAST();
-        if (currentToken.type() == TokenType.COMPARISON) {
+        if (currentToken.type() == TokenType.COMPARISON)
             calc = buildEquation(calc);
-        }
+
         //Nur temporär
         //Wird auch beim rechten Teil einer gleichung ausgeführt (nicht erwünscht)
-        rootNode.add(calc);
         return calc;
     }
 

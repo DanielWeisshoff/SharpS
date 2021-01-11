@@ -1,4 +1,4 @@
-package com.danielweisshoff.nodesystem;
+package com.danielweisshoff.interpreter.nodesystem;
 
 public enum BinaryOperator {
     ADD, SUB, MUL, DIV

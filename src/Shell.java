@@ -1,8 +1,8 @@
 import com.danielweisshoff.interpreter.Interpreter;
 import com.danielweisshoff.lexer.Lexer;
 import com.danielweisshoff.lexer.Token;
-import com.danielweisshoff.nodesystem.node.EntryNode;
 import com.danielweisshoff.parser.Parser;
+import com.danielweisshoff.parser.Class;
 
 /*TODO
  * - Rechnen mit Klammern soll möglich sein
@@ -29,8 +29,8 @@ public class Shell {
         for (Token t : tokens)
             t.print();
 
-        EntryNode entry = new Parser(tokens).parse();
-        new Interpreter(entry).run();
+        Class[] classes = new Parser(tokens).parse();
+        new Interpreter(classes).run();
     }
 
     public static void main(String[] args) {
