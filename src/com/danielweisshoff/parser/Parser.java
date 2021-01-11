@@ -2,11 +2,11 @@ package com.danielweisshoff.parser;
 
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
-import com.danielweisshoff.interpreter.nodesystem.Data;
-import com.danielweisshoff.interpreter.nodesystem.DataType;
-import com.danielweisshoff.interpreter.nodesystem.node.EntryNode;
-import com.danielweisshoff.interpreter.nodesystem.node.EquationNode;
-import com.danielweisshoff.interpreter.nodesystem.node.Node;
+import com.danielweisshoff.parser.nodesystem.Data;
+import com.danielweisshoff.parser.nodesystem.DataType;
+import com.danielweisshoff.parser.nodesystem.node.EntryNode;
+import com.danielweisshoff.parser.nodesystem.node.EquationNode;
+import com.danielweisshoff.parser.nodesystem.node.Node;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -111,16 +111,17 @@ public class Parser {
             return;
         advance();
 
-        if (isEntry)
-            System.out.println("Entry erkannt");
-        else if (isCon)
-            System.out.println("Konstruktor erkannt");
-        else
-            System.out.println("Funktion erkannt ");
-
-        //Platzhalter
         EntryNode functionRoot = new EntryNode(functionName);
-        currentClass.addFunction(functionName, functionRoot);
+        if (isEntry) {
+            currentClass.addEntry(functionRoot);
+            System.out.println("Entry erkannt");
+        } else if (isCon) {
+            currentClass.addFunction(functionName, functionRoot);
+            System.out.println("Konstruktor erkannt");
+        } else {
+            currentClass.addFunction(functionName, functionRoot);
+            System.out.println("Funktion erkannt ");
+        }
         currentFunction = functionRoot;
     }
 

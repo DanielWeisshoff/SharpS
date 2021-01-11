@@ -1,4 +1,4 @@
-package com.danielweisshoff.interpreter.nodesystem;
+package com.danielweisshoff.parser.nodesystem;
 
 public class Data<T extends Number> {
 

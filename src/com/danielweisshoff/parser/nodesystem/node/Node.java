@@ -1,8 +1,8 @@
-package com.danielweisshoff.interpreter.nodesystem.node;
+package com.danielweisshoff.parser.nodesystem.node;
 
 
-import com.danielweisshoff.interpreter.nodesystem.Data;
-import com.danielweisshoff.interpreter.nodesystem.DataType;
+import com.danielweisshoff.parser.nodesystem.Data;
+import com.danielweisshoff.parser.nodesystem.DataType;
 
 public class Node {
 

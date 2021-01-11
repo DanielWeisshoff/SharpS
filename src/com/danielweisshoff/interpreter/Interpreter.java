@@ -1,6 +1,6 @@
 package com.danielweisshoff.interpreter;
 
-import com.danielweisshoff.interpreter.nodesystem.node.EntryNode;
+import com.danielweisshoff.parser.nodesystem.node.EntryNode;
 import com.danielweisshoff.parser.Class;
 
 import java.util.*;
@@ -52,10 +52,11 @@ public class Interpreter {
             counter++;
         }
         Scanner scanner = new Scanner(System.in);
-        int input = 0;
+        int input = -1;
         while (input < 0 || input > counter) {
+            System.out.print("\nselect: ");
             input = scanner.nextInt();
         }
-        return entries.get(input);
+        return entries.get(input - 1);
     }
 }
