@@ -1,25 +1,23 @@
 package com.danielweisshoff.parser;
 
-import java.util.ArrayList;
-
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
-<<<<<<< Updated upstream
-
-public class Parser {
-
-    public void parse(ArrayList<Token> tokens) {
-=======
-import com.danielweisshoff.nodesystem.Data;
-import com.danielweisshoff.nodesystem.DataType;
-import com.danielweisshoff.nodesystem.node.EntryNode;
-import com.danielweisshoff.nodesystem.node.EquationNode;
-import com.danielweisshoff.nodesystem.node.Node;
+import com.danielweisshoff.parser.container.Class;
+import com.danielweisshoff.parser.container.Program;
+import com.danielweisshoff.parser.container.Variable;
+import com.danielweisshoff.parser.nodesystem.Data;
+import com.danielweisshoff.parser.nodesystem.DataType;
+import com.danielweisshoff.parser.nodesystem.node.EntryNode;
+import com.danielweisshoff.parser.nodesystem.node.EquationNode;
+import com.danielweisshoff.parser.nodesystem.node.Node;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/*TODO
+ * - Entries k?nnen auch Namen haben
+ */
 public class Parser {
 
     private final Token[] tokens;
@@ -27,205 +25,139 @@ public class Parser {
     private Token currentToken;
     //Nur zum testen
     public static HashMap<String, Data<?>> variables = new HashMap<>();
-    private EntryNode rootNode;
 
     private final List<Class> classes = new ArrayList<>();
+    private final List<EntryNode> entries = new ArrayList<>();
+
     private Class currentClass = null;
     private Node currentFunction = null;
 
     public Parser(Token[] tokens) {
         this.tokens = tokens;
-        rootNode = new EntryNode();
         advance();
     }
->>>>>>> Stashed changes
 
-        if (tokens.get(0).isNumeric())
-            doCalculatingStuff(tokens);
-        if (tokens.size() >= 2) {
-            if (tokens.get(0).isOP()
-                    && tokens.get(1).isNumeric())
-                doCalculatingStuff(tokens);
-        }
+    private void advance() {
+        position++;
+        if (position < tokens.length)
+            currentToken = tokens[position];
     }
 
-    private void doCalculatingStuff(
-            ArrayList<Token> tokens) {
+    private Token next() {
+        if (position < tokens.length - 1)
+            return tokens[position + 1];
+        return new Token(TokenType.EOF, "");
+    }
 
-<<<<<<< Updated upstream
-        // EOF entfernen
-        tokens.remove(tokens.size() - 1);
+    private void nextLine() {
+        while (currentToken.type() != TokenType.EOF && currentToken.type() != TokenType.NEWLINE) {
+            advance();
+        }
+        advance();
+    }
 
-        // Gültige Operatoren als Vorzeichen in Nummertoken
-        // einfügen
-        Token[] tokenArray = signNumbers(tokens);
+    public Program parse() {
 
-        // falls == enthalten ist, gleichung checken
-        for (int i = 0; i < tokens.size() - 1; i++) {
-            if (tokenArray[i].type() == TokenType.EQUALS
-                    && tokenArray[i + 1]
-                    .type() == TokenType.EQUALS) {
-                createEquation(tokens, i);
-                return;
+        while (!currentToken.isEOF()) {
+            if (currentToken.type() == TokenType.TAB) {
+                switch (currentToken.getValue()) {
+                    case "1" -> validateAttributeLane();
+                    case "2" -> validateMethodLane();
+                    default -> validateScopeLane();
+                }
+            } else {
+                validateClassLane();
             }
         }
-        // Ansonsten normale Rechnung ausführen
-        Calculation calculation = new Calculation(
-                tokenArray);
-        System.out.println(calculation.getResult());
-=======
-    public EntryNode parse() {
-        while (!currentToken.isEOF()) {
-            if (currentToken.getValue().equals("cls")) {
-                advance();
-                buildClass();
-            } else if (currentClass != null) {
-                if (currentToken.type() == TokenType.TAB) {
-                    switch (currentToken.getValue()) {
-                        //Attribute Lane
-                        case "1":
-                            advance();
-                            if (currentToken.type() == TokenType.KEYWORD) {
-                                advance();
-                                initializeVariable();
-                            } else
-                                assignVariable();
-                            break;
-                        //Function Lane
-                        case "2":
-                            advance();
-                            buildFunction();
-                            break;
-                    }
-                } else advance();
-            } else advance();
-        }
-        return rootNode; //PLatzhalter
+
+        Class[] classArray = new Class[classes.size()];
+        classArray = classes.toArray(classArray);
+        Program program = new Program(classArray);
+        return program;
     }
 
-    private void buildClass() {
+    public void validateClassLane() {
+        //Class, Enum, Interface, Struct
+        switch (currentToken.getValue()) {
+            case "cls":
+                advance();
+                Class c = buildClass();
+                classes.add(c);
+                currentClass = c;
+                break;
+            default:
+                new Error("Classlane falsch");
+        }
+    }
+
+    public void validateAttributeLane() {
+        advance();
+        if (currentToken.type() == TokenType.KEYWORD) {
+            advance();
+            Variable v = initializeVariable();
+            currentClass.addAttribute(v);
+        } else
+            assignVariable();
+    }
+
+    public void validateMethodLane() {
+        advance();
+        currentFunction = buildFunction();
+    }
+
+    public void validateScopeLane() {
+        advance();
+        if (currentToken.type() == TokenType.KEYWORD) {
+            advance();
+            initializeVariable();
+        } else
+            assignVariable();
+    }
+
+    /* BUILD
+     *
+     */
+    private Class buildClass() {
         if (currentToken.type() != TokenType.IDENTIFIER)
-            return;
+            new Error("Klassenname fehlt");
+
         String className = currentToken.getValue();
         if (!checkNextTokens(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON))
-            return;
-        advance();
-        System.out.println("Klasse erkannt");
+            new Error("Methodenstruktur falsch");
 
-        Class c = new Class(className);
-        classes.add(c);
-        currentClass = c;
+        nextLine();
+
+        System.out.println("Klasse erkannt");
+        return new Class(className);
     }
 
-    private void buildFunction() {
+    private EntryNode buildFunction() {
         boolean isEntry = false;
-        boolean isCon = false;
         String functionName;
         if (currentToken.getValue().equals("ntr")) {
             isEntry = true;
             functionName = "entry";
         } else if (currentToken.getValue().equals("con")) {
-            isCon = true;
             functionName = "constructor";
         } else {
             advance();
             functionName = currentToken.getValue();
         }
         if (!checkNextTokens(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON))
-            return;
+            new Error("Falsches Format");
+
         advance();
 
-        if (isEntry)
-            System.out.println("Entry erkannt");
-        else if (isCon)
-            System.out.println("Konstruktor erkannt");
-        else
-            System.out.println("Funktion erkannt ");
-
-        //Platzhalter
-        EntryNode functionRoot = new EntryNode();
-        currentClass.addMethod(functionName, functionRoot);
->>>>>>> Stashed changes
-    }
-
-    // Wandelt Zahlen je nach vorzeichen um
-    private Token[] signNumbers(ArrayList<Token> tokens) {
-        // Erste Zahl ganz links validieren
-        if (tokens.size() >= 2) {
-
-            if (tokens.get(1).isNumeric()
-                    && tokens.get(0)
-                    .type() == TokenType.SUB) {
-                tokens.get(1)
-                        .setValue(
-                                "-" + tokens
-                                        .get(1)
-                                        .getValue());
-                tokens.remove(0);
-            }
-
-<<<<<<< Updated upstream
-            for (int i = 1; i < tokens.size(); i++) {
-                if (tokens.get(i).isNumeric()
-                        &&
-                        tokens.get(i - 1)
-                                .type() == TokenType.SUB
-                        &&
-                        tokens.get(i - 2).isOP()) {
-                    tokens.get(i)
-                            .setValue(
-                                    "-" + tokens
-                                            .get(i)
-                                            .getValue());
-                    tokens.remove(i - 1);
-                }
-            }
+        EntryNode functionRoot = new EntryNode(functionName);
+        if (isEntry) {
+            currentClass.addEntry(functionRoot);
+            System.out.println("Entry '" + functionName + "' erkannt");
+        } else {
+            currentClass.addFunction(functionName, functionRoot);
+            System.out.println("Funktion '" + functionName + "' erkannt ");
         }
-
-        Token[] tokenArray = new Token[tokens
-                .size()];
-        for (int i = 0; i < tokens.size(); i++) {
-            tokenArray[i] = tokens.get(i);
-        }
-        return tokenArray;
-    }
-
-    private void createEquation(ArrayList<Token> tokens,
-                                int splitPosition) {
-
-        // Splitposition wird immer ein Operator sein
-
-        int leftEquationTokenAmount = splitPosition;
-        int rightEquationTokenAmount = tokens.size()
-                - splitPosition - 2;
-        // linken u rechten Term füllen
-        Token[] leftEquationTokens = new Token[leftEquationTokenAmount];
-        Token[] rightEquationTokens = new Token[rightEquationTokenAmount];
-
-        for (int i = 0; i < tokens.size(); i++) {
-            if (i == splitPosition
-                    || i == splitPosition + 1)
-                continue;
-            else if (i < splitPosition)
-                leftEquationTokens[i] = tokens.get(i);
-            else {
-                rightEquationTokens[i - 2
-                        - splitPosition] = tokens.get(i);
-            }
-=======
-        while (!currentToken.isEOF())
-            if (currentToken.isOP() || currentToken.isNumeric() || currentToken.type() == TokenType.IDENTIFIER) {
-                buffer.add(currentToken);
-                advance();
-            } else break;
-
-        Token[] tokenArray = new Token[buffer.size()];
-        tokenArray = buffer.toArray(tokenArray);
-        Node calculation = new Expression(tokenArray).toAST();
-        if (currentToken.type() == TokenType.COMPARISON) {
-            calculation = buildEquation(calculation);
-        }
-        return calculation;
+        nextLine();
+        return functionRoot;
     }
 
     private Node buildEquation(Node leftExpression) {
@@ -236,56 +168,65 @@ public class Parser {
         return new EquationNode(leftExpression, compareType.getValue(), rightExpression);
     }
 
-    private void initializeVariable() {
+    private Variable initializeVariable() {
         String varName = "";
         if (currentToken.type() == TokenType.IDENTIFIER)
             varName = currentToken.getValue();
         else
-            return;
+            new Error("Fehler beim initialisieren einer Variable");
+
         advance();
+        Variable v;
         if (currentToken.type() == TokenType.ASSIGN) {
             advance();
             Node expr = buildExpression();
             Data<?> result = expr.execute();
-            variables.put(varName, result);
+            v = new Variable(varName, result);
             System.out.println("Variable initialisiert");
         } else {
-            variables.put(varName, new Data<>(0, DataType.DOUBLE));
+            v = new Variable(varName, new Data<>(0, DataType.DOUBLE));
             System.out.println("Variable deklariert");
->>>>>>> Stashed changes
         }
-
-        Calculation leftEquation = new Calculation(
-                leftEquationTokens);
-        Calculation rightEquation = new Calculation(
-                rightEquationTokens);
-        compareEquations(leftEquation, rightEquation);
+        nextLine();
+        return v;
     }
 
-<<<<<<< Updated upstream
-    private void compareEquations(Calculation a,
-                                  Calculation b) {
-        if (a.getResult() == b.getResult())
-            System.out.println("TRUE");
-        else
-            System.out.println("FALSE");
-=======
     private void assignVariable() {
         if (next().type() != TokenType.ASSIGN) {
             buildExpression();
             return;
         }
         String varName = currentToken.getValue();
-        if (!variables.containsKey(varName)) {
-            System.out.println("Variable existiert nicht");
-            return;
-        }
+        if (!variables.containsKey(varName))
+            new Error("Variable existiert nicht");
+
         advance();
         advance();
         Node expr = buildExpression();
         Data<?> result = expr.execute();
         variables.put(varName, result);
         System.out.println("Variablenwert veraendert");
+        nextLine();
+    }
+
+    private Node buildExpression() {
+        ArrayList<Token> buffer = new ArrayList<>();
+
+        while (!currentToken.isEOF()) {
+            if (currentToken.isOP() || currentToken.isNumeric() || currentToken.type() == TokenType.IDENTIFIER) {
+                buffer.add(currentToken);
+                advance();
+            } else break;
+        }
+        Token[] arr = new Token[buffer.size()];
+        arr = buffer.toArray(arr);
+        Node calc = new Expression(arr).toAST();
+        if (currentToken.type() == TokenType.COMPARISON)
+            calc = buildEquation(calc);
+
+        //Nur tempor?r
+        //Wird auch beim rechten Teil einer gleichung ausgef?hrt (nicht erw?nscht)
+        return calc;
     }
 
     private boolean checkNextTokens(TokenType... type) {
@@ -295,6 +236,5 @@ public class Parser {
                 return false;
         }
         return true;
->>>>>>> Stashed changes
     }
 }

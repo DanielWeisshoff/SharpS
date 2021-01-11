@@ -1,0 +1,18 @@
+
+
+Initialisieren
+int a = 0
+<keyword> <identifier> <assign> <expression>
+
+Deklarieren
+int a
+<keyword> <identifier>
+
+Zuweisen
+<identifier> <assign> <expression>
+
+Expression
+<identifier | Number> <BinaryOp>? *
+
+Equation
+<Expression> <Comparison> <Expression>

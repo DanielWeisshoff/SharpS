@@ -1,52 +1,37 @@
-
-import java.util.ArrayList;
-import java.util.Scanner;
-
+import com.danielweisshoff.interpreter.Interpreter;
 import com.danielweisshoff.lexer.Lexer;
 import com.danielweisshoff.lexer.Token;
-import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.parser.Parser;
+import com.danielweisshoff.parser.container.Class;
+import com.danielweisshoff.parser.container.Program;
 
 /*TODO
  * - Rechnen mit Klammern soll möglich sein
- * - In Node-System umwandeln
- * - Number-Node
- * - Operation-Node
  */
 
-/**
- * 
- * @author danie
- *
- */
 public class Shell {
 
-	public Shell() {
-		System.out.println("Version 0.2");
-		Scanner scanner = new Scanner(System.in);
+    public Shell() {
+        System.out.println("Version 0.2");
+        validate(Goethe.readFile());
+        /*
+        String input = "";
+        Scanner scanner = new Scanner(System.in);
+        do {
+            input = scanner.nextLine();
+            validate(input);
+        }
+        while (!input.equals("quit"));*/
+    }
 
-		
-		while (true) {
-			String text = scanner.nextLine();
-			validate(text);
-		}
-	}
+    public void validate(String text) {
+        Token[] tokens = new Lexer(text).tokenizeText();
 
-	public void validate(String text) {
-		Lexer lexer = new Lexer(text);
-		Token t = null;
-		ArrayList<Token> tokens = new ArrayList<Token>();
-		do {
-			t = lexer.nextToken();
-			tokens.add(t);
-			 t.print();
-		} while (t.type() != TokenType.EOF);
+        Program program = new Parser(tokens).parse();
+        new Interpreter(program).run();
+    }
 
-		Parser parser = new Parser();
-		parser.parse(tokens);
-	}
-
-	public static void main(String[] args) {
-		new Shell();
-	}
+    public static void main(String[] args) {
+        new Shell();
+    }
 }

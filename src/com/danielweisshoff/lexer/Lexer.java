@@ -3,132 +3,143 @@ package com.danielweisshoff.lexer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * @author danie
+/*TODO
+ * Wenn der Text mit Leerzeichen endet, gibt es Fehler
+ *
+ * Problem mit Unaryoperator
+ * 1-1  wird falsch gewertet
+ *
+ * lasttoken entfernen und ll(1) einf?hren
  */
 public class Lexer {
 
-    public static String VERSION = "V 0.7";
-    private HashMap<Character, TokenType> tokenMap = new HashMap<Character, TokenType>();
-    private String text;
-    private int charIndex = 0;
+    public static String VERSION = "V 0.8";
+    private final String text;
+    private int charIndex = -1;
     private char currentChar;
-<<<<<<< Updated upstream
-    private char nextChar;
-=======
     private final HashMap<Character, TokenType> tokenMap = new HashMap<>();
-    private final String[] keywords = new String[]{"int", "ntr", "cls"};
+    private final String[] keywords = new String[]{"int", "con", "fnc", "ntr", "cls"};
     private Token lastToken;
->>>>>>> Stashed changes
 
     public Lexer(String text) {
         this.text = text;
         initializeSingleCharacterTokens();
+        advance();
     }
 
-    public ArrayList<Token> tokenizeText() {
-        ArrayList<Token> tokens = new ArrayList<Token>();
+    private void advance() {
+        charIndex++;
+        if (charIndex < text.length())
+            currentChar = text.charAt(charIndex);
+    }
+
+    public Token[] tokenizeText() {
+        ArrayList<Token> tokens = new ArrayList<>();
 
         while (charIndex < text.length()) {
-            currentChar = text.charAt(charIndex);
             if (tokenMap.containsKey(currentChar)) {
-<<<<<<< Updated upstream
-                tokens.add(new Token(
-                        tokenMap.get(currentChar), null));
-            } else if (Character
-                    .isAlphabetic(currentChar)) {
-=======
                 tokens.add(new Token(tokenMap.get(currentChar), ""));
                 advance();
             } else if (Character.isAlphabetic(currentChar)) {
->>>>>>> Stashed changes
                 tokens.add(buildIdentifierToken());
             } else if (Character.isDigit(currentChar)) {
                 tokens.add(buildNumberToken());
-            } else if (currentChar == '"') {
-                tokens.add(buildStringToken());
-            } else if (currentChar == '#') {
-                skipComment();
+            } else if (currentChar == ' ') {
+                Token t = buildTabToken();
+                if (t != null)
+                    tokens.add(t);
+            } else {
+                switch (currentChar) {
+                    case '"' -> tokens.add(buildStringToken());
+                    case '#' -> skipComment();
+                    case '=' -> tokens.add(buildComparisonToken('='));
+                    case '<' -> tokens.add(buildComparisonToken('<'));
+                    case '>' -> tokens.add(buildComparisonToken('>'));
+                    case '!' -> tokens.add(buildComparisonToken('!'));
+                    case '-' -> tokens.add(buildUnaryNumberToken());
+                    default -> advance();
+                }
             }
-
-            charIndex++;
         }
-<<<<<<< Updated upstream
-        return tokens;
-=======
         tokens.add(new Token(TokenType.EOF, ""));
         return Token.toArray(tokens);
->>>>>>> Stashed changes
     }
 
     public Token nextToken() {
-
         if (charIndex >= text.length())
             return new Token(TokenType.EOF, "");
 
         Token token = null;
-
-        while (token == null) {
-            currentChar = text.charAt(charIndex);
+        while (token == null && charIndex < text.length()) {
             if (tokenMap.containsKey(currentChar)) {
-<<<<<<< Updated upstream
-                token = new Token(
-                        tokenMap.get(currentChar),
-                        null);
-            } else if (Character
-                    .isAlphabetic(currentChar)) {
-=======
                 token = new Token(tokenMap.get(currentChar), "");
                 advance();
             } else if (Character.isAlphabetic(currentChar)) {
->>>>>>> Stashed changes
                 token = buildIdentifierToken();
             } else if (Character.isDigit(currentChar)) {
                 token = buildNumberToken();
-            } else if (currentChar == '"') {
-                token = buildStringToken();
-            } else if (currentChar == '#') {
-                skipComment();
+            } else {
+                switch (currentChar) {
+                    case '"' -> token = (buildStringToken());
+                    case '#' -> skipComment();
+                    case '=' -> token = buildComparisonToken('=');
+                    case '<' -> token = buildComparisonToken('<');
+                    case '>' -> token = buildComparisonToken('>');
+                    case '!' -> token = buildComparisonToken('!');
+                    case '-' -> token = buildUnaryNumberToken();
+                    default -> advance();
+                }
             }
-            charIndex++;
         }
+        lastToken = token;
         return token;
     }
 
     private Token buildIdentifierToken() {
         int start = charIndex;
-
-        while (charIndex < text.length() - 1) {
-            nextChar = text.charAt(charIndex + 1);
-            if (Character.isLetterOrDigit(nextChar)) {
-                charIndex++;
+        advance();
+        while (charIndex < text.length()) {
+            if (Character.isLetterOrDigit(currentChar)) {
+                advance();
             } else
                 break;
         }
-        return new Token(TokenType.IDENTIFIER,
-                text.substring(start, charIndex + 1));
+        String subString = text.substring(start, charIndex);
+        for (String s : keywords)
+            if (subString.equals(s))
+                return new Token(TokenType.KEYWORD, subString);
+        return new Token(TokenType.IDENTIFIER, subString);
+    }
+
+    private Token buildTabToken() {
+        Token t = null;
+        int whitespaceCount = 1;
+        advance();
+        while (currentChar == ' ') {
+            whitespaceCount++;
+            advance();
+        }
+        if (whitespaceCount >= 4)
+            t = new Token(TokenType.TAB, "" + (int) Math.floor(whitespaceCount / 4));
+        return t;
     }
 
     private Token buildNumberToken() {
         int start = charIndex;
         boolean isFloat = false;
-        while (charIndex < text.length() - 1) {
-            nextChar = text.charAt(charIndex + 1);
-            if (Character.isDigit(nextChar)
-                    || nextChar == '.') {
-                if (nextChar == '.')
+        advance();
+        while (charIndex < text.length()) {
+            if (Character.isDigit(currentChar) || currentChar == '.') {
+                if (currentChar == '.')
                     isFloat = true;
-                charIndex++;
+                advance();
             } else
                 break;
         }
         if (isFloat)
             return new Token(TokenType.FLOAT,
-                    text.substring(start, charIndex + 1));
+                    text.substring(start, charIndex));
         return new Token(TokenType.NUMBER,
-<<<<<<< Updated upstream
-                text.substring(start, charIndex + 1));
-=======
                 text.substring(start, charIndex));
     }
 
@@ -159,57 +170,45 @@ public class Lexer {
             }
         }
         return new Token(TokenType.ASSIGN, "" + c);
->>>>>>> Stashed changes
     }
 
     private Token buildStringToken() {
+        advance();
         int start = charIndex;
 
-        while (charIndex < text.length() - 1) {
-            nextChar = text.charAt(charIndex + 1);
-            if (nextChar != '"') {
-                charIndex++;
+        while (charIndex < text.length()) {
+            if (currentChar != '"') {
+                advance();
             } else {
-                charIndex++;
+                advance();
                 break;
             }
         }
         return new Token(TokenType.STRING,
-                text.substring(start + 1, charIndex));
+                text.substring(start, charIndex - 1));
     }
 
     private void skipComment() {
         while (charIndex < text.length() - 1) {
             if (currentChar != '\n') {
-                charIndex++;
-                currentChar = text.charAt(charIndex);
+                advance();
             } else
                 return;
         }
     }
 
     /**
-     * Hier können alle Einzeltokens eingetragen werden
-     *
-     * @return
+     * Hier k?nnen alle Einzeltokens eingetragen werden
      */
     private void initializeSingleCharacterTokens() {
         tokenMap.put('+', TokenType.ADD);
-        tokenMap.put('-', TokenType.SUB);
         tokenMap.put('*', TokenType.MUL);
         tokenMap.put('/', TokenType.DIV);
-        tokenMap.put('=', TokenType.EQUALS);
         tokenMap.put('(', TokenType.O_ROUND_BRACKET);
         tokenMap.put(')', TokenType.C_ROUND_BRACKET);
         tokenMap.put('\n', TokenType.NEWLINE);
         tokenMap.put('.', TokenType.DOT);
         tokenMap.put(',', TokenType.COMMA);
         tokenMap.put(':', TokenType.COLON);
-
-//		tokenMap.put('[', TokenType.O_SQUARE_BRACKET);
-//		tokenMap.put(']', TokenType.C_SQUARE_BRACKET);
-//		tokenMap.put('<', TokenType.O_ANGLE_BRACKET);
-//		tokenMap.put('>', TokenType.C_ANGLE_BRACKET);
     }
-
 }
