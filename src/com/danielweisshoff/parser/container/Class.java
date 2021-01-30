@@ -10,14 +10,14 @@ import java.util.List;
 public class Class {
 
     private final String name;
-    private final HashMap<String, Node> functions;
+    //private final HashMap<String, Node> functions;
     private final List<EntryNode> entries;
-    private final HashMap<String, Variable> attributes;
+    //private final HashMap<String, Variable> attributes;
 
     public Class(String name) {
         this.name = name;
-        functions = new HashMap<>();
-        attributes = new HashMap<>();
+       // functions = new HashMap<>();
+       // attributes = new HashMap<>();
         entries = new ArrayList<>();
     }
 
@@ -25,9 +25,9 @@ public class Class {
         return name;
     }
 
-    public void addAttribute(Variable v) {
+   /* public void addAttribute(Variable v) {
         attributes.put(v.getName(), v);
-    }
+    }*/
 
     public void addEntry(EntryNode entryNode) {
         entries.add(entryNode);
@@ -38,7 +38,7 @@ public class Class {
         return entries.toArray(arr);
     }
 
-    public void addFunction(String functionName, Node functionRoot) {
+ /*   public void addFunction(String functionName, Node functionRoot) {
         functions.put(functionName, functionRoot);
-    }
+    }*/
 }

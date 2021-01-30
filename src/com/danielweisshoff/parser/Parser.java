@@ -3,6 +3,7 @@ package com.danielweisshoff.parser;
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.parser.container.Class;
+import com.danielweisshoff.parser.container.Function;
 import com.danielweisshoff.parser.container.Program;
 import com.danielweisshoff.parser.container.Variable;
 import com.danielweisshoff.parser.nodesystem.Data;
@@ -17,14 +18,20 @@ import java.util.List;
 
 /*TODO
  * - Entries können auch Namen haben
+ * - Einen Weg finden, Methoden mit gleichen Namen aber unterschiedlichen Parametern zu speichern
+ * - Dictionary<String,MethodGroup>
+ +
  */
 public class Parser {
 
     private final Token[] tokens;
     private int position = -1;
     private Token currentToken;
-    //Nur zum testen
+
+    //Erstmals sind alle Variablen u Methoden global
     public static HashMap<String, Data<?>> variables = new HashMap<>();
+    //Später in MethodGroup umändern
+    public static HashMap<String, Function> methods = new HashMap<>();
 
     private final List<Class> classes = new ArrayList<>();
     private final List<EntryNode> entries = new ArrayList<>();
@@ -80,13 +87,12 @@ public class Parser {
         //Class, Enum, Interface, Struct
         switch (currentToken.getValue()) {
             case "cls":
-                advance();
                 Class c = buildClass();
                 classes.add(c);
                 currentClass = c;
                 break;
             default:
-                new Error("Classlane falsch");
+                new Error("Class-lane falsch");
         }
     }
 
@@ -95,7 +101,6 @@ public class Parser {
         if (currentToken.type() == TokenType.KEYWORD) {
             advance();
             Variable v = initializeVariable();
-            currentClass.addAttribute(v);
         } else
             assignVariable();
     }
@@ -118,32 +123,36 @@ public class Parser {
      *
      */
     private Class buildClass() {
+        advance();
         if (currentToken.type() != TokenType.IDENTIFIER)
             new Error("Klassenname fehlt");
-
         String className = currentToken.getValue();
-        if (!checkNextTokens(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON))
+
+        if (!compareNextTokens(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON)) {
             new Error("Methodenstruktur falsch");
+        }
 
         nextLine();
 
-        System.out.println("Klasse erkannt");
+        System.out.println("Klasse " + className + " erkannt");
         return new Class(className);
     }
 
     private EntryNode buildFunction() {
         boolean isEntry = false;
+        boolean isConstructor = false;
         String functionName;
         if (currentToken.getValue().equals("ntr")) {
             isEntry = true;
             functionName = "entry";
         } else if (currentToken.getValue().equals("con")) {
             functionName = "constructor";
+            isConstructor = true;
         } else {
             advance();
             functionName = currentToken.getValue();
         }
-        if (!checkNextTokens(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON))
+        if (!compareNextTokens(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON))
             new Error("Falsches Format");
 
         advance();
@@ -153,9 +162,14 @@ public class Parser {
             currentClass.addEntry(functionRoot);
             System.out.println("Entry '" + functionName + "' erkannt");
         } else {
-            currentClass.addFunction(functionName, functionRoot);
             System.out.println("Funktion '" + functionName + "' erkannt ");
         }
+        //Eintragen einer normalen Funktion
+        if(!isEntry && !isConstructor){
+            Function f = new Function(functionRoot);
+            methods.put(functionName,f);
+        }
+
         nextLine();
         return functionRoot;
     }
@@ -173,7 +187,7 @@ public class Parser {
         if (currentToken.type() == TokenType.IDENTIFIER)
             varName = currentToken.getValue();
         else
-            new Error("Fehler beim initialisieren einer Variable");
+            new Error("Fehler beim Initialisieren einer Variable");
 
         advance();
         Variable v;
@@ -205,7 +219,7 @@ public class Parser {
         Node expr = buildExpression();
         Data<?> result = expr.execute();
         variables.put(varName, result);
-        System.out.println("Variablenwert veraendert");
+        System.out.println("Variablenwert verändert");
         nextLine();
     }
 
@@ -213,7 +227,9 @@ public class Parser {
         ArrayList<Token> buffer = new ArrayList<>();
 
         while (!currentToken.isEOF()) {
-            if (currentToken.isOP() || currentToken.isNumeric() || currentToken.type() == TokenType.IDENTIFIER) {
+            if (currentToken.isOP()
+                    || currentToken.isNumeric()
+                    || currentToken.type() == TokenType.IDENTIFIER) {
                 buffer.add(currentToken);
                 advance();
             } else break;
@@ -229,7 +245,7 @@ public class Parser {
         return calc;
     }
 
-    private boolean checkNextTokens(TokenType... type) {
+    private boolean compareNextTokens(TokenType... type) {
         for (TokenType t : type) {
             advance();
             if (currentToken.type() != t)
