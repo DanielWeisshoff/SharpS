@@ -2,7 +2,7 @@ package com.danielweisshoff.interpreter;
 
 import com.danielweisshoff.parser.container.Program;
 
-import java.util.*;
+import java.util.Scanner;
 
 
 public class Interpreter {

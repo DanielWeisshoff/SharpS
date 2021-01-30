@@ -1,10 +1,8 @@
 package com.danielweisshoff.parser.container;
 
 import com.danielweisshoff.parser.nodesystem.node.EntryNode;
-import com.danielweisshoff.parser.nodesystem.node.Node;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Class {
@@ -16,8 +14,8 @@ public class Class {
 
     public Class(String name) {
         this.name = name;
-       // functions = new HashMap<>();
-       // attributes = new HashMap<>();
+        // functions = new HashMap<>();
+        // attributes = new HashMap<>();
         entries = new ArrayList<>();
     }
 

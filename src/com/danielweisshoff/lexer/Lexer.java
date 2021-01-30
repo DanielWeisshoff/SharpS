@@ -15,10 +15,10 @@ public class Lexer {
 
     public static String VERSION = "V 0.8";
     private final String text;
-    private int charIndex = -1;
-    private char currentChar;
     private final HashMap<Character, TokenType> tokenMap = new HashMap<>();
     private final String[] keywords = new String[]{"int", "con", "fnc", "ntr", "cls"};
+    private int charIndex = -1;
+    private char currentChar;
     private Token lastToken;
 
     public Lexer(String text) {
