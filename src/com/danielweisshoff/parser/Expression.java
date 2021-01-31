@@ -19,7 +19,7 @@ public class Expression {
 
     /**
      * Kompliziertere Methode, welche kein Lookahead benötigt und stattdessen
-     * unverarbeitete Token buffert.
+     * unverarbeitete Token buffered.
      * Das Prinzip ist gut, der Code könnte besser sein
      *
      * @return The root Node of the calculation
