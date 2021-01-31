@@ -12,26 +12,29 @@ public class VariableBuilder {
 
 
     public static Variable initializeVariable(Parser p) {
-        String varName = "";
-        if (p.currentToken.type() == TokenType.IDENTIFIER)
-            varName = p.currentToken.getValue();
-        else
+        if (p.currentToken.type() != TokenType.IDENTIFIER)
             new Error("Fehler beim Initialisieren einer Variable");
+        String varName = p.currentToken.getValue();
 
         p.advance();
+
         Variable v;
         if (p.currentToken.type() == TokenType.ASSIGN) {
-            p.advance();
-            Node expr = ExpressionBuilder.buildExpression(p);
-            Data<?> result = expr.execute();
-            v = new Variable(varName, result);
+            v = declareVariable(varName, p);
             System.out.println("Variable initialisiert");
         } else {
             v = new Variable(varName, new Data<>(0, DataType.DOUBLE));
             System.out.println("Variable deklariert");
         }
-        p.nextLine();
         return v;
+    }
+
+    private static Variable declareVariable(String varName, Parser p) {
+        p.advance();
+        Node expr = ExpressionBuilder.buildExpression(p);
+        Data<?> result = expr.execute();
+
+        return new Variable(varName, result);
     }
 
     public static void assignVariable(Parser p) {
@@ -49,6 +52,5 @@ public class VariableBuilder {
         Data<?> result = expr.execute();
         Parser.variables.put(varName, result);
         System.out.println("Variablenwert verändert");
-        p.nextLine();
     }
 }

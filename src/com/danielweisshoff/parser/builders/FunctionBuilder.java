@@ -13,34 +13,67 @@ public class FunctionBuilder {
         boolean isConstructor = false;
         String functionName;
         if (p.currentToken.getValue().equals("ntr")) {
-            isEntry = true;
-            functionName = "entry";
+            return buildEntry(p);
         } else if (p.currentToken.getValue().equals("con")) {
-            functionName = "constructor";
-            isConstructor = true;
+            return buildConstructor(p);
         } else {
-            p.advance();
-            functionName = p.currentToken.getValue();
+            return build(p);
         }
+    }
+
+    private static EntryNode build(Parser p) {
+        p.advance();
+        String functionName = p.currentToken.getValue();
+
+        if (!p.compareNextTokens(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON))
+            new Error("Falsches Format");
+
+        p.advance();
+
+        EntryNode function = new EntryNode(functionName);
+
+        System.out.println("Funktion '" + functionName + "' erkannt ");
+
+        //Eintragen einer normalen Funktion
+        Function f = new Function(function);
+        Parser.methods.put(functionName, f);
+
+        return function;
+    }
+
+    private static EntryNode buildConstructor(Parser p) {
+        String functionName = "constructor";
+
         if (!p.compareNextTokens(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON))
             new Error("Falsches Format");
 
         p.advance();
 
         EntryNode functionRoot = new EntryNode(functionName);
-        if (isEntry) {
-            p.currentClass.addEntry(functionRoot);
-            System.out.println("Entry '" + functionName + "' erkannt");
-        } else {
-            System.out.println("Funktion '" + functionName + "' erkannt ");
-        }
-        //Eintragen einer normalen Funktion
-        if (!isEntry && !isConstructor) {
-            Function f = new Function(functionRoot);
-            Parser.methods.put(functionName, f);
+
+        System.out.println("Konstruktor '" + functionName + "' erkannt ");
+
+        return functionRoot;
+    }
+
+    private static EntryNode buildEntry(Parser p) {
+
+        String functionName = "entry";
+
+        if (p.next().type() == TokenType.IDENTIFIER) {
+            p.advance();
+            functionName = p.currentToken.getValue();
         }
 
-        p.nextLine();
+        if (!p.compareNextTokens(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON))
+            new Error("Falsches Format");
+
+        p.advance();
+
+        EntryNode functionRoot = new EntryNode(functionName);
+        p.currentClass.addEntry(functionRoot);
+        System.out.println("Entry '" + functionName + "' erkannt");
+
         return functionRoot;
     }
 }

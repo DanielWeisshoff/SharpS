@@ -16,8 +16,6 @@ public class ClassBuilder {
             new Error("Methodenstruktur falsch");
         }
 
-        p.nextLine();
-
         System.out.println("Klasse " + className + " erkannt");
         return new Class(className);
     }

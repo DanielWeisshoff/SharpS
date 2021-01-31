@@ -13,7 +13,7 @@ public class ExpressionBuilder {
     public static Node buildExpression(Parser p) {
         ArrayList<Token> buffer = new ArrayList<>();
 
-        while (!p.currentToken.isEOF()) {
+        while (!p.currentToken.isEOF() && p.currentToken.type() != TokenType.NEWLINE) {
             if (p.currentToken.isOP()
                     || p.currentToken.isNumeric()
                     || p.currentToken.type() == TokenType.IDENTIFIER) {
@@ -26,6 +26,9 @@ public class ExpressionBuilder {
         Node calc = new Expression(arr).toAST();
         if (p.currentToken.type() == TokenType.COMPARISON)
             calc = EquationBuilder.buildEquation(p, calc);
+
+
+        //System.out.println("Rechnung erstellt");
 
         //Nur temporär
         //Wird auch beim rechten Teil einer gleichung ausgeführt (nicht erwünscht)
