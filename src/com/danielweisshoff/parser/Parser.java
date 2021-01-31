@@ -31,10 +31,12 @@ public class Parser {
     private final Token[] tokens;
     private final List<Class> classes = new ArrayList<>();
     private final List<EntryNode> entries = new ArrayList<>();
+
     public Token currentToken;
+    private int position = -1;
+
     public Class currentClass = null;
     public Node currentFunction = null;
-    private int position = -1;
 
     public Parser(Token[] tokens) {
         this.tokens = tokens;
@@ -54,8 +56,11 @@ public class Parser {
     }
 
     public void nextLine() {
-        while (currentToken.type() != TokenType.EOF && currentToken.type() != TokenType.NEWLINE) {
-            advance();
+        while (currentToken.type() != TokenType.EOF) {
+            if (currentToken.type() == TokenType.NEWLINE && next().type() != TokenType.NEWLINE) {
+                break;
+            } else
+                advance();
         }
         advance();
     }
@@ -63,7 +68,9 @@ public class Parser {
     public Program parse() {
 
         while (!currentToken.isEOF()) {
-            if (currentToken.type() == TokenType.TAB) {
+            if (currentToken.type() == TokenType.TAB && next().type() == TokenType.NEWLINE)
+                nextLine();
+            else if (currentToken.type() == TokenType.TAB) {
                 switch (currentToken.getValue()) {
                     case "1" -> validateAttributeLane();
                     case "2" -> validateMethodLane();
@@ -80,6 +87,15 @@ public class Parser {
         return program;
     }
 
+    public boolean compareNextTokens(TokenType... type) {
+        for (TokenType t : type) {
+            advance();
+            if (currentToken.type() != t)
+                return false;
+        }
+        return true;
+    }
+
     public void validateClassLane() {
         //Class, Enum, Interface, Struct
         switch (currentToken.getValue()) {
@@ -87,9 +103,10 @@ public class Parser {
                 Class c = ClassBuilder.buildClass(this);
                 classes.add(c);
                 currentClass = c;
+                nextLine();
                 break;
             default:
-                new Error("Class-lane falsch");
+                new Error("Class-lane falsch " + currentToken.getDescription());
         }
     }
 
@@ -105,28 +122,28 @@ public class Parser {
     public void validateMethodLane() {
         advance();
         currentFunction = FunctionBuilder.buildFunction(this);
+        nextLine();
     }
 
     public void validateScopeLane() {
         advance();
         if (currentToken.type() == TokenType.KEYWORD) {
-            advance();
-            VariableBuilder.initializeVariable(this);
-        } else
+            switch (currentToken.type()) {
+                case NUMBER, FLOAT -> {
+                    advance();
+                    VariableBuilder.initializeVariable(this);
+                    nextLine();
+                }
+            }
+        } else if (next().type() == TokenType.O_ROUND_BRACKET) {
+            //Eine Methode aus dem standard package wird aufgerufen
+            nextLine();
+        } else if (next().type() == TokenType.DOT) {
+            //Eine Methode einer Klasse/eines Objektes wird aufgerufen
+            nextLine();
+        } else {
             VariableBuilder.assignVariable(this);
-    }
-
-    public boolean compareNextTokens(TokenType... type) {
-        for (TokenType t : type) {
-            advance();
-            if (currentToken.type() != t)
-                return false;
+            nextLine();
         }
-        return true;
     }
-
-    /*
-     *BUILD
-     */
-
 }
