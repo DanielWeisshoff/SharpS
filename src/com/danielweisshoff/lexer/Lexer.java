@@ -10,6 +10,7 @@ import java.util.HashMap;
  * 1-1  wird falsch gewertet
  *
  * lasttoken entfernen und ll(1) einführen
+ * Wenn der Text mit whitespace endet, crasht der Parser
  */
 public class Lexer {
 
@@ -197,7 +198,7 @@ public class Lexer {
         }
     }
 
-    /**
+    /*
      * Hier können alle Einzeltokens eingetragen werden
      */
     private void initializeSingleCharacterTokens() {
