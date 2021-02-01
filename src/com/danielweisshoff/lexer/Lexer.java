@@ -3,9 +3,6 @@ package com.danielweisshoff.lexer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/*TODO
- * - Wenn der Text mit whitespace endet, crasht der Parser
- */
 public class Lexer {
 
     public static String VERSION = "V 0.8.1";
@@ -106,7 +103,7 @@ public class Lexer {
         Token t = null;
         int whitespaceCount = 1;
         advance();
-        while (currentChar == ' ') {
+        while (currentChar == ' ' && charIndex < text.length()) {
             whitespaceCount++;
             advance();
         }
