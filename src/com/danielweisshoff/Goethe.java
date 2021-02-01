@@ -1,47 +1,56 @@
 package com.danielweisshoff;
 
 import com.danielweisshoff.lexer.Token;
+import com.danielweisshoff.logger.Log;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
 import java.util.Scanner;
 
 public class Goethe {
 
-    public static void writeToFile(String fileName, String filePath, String text) {
+    private static final File lexerPath = new File("src/com/danielweisshoff/lexer.txt");
+    private static final File programPath = new File("src/com/danielweisshoff/program.txt");
+    private static final File logPath = new File("src/com/danielweisshoff/log.txt");
+
+    public static String getProgram() {
+        StringBuilder program = new StringBuilder();
         try {
-            new File(filePath + "/" + fileName + ".txt");
-            FileWriter myWriter = new FileWriter(filePath + "/" + fileName + ".txt");
+            Scanner scanner = new Scanner(programPath).useDelimiter("(\\b|\\B)");
+            while (scanner.hasNext())
+                program.append(scanner.next());
+        } catch (Exception ignored) {
+
+        }
+        return program.toString();
+    }
+
+    public static void writeText(File file, String text, boolean append) {
+        try {
+            FileWriter myWriter = new FileWriter(file, append);
             myWriter.write(text);
             myWriter.close();
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            System.out.println(e.getLocalizedMessage());
         }
     }
 
-    public static void writeTokensToFile(List<Token> tokens) {
-
-        StringBuilder converted = new StringBuilder();
-
-        for (Token t : tokens)
-            converted.append(t.getDescription()).append("\n");
-        converted.append("ß");
-        Goethe.writeToFile("output",
-                "C:\\Users\\danie\\Desktop\\",
-                converted.toString());
-    }
-
-    public static String readFile() {
-        StringBuilder stringy = new StringBuilder();
-        try {
-            File myObj = new File("C:\\Users\\danie\\Desktop\\program.txt");
-            Scanner charScanner = new Scanner(myObj).useDelimiter("(\\b|\\B)");
-            while (charScanner.hasNext())
-                stringy.append(charScanner.next());
-        } catch (Exception pickachu) {
-            System.out.println("Failer");
+    public static void writeTokens(Token[] tokens) {
+        StringBuilder tokenStr = new StringBuilder();
+        for (Token t : tokens) {
+            tokenStr.append(t.getDescription());
+            tokenStr.append("\n");
         }
-        return stringy.toString();
+        writeText(lexerPath, tokenStr.toString(), false);
     }
+
+    public static void writeLog(Log l) {
+        writeText(logPath, l.getLogFormat(), true);
+    }
+
+    /*public File getFile(String totalPath) {
+        ClassLoader classLoader = getClass().getClassLoader();
+        return new File(classLoader.getResource(totalPath).getFile());
+    }*/
 }

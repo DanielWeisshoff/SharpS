@@ -18,7 +18,7 @@ public class Shell {
 
     public Shell() {
         System.out.println("Version 0.2");
-        validate(Goethe.readFile());
+        validate(Goethe.getProgram());
         /*
         String input = "";
         Scanner scanner = new Scanner(System.in);
@@ -37,6 +37,8 @@ public class Shell {
 
         Instant start = Instant.now();
         Token[] tokens = new Lexer(text).tokenizeText();
+        Goethe.writeTokens(tokens);
+
         Instant end = Instant.now();
         Logger.log("Lexer done in " + Duration.between(start, end).toMillis() + "ms");
 
