@@ -19,7 +19,7 @@ public class CallBuilder {
             if (!Parser.methods.containsKey(name))
                 new Error("Methode " + name + " existiert nicht");
 
-        Logger.log("Funktionaufruf " + name + " wurde erkannt");
+        Logger.log("Funktionsaufruf " + name + " wurde erkannt");
 
         CallNode call = new CallNode(name);
         return call;
