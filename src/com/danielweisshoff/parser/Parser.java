@@ -143,7 +143,8 @@ public class Parser {
     }
 
     public void validateMethodLane() {
-        currentFunction = FunctionBuilder.buildFunction(this);
+        if (currentToken.type() == TokenType.KEYWORD)
+            currentFunction = FunctionBuilder.buildFunction(this);
         nextLine();
     }
 
