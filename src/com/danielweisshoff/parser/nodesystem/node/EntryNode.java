@@ -32,7 +32,7 @@ public class EntryNode extends Node {
     @Override
     public Data<Integer> execute() {
         for (Node n : children) {
-            n.execute().print();
+            n.execute();
         }
         return new Data<>(1, DataType.INT);
     }
