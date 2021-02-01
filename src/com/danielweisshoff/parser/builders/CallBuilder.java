@@ -2,6 +2,7 @@ package com.danielweisshoff.parser.builders;
 
 import com.danielweisshoff.interpreter.builtin.BuiltInFunction;
 import com.danielweisshoff.lexer.TokenType;
+import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.Error;
 import com.danielweisshoff.parser.Parser;
 import com.danielweisshoff.parser.nodesystem.node.CallNode;
@@ -18,7 +19,7 @@ public class CallBuilder {
             if (!Parser.methods.containsKey(name))
                 new Error("Methode " + name + " existiert nicht");
 
-        System.out.println("Funktionaufruf " + name + " wurde erkannt");
+        Logger.log("Funktionaufruf " + name + " wurde erkannt");
 
         CallNode call = new CallNode(name);
         return call;

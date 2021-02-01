@@ -1,6 +1,7 @@
 package com.danielweisshoff.parser.builders;
 
 import com.danielweisshoff.lexer.TokenType;
+import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.Error;
 import com.danielweisshoff.parser.Parser;
 import com.danielweisshoff.parser.container.Function;
@@ -30,7 +31,7 @@ public class FunctionBuilder {
 
         EntryNode function = new EntryNode(functionName);
 
-        System.out.println("Funktion '" + functionName + "' erkannt ");
+        Logger.log("Funktion '" + functionName + "' erkannt ");
 
         //Eintragen einer normalen Funktion
         Function f = new Function(function);
@@ -47,7 +48,7 @@ public class FunctionBuilder {
 
         EntryNode functionRoot = new EntryNode(functionName);
 
-        System.out.println("Konstruktor '" + functionName + "' erkannt ");
+        Logger.log("Konstruktor '" + functionName + "' erkannt ");
 
         return functionRoot;
     }
@@ -66,7 +67,7 @@ public class FunctionBuilder {
 
         EntryNode functionRoot = new EntryNode(functionName);
         p.currentClass.addEntry(functionRoot);
-        System.out.println("Entry '" + functionName + "' erkannt");
+        Logger.log("Entry '" + functionName + "' erkannt");
 
         return functionRoot;
     }

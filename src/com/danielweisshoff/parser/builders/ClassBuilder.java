@@ -1,6 +1,7 @@
 package com.danielweisshoff.parser.builders;
 
 import com.danielweisshoff.lexer.TokenType;
+import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.Error;
 import com.danielweisshoff.parser.Parser;
 import com.danielweisshoff.parser.container.Class;
@@ -16,7 +17,7 @@ public class ClassBuilder {
             new Error("Methodenstruktur falsch");
         }
 
-        System.out.println("Klasse " + className + " erkannt");
+        Logger.log("Klasse " + className + " erkannt");
         return new Class(className);
     }
 }
