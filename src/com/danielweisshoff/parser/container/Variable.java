@@ -20,4 +20,8 @@ public class Variable {
     public String getName() {
         return name;
     }
+
+    public Data<?> getData() {
+        return data;
+    }
 }
