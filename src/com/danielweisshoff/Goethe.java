@@ -11,7 +11,8 @@ import java.util.Scanner;
 public class Goethe {
 
     private static final File lexerPath = new File("src/com/danielweisshoff/lexer.txt");
-    private static final File programPath = new File("src/com/danielweisshoff/program.txt");
+    //Läuft so nur unter Windows
+    private static final File programPath = new File("src/com/danielweisshoff/program.\u00df");
     private static final File logPath = new File("src/com/danielweisshoff/log.txt");
 
     public static String getProgram() {
@@ -20,8 +21,8 @@ public class Goethe {
             Scanner scanner = new Scanner(programPath).useDelimiter("(\\b|\\B)");
             while (scanner.hasNext())
                 program.append(scanner.next());
-        } catch (Exception ignored) {
-
+        } catch (Exception e) {
+            System.out.println(e.getLocalizedMessage());
         }
         return program.toString();
     }
