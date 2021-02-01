@@ -1,6 +1,7 @@
 package com.danielweisshoff.parser.nodesystem.node;
 
 import com.danielweisshoff.interpreter.builtin.BuiltInFunction;
+import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.Parser;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
@@ -27,10 +28,10 @@ public class CallNode extends Node {
 
         if (BuiltInFunction.builtInFunctions.containsKey(name)) {
             data = BuiltInFunction.builtInFunctions.get(name).call();
-            System.out.println("BuiltInFunktion " + name + " wird aufgerufen");
+            Logger.log("BuiltInFunktion " + name + " wird aufgerufen");
         } else if (Parser.methods.containsKey(name)) {
             data = Parser.methods.get(name).getNode().execute();
-            System.out.println("Funktion " + name + " wird aufgerufen");
+            Logger.log("Funktion " + name + " wird aufgerufen");
         }
 
         return data;
