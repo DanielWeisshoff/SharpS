@@ -6,6 +6,10 @@ import com.danielweisshoff.parser.nodesystem.DataType;
 
 import java.util.ArrayList;
 
+/**
+ * Forms an entry point for the program
+ * Executes all child nodes like a queue
+ */
 public class EntryNode extends Node {
 
     private final ArrayList<Node> children;

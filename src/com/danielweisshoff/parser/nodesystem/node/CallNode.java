@@ -5,6 +5,14 @@ import com.danielweisshoff.parser.Parser;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 
+/* TODO
+ * - Nachschauen ob Funktion existiert in FunctionBuilder verschieben
+ * - Nicht mehr namen, sondern ID benutzen
+ */
+
+/**
+ * Calls the defined function
+ */
 public class CallNode extends Node {
     private final String name;
 

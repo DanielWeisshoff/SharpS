@@ -3,6 +3,14 @@ package com.danielweisshoff.parser.nodesystem.node;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 
+/* TODO
+ * - In einzelne Nodes auslagern
+ */
+
+/**
+ * Compares the given Nodes
+ * returns 1 or 0
+ */
 public class EquationNode extends Node {
 
     private final Node left;

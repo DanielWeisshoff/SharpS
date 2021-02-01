@@ -4,6 +4,13 @@ import com.danielweisshoff.parser.Parser;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 
+/* TODO
+ *   - Sollte eventuell ID anstatt Name speichern
+ */
+
+/**
+ * Holds the name of a variable and returns the stored data
+ */
 public class VariableNode extends Node {
 
     private final String name;

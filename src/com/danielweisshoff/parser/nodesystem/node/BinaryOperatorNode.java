@@ -4,7 +4,14 @@ import com.danielweisshoff.parser.nodesystem.BinaryOperator;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 
+/* TODO
+ * - Funktionalität in 4 Nodes aufteilen
+ */
 
+/**
+ * Calculates the result of the two given Nodes.
+ * Is able to use the four basic operators
+ */
 public class BinaryOperatorNode extends Node {
 
     private final Node leftNode;

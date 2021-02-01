@@ -8,6 +8,9 @@ import com.danielweisshoff.parser.nodesystem.node.Node;
 
 import java.util.ArrayList;
 
+/* TODO
+ * - Evtl. Expression.java hier einfügen
+ */
 public class ExpressionBuilder {
 
     public static Node buildExpression(Parser p) {

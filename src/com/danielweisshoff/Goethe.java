@@ -8,6 +8,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
+/**
+ * Responsible for all file writing and reading
+ */
 public class Goethe {
 
     private static final File lexerPath = new File("src/com/danielweisshoff/lexer.txt");

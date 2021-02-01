@@ -4,6 +4,10 @@ package com.danielweisshoff.parser.nodesystem.node;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 
+/**
+ * The power of creation lies at our feet.
+ * The only thing holding you back is <i>imagination</i>
+ */
 public class Node {
 
     /*//Spezifiziert, welche/r Datentyp angenommen / ausgegeben wird

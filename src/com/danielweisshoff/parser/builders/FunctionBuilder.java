@@ -7,6 +7,13 @@ import com.danielweisshoff.parser.Parser;
 import com.danielweisshoff.parser.container.Function;
 import com.danielweisshoff.parser.nodesystem.node.EntryNode;
 
+/* TODO
+ * - Da Methoden unveränderbar sind und nicht erzeugt / gelöscht werden können,
+ *   sollten sie direkt mit IDs aufgerufen werden. Dazu wird hier eine ArrayList<String,int> angegeben um
+ *   eingegebene Methodennamen zu vergleichen und anschließend die daraus entstehende id anstatt des
+ *   Namens in der CallNode eintragen.
+ * - Nach bearbeitung die Todolist in VariableBuilder kopieren
+ */
 public class FunctionBuilder {
 
     public static EntryNode buildFunction(Parser p) {

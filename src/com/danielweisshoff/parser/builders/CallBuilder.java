@@ -7,6 +7,12 @@ import com.danielweisshoff.parser.Error;
 import com.danielweisshoff.parser.Parser;
 import com.danielweisshoff.parser.nodesystem.node.CallNode;
 
+/* TODO
+ * - Parameter sollen möglich sein
+ * - Es soll geschaut werden, ob die Parameter richtig sind
+ * - Falls der Rückgabewert gespeichert wird soll geschaut werden,
+ *   ob Rückgabe und Zieladresse vom gleichen Datentypen sind
+ */
 public class CallBuilder {
 
     public static CallNode buildCall(Parser p) {

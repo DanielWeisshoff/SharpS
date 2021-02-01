@@ -9,6 +9,16 @@ import com.danielweisshoff.parser.nodesystem.node.VariableNode;
 
 import java.util.ArrayList;
 
+/* TODO
+ * - Es gibt Expression und ExpressionBuilder. Beides ist nur zum aufbauen gedacht.
+ *   Brauch man nicht nur eine Datei? --> Alles in ExpressionBuilder lagern
+ * - RECHNEN MIT KLAMMERN
+ * - Rechnen mit unary soll einwandfrei funktionieren
+ */
+
+/**
+ * Builds an expression
+ */
 public class Expression {
 
     private final Token[] tokens;

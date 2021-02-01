@@ -23,6 +23,13 @@ import java.util.List;
  * - Entries können auch Namen haben
  * - Einen Weg finden, Methoden mit gleichen Namen aber unterschiedlichen Parametern zu speichern
  * - Dictionary<String,MethodGroup>
+ *
+ * - Alle Variablen werden schon bevor der Interpreter das Programm ausführt gespeichert. Stattdessen sollte
+ *   an der Stelle eine AssignNode eingetragen werden, da lokale Variablen während Laufzeit erstellt werden müssen
+ */
+
+/**
+ * Takes in tokens and converts them to a runnable AST
  */
 public class Parser {
 
