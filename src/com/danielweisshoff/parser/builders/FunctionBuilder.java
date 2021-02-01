@@ -28,8 +28,6 @@ public class FunctionBuilder {
         if (!p.compareNextTokens(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON))
             new Error("Falsches Format");
 
-        p.advance();
-
         EntryNode function = new EntryNode(functionName);
 
         System.out.println("Funktion '" + functionName + "' erkannt ");
@@ -46,8 +44,6 @@ public class FunctionBuilder {
 
         if (!p.compareNextTokens(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON))
             new Error("Falsches Format");
-
-        p.advance();
 
         EntryNode functionRoot = new EntryNode(functionName);
 
@@ -67,8 +63,6 @@ public class FunctionBuilder {
 
         if (!p.compareNextTokens(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON))
             new Error("Falsches Format");
-
-        p.advance();
 
         EntryNode functionRoot = new EntryNode(functionName);
         p.currentClass.addEntry(functionRoot);
