@@ -1,18 +1,16 @@
 package com.danielweisshoff.interpreter;
 
+import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.container.Program;
+import com.danielweisshoff.parser.nodesystem.Data;
 
-import java.util.*;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Scanner;
 
 
 public class Interpreter {
 
-    /*TODO
-     * - Anstatt Entrienodes sollte der Parser dem Interpreter alle Klassen als Array schicken,
-     * denn somit hat der Interpeter volle Kontrolle, denn die Entrypoints sind sowieso in
-     * den Klassen gespeichert
-     * - Alle Entries aus allen Klassen suchen
-     */
     private final Program program;
 
     public Interpreter(Program program) {
@@ -24,8 +22,17 @@ public class Interpreter {
         program.printEntries();
         Scanner scanner = new Scanner(System.in);
         System.out.print("\nselect: ");
+
+
         int input = scanner.nextInt();
-        program.getEntry(input).execute();
+
+        Instant start = Instant.now();
+        Logger.log("--->Starting program on entry " + input + "<---");
+        Data<?> errorCode = program.getEntry(input).execute();
+        Instant end = Instant.now();
+
+        Logger.log("Program finished in " + Duration.between(start, end).toMillis() + "ms");
+        Logger.log("Exited program with code " + errorCode.getData());
     }
 }
 

@@ -16,6 +16,6 @@ public class Node {
     }
 
     public Data<?> execute() {
-        return new Data<Integer>(1, DataType.INT);
+        return new Data<>(1, DataType.INT);
     }
 }

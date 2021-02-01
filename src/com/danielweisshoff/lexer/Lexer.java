@@ -9,16 +9,17 @@ import java.util.HashMap;
  * Problem mit Unaryoperator
  * 1-1  wird falsch gewertet
  *
- * lasttoken entfernen und ll(1) einf?hren
+ * lasttoken entfernen und ll(1) einf�hren
+ * Wenn der Text mit whitespace endet, crasht der Parser
  */
 public class Lexer {
 
     public static String VERSION = "V 0.8";
     private final String text;
-    private int charIndex = -1;
-    private char currentChar;
     private final HashMap<Character, TokenType> tokenMap = new HashMap<>();
     private final String[] keywords = new String[]{"int", "con", "fnc", "ntr", "cls"};
+    private int charIndex = -1;
+    private char currentChar;
     private Token lastToken;
 
     public Lexer(String text) {
@@ -197,8 +198,9 @@ public class Lexer {
         }
     }
 
-    /**
-     * Hier k?nnen alle Einzeltokens eingetragen werden
+
+    /*
+     * Hier können alle Einzeltokens eingetragen werden
      */
     private void initializeSingleCharacterTokens() {
         tokenMap.put('+', TokenType.ADD);
