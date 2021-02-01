@@ -1,5 +1,6 @@
 package com.danielweisshoff.parser;
 
+import com.danielweisshoff.interpreter.builtin.BuiltInFunction;
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.parser.builders.CallBuilder;
@@ -35,12 +36,12 @@ public class Parser {
     private final List<EntryNode> entries = new ArrayList<>();
 
     public Token currentToken;
-    private int position = -1;
-
     public Class currentClass = null;
     public EntryNode currentFunction = null;
+    private int position = -1;
 
     public Parser(Token[] tokens) {
+        BuiltInFunction.registerAll();
         this.tokens = tokens;
         advance();
     }
@@ -148,9 +149,12 @@ public class Parser {
         } else if (currentToken.type() == TokenType.IDENTIFIER && next().type() == TokenType.ASSIGN) {
             VariableBuilder.assignVariable(this);
             nextLine();
-        } else {
+        } else if (currentToken.type() == TokenType.IDENTIFIER) {
             CallNode n = CallBuilder.buildCall(this);
             currentFunction.add(n);
+            nextLine();
+        } else {
+            //Fehlende Syntax erstmal überspringen
             nextLine();
         }
     }
