@@ -10,7 +10,7 @@ import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.Node;
 
 /* TODO
- * - Anstatt direkt Variablen zu erstellen, sollten Assignnodes erstellt werden,
+ * - Anstatt direkt Variablen zu erstellen, sollten Assign-nodes erstellt werden,
  *   welche erst bei Programmausführung Variablen anlegen
  */
 public class VariableBuilder {

@@ -1,5 +1,6 @@
 package com.danielweisshoff.parser.nodesystem.node;
 
+import com.danielweisshoff.interpreter.builtin.BuiltInVariable;
 import com.danielweisshoff.parser.Parser;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
@@ -25,6 +26,8 @@ public class VariableNode extends Node {
         Data<?> data = new Data<>(null, DataType.NULL);
         if (Parser.variables.containsKey(name)) {
             data = Parser.variables.get(name);
+        }else if(BuiltInVariable.builtInVariables.containsKey(name)){
+            data = BuiltInVariable.builtInVariables.get(name).getData();
         }
         return data;
     }

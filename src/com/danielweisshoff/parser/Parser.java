@@ -1,6 +1,7 @@
 package com.danielweisshoff.parser;
 
 import com.danielweisshoff.interpreter.builtin.BuiltInFunction;
+import com.danielweisshoff.interpreter.builtin.BuiltInVariable;
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.parser.builders.CallBuilder;
@@ -50,6 +51,8 @@ public class Parser {
 
     public Parser(Token[] tokens) {
         BuiltInFunction.registerAll();
+        BuiltInVariable.registerAll();
+
         this.tokens = tokens;
         advance();
     }
