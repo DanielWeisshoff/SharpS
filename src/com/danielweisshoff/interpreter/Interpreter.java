@@ -2,7 +2,7 @@ package com.danielweisshoff.interpreter;
 
 import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.container.Program;
-import com.danielweisshoff.parser.nodesystem.Data;
+import com.danielweisshoff.interpreter.nodesystem.Data;
 
 import java.time.Duration;
 import java.time.Instant;

@@ -1,8 +1,9 @@
-package com.danielweisshoff.parser.nodesystem.node;
+package com.danielweisshoff.interpreter.nodesystem.node;
 
-import com.danielweisshoff.parser.nodesystem.BinaryOperator;
-import com.danielweisshoff.parser.nodesystem.Data;
-import com.danielweisshoff.parser.nodesystem.DataType;
+import com.danielweisshoff.interpreter.nodesystem.BinaryOperator;
+import com.danielweisshoff.interpreter.nodesystem.Data;
+import com.danielweisshoff.interpreter.nodesystem.DataType;
+import com.danielweisshoff.logger.Logger;
 
 /* TODO
  * - Funktionalität in 4 Nodes aufteilen
@@ -28,8 +29,10 @@ public class BinaryOperatorNode extends Node {
 
     @Override
     public Data<Double> execute() {
+        Logger.log("ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ");
         if (result == null)
             calculateResult();
+        System.out.println(result);
         return result;
     }
 

@@ -1,4 +1,4 @@
-package com.danielweisshoff.parser.nodesystem;
+package com.danielweisshoff.interpreter.nodesystem;
 
 /**
  * Storage for all datatypes.

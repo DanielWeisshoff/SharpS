@@ -1,8 +1,8 @@
-package com.danielweisshoff.parser.nodesystem.node;
+package com.danielweisshoff.interpreter.nodesystem.node;
 
 
-import com.danielweisshoff.parser.nodesystem.Data;
-import com.danielweisshoff.parser.nodesystem.DataType;
+import com.danielweisshoff.interpreter.nodesystem.Data;
+import com.danielweisshoff.interpreter.nodesystem.DataType;
 
 import java.util.ArrayList;
 

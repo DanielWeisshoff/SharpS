@@ -1,8 +1,8 @@
 package com.danielweisshoff.interpreter.builtin.functions;
 
 import com.danielweisshoff.interpreter.builtin.BuiltInFunction;
-import com.danielweisshoff.parser.nodesystem.Data;
-import com.danielweisshoff.parser.nodesystem.DataType;
+import com.danielweisshoff.interpreter.nodesystem.Data;
+import com.danielweisshoff.interpreter.nodesystem.DataType;
 
 public class printFunction extends BuiltInFunction {
 

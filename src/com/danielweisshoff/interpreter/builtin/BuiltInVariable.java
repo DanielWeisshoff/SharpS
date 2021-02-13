@@ -1,8 +1,8 @@
 package com.danielweisshoff.interpreter.builtin;
 
 import com.danielweisshoff.parser.container.Variable;
-import com.danielweisshoff.parser.nodesystem.Data;
-import com.danielweisshoff.parser.nodesystem.DataType;
+import com.danielweisshoff.interpreter.nodesystem.Data;
+import com.danielweisshoff.interpreter.nodesystem.DataType;
 
 import java.util.HashMap;
 
