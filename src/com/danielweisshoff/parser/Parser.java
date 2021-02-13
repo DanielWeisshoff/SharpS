@@ -26,6 +26,7 @@ import java.util.List;
  *
  * - Alle Variablen werden schon bevor der Interpreter das Programm ausführt gespeichert. Stattdessen sollte
  *   an der Stelle eine AssignNode eingetragen werden, da lokale Variablen während Laufzeit erstellt werden müssen
+ * - TRUE,FALSE als standardwerte einfügen
  */
 
 /**
@@ -128,7 +129,8 @@ public class Parser {
                 nextLine();
                 break;
             default:
-                new Error("Class-lane falsch " + currentToken.getDescription());
+                nextLine();
+                // new Error("Class-lane falsch " + currentToken.getDescription());
         }
     }
 
