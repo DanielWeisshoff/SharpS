@@ -1,13 +1,12 @@
 package com.danielweisshoff.parser.builders;
 
+import com.danielweisshoff.interpreter.nodesystem.Data;
+import com.danielweisshoff.interpreter.nodesystem.node.InitNode;
+import com.danielweisshoff.interpreter.nodesystem.node.Node;
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.Error;
 import com.danielweisshoff.parser.Parser;
-import com.danielweisshoff.parser.container.Variable;
-import com.danielweisshoff.parser.nodesystem.Data;
-import com.danielweisshoff.parser.nodesystem.DataType;
-import com.danielweisshoff.parser.nodesystem.node.Node;
 
 /* TODO
  * - Anstatt direkt Variablen zu erstellen, sollten Assign-nodes erstellt werden,
@@ -15,30 +14,29 @@ import com.danielweisshoff.parser.nodesystem.node.Node;
  */
 public class VariableBuilder {
 
-    public static Variable initializeVariable(Parser p) {
+    public static Node initializeVariable(Parser p) {
         if (p.currentToken.type() != TokenType.IDENTIFIER)
             new Error("Fehler beim Initialisieren einer Variable");
         String varName = p.currentToken.getValue();
 
         p.advance();
 
-        Variable v;
+        Node n;
         if (p.currentToken.type() == TokenType.ASSIGN) {
-            v = declareVariable(varName, p);
+            n = initializeVariable(varName, p);
             Logger.log("Variable initialisiert");
         } else {
-            v = new Variable(varName, new Data<>(0, DataType.DOUBLE));
+            n = new InitNode(varName);
             Logger.log("Variable deklariert");
         }
-        return v;
+        return n;
     }
 
-    private static Variable declareVariable(String varName, Parser p) {
+    private static Node initializeVariable(String varName, Parser p) {
         p.advance();
         Node expr = ExpressionBuilder.buildExpression(p);
-        Data<?> result = expr.execute();
 
-        return new Variable(varName, result);
+        return new InitNode(varName, expr);
     }
 
     public static void assignVariable(Parser p) {

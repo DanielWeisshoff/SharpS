@@ -2,6 +2,9 @@ package com.danielweisshoff.parser;
 
 import com.danielweisshoff.interpreter.builtin.BuiltInFunction;
 import com.danielweisshoff.interpreter.builtin.BuiltInVariable;
+import com.danielweisshoff.interpreter.nodesystem.Data;
+import com.danielweisshoff.interpreter.nodesystem.node.CallNode;
+import com.danielweisshoff.interpreter.nodesystem.node.EntryNode;
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.parser.builders.CallBuilder;
@@ -11,23 +14,17 @@ import com.danielweisshoff.parser.builders.VariableBuilder;
 import com.danielweisshoff.parser.container.Class;
 import com.danielweisshoff.parser.container.Function;
 import com.danielweisshoff.parser.container.Program;
-import com.danielweisshoff.parser.container.Variable;
-import com.danielweisshoff.parser.nodesystem.Data;
-import com.danielweisshoff.parser.nodesystem.node.CallNode;
-import com.danielweisshoff.parser.nodesystem.node.EntryNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 /*TODO
- * - Entries können auch Namen haben
  * - Einen Weg finden, Methoden mit gleichen Namen aber unterschiedlichen Parametern zu speichern
  * - Dictionary<String,MethodGroup>
  *
  * - Alle Variablen werden schon bevor der Interpreter das Programm ausführt gespeichert. Stattdessen sollte
  *   an der Stelle eine AssignNode eingetragen werden, da lokale Variablen während Laufzeit erstellt werden müssen
- * - TRUE,FALSE als standardwerte einfügen
  */
 
 /**
@@ -140,8 +137,8 @@ public class Parser {
     public void validateAttributeLane() {
         if (currentToken.type() == TokenType.KEYWORD) {
             advance();
-            Variable v = VariableBuilder.initializeVariable(this);
-            variables.put(v.getName(), v.getData());
+            currentFunction.add(VariableBuilder.initializeVariable(this));
+            //variables.put(v.getName(), v.getData());
         } else
             VariableBuilder.assignVariable(this);
         nextLine();
@@ -156,8 +153,8 @@ public class Parser {
     public void validateScopeLane() {
         if (currentToken.type() == TokenType.KEYWORD) {
             advance();
-            Variable v = VariableBuilder.initializeVariable(this);
-            variables.put(v.getName(), v.getData());
+            currentFunction.add(VariableBuilder.initializeVariable(this));
+            //variables.put(v.getName(), v.getData());
             nextLine();
         } else if (currentToken.type() == TokenType.IDENTIFIER && next().type() == TokenType.ASSIGN) {
             VariableBuilder.assignVariable(this);
