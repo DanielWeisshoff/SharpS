@@ -27,8 +27,7 @@ public class ExpressionBuilder {
                 p.advance();
             } else break;
         }
-        Token[] arr = new Token[buffer.size()];
-        arr = buffer.toArray(arr);
+        Token[] arr = convertToUnary(buffer);
 
         Node calculation;
         if (arr.length == 1)
@@ -46,5 +45,22 @@ public class ExpressionBuilder {
             Logger.log("Rechnung erstellt");
 
         return calculation;
+    }
+
+    private static Token[] convertToUnary(ArrayList<Token> tokens) {
+        if (tokens.get(0).type() == TokenType.SUB) {
+            tokens.get(1).setValue("-" + tokens.get(1).getValue());
+            tokens.remove(0);
+        }
+
+        for (int i = 0; i < tokens.size() - 1; i++) {
+            if (tokens.get(i).isOP() && tokens.get(i + 1).type() == TokenType.SUB) {
+                tokens.get(i + 2).setValue("-" + tokens.get(i + 2).getValue());
+                tokens.remove(i + 1);
+            }
+        }
+
+        Token[] arr = new Token[tokens.size()];
+        return tokens.toArray(arr);
     }
 }
