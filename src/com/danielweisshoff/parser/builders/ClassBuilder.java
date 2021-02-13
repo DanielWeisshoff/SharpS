@@ -13,7 +13,7 @@ public class ClassBuilder {
             new Error("Klassenname fehlt");
         String className = p.currentToken.getValue();
 
-        if (!p.compareNextTokens(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON)) {
+        if (!p.compareNextTokens(TokenType.COLON)) {
             new Error("Methodenstruktur falsch");
         }
 
