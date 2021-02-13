@@ -1,9 +1,9 @@
 package com.danielweisshoff.interpreter.nodesystem.node;
 
 import com.danielweisshoff.interpreter.builtin.BuiltInVariable;
-import com.danielweisshoff.parser.Parser;
 import com.danielweisshoff.interpreter.nodesystem.Data;
 import com.danielweisshoff.interpreter.nodesystem.DataType;
+import com.danielweisshoff.parser.Parser;
 
 /* TODO
  *   - Sollte eventuell ID anstatt Name speichern

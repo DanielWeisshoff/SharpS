@@ -1,8 +1,8 @@
 package com.danielweisshoff.interpreter.nodesystem.node;
 
-import com.danielweisshoff.parser.container.Variable;
 import com.danielweisshoff.interpreter.nodesystem.Data;
 import com.danielweisshoff.interpreter.nodesystem.DataType;
+import com.danielweisshoff.parser.container.Variable;
 
 /*TODO
  * - Soll dafür da sein während der Laufzeit Variablen im aktuellen Scope zu erstellen / verändern

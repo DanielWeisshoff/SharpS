@@ -1,10 +1,10 @@
 package com.danielweisshoff.interpreter.nodesystem.node;
 
 import com.danielweisshoff.interpreter.builtin.BuiltInFunction;
-import com.danielweisshoff.logger.Logger;
-import com.danielweisshoff.parser.Parser;
 import com.danielweisshoff.interpreter.nodesystem.Data;
 import com.danielweisshoff.interpreter.nodesystem.DataType;
+import com.danielweisshoff.logger.Logger;
+import com.danielweisshoff.parser.Parser;
 
 /* TODO
  * - Nachschauen ob Funktion existiert in FunctionBuilder verschieben
