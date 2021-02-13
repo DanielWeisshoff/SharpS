@@ -1,11 +1,11 @@
 package com.danielweisshoff.parser.builders;
 
 import com.danielweisshoff.interpreter.builtin.BuiltInFunction;
+import com.danielweisshoff.interpreter.nodesystem.node.CallNode;
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.Error;
 import com.danielweisshoff.parser.Parser;
-import com.danielweisshoff.parser.nodesystem.node.CallNode;
 
 /* TODO
  * - Parameter sollen möglich sein

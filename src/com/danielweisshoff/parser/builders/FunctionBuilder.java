@@ -1,11 +1,11 @@
 package com.danielweisshoff.parser.builders;
 
+import com.danielweisshoff.interpreter.nodesystem.node.EntryNode;
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.Error;
 import com.danielweisshoff.parser.Parser;
 import com.danielweisshoff.parser.container.Function;
-import com.danielweisshoff.parser.nodesystem.node.EntryNode;
 
 /* TODO
  * - Da Methoden unveränderbar sind und nicht erzeugt / gelöscht werden können,

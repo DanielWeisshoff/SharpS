@@ -1,15 +1,18 @@
 package com.danielweisshoff.parser.builders;
 
+import com.danielweisshoff.interpreter.nodesystem.node.Node;
+import com.danielweisshoff.interpreter.nodesystem.node.NumberNode;
+import com.danielweisshoff.interpreter.nodesystem.node.VariableNode;
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
-import com.danielweisshoff.parser.Expression;
+import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.Parser;
-import com.danielweisshoff.parser.nodesystem.node.Node;
+import com.danielweisshoff.parser.expression.Expression;
 
 import java.util.ArrayList;
 
 /* TODO
- * - Evtl. Expression.java hier einfügen
+ * - Bei einer Equatipn wird rekusiv aufgerufen -> bessere Lösung finden
  */
 public class ExpressionBuilder {
 
@@ -26,15 +29,22 @@ public class ExpressionBuilder {
         }
         Token[] arr = new Token[buffer.size()];
         arr = buffer.toArray(arr);
-        Node calc = new Expression(arr).toAST();
+
+        Node calculation;
+        if (arr.length == 1)
+            if (arr[0].isNumeric())
+                calculation = new NumberNode(Double.parseDouble(arr[0].getValue()));
+            else
+                calculation = new VariableNode(arr[0].getValue());
+        else
+            calculation = new Expression(arr).toAST();
+
+
         if (p.currentToken.type() == TokenType.COMPARISON)
-            calc = EquationBuilder.buildEquation(p, calc);
+            calculation = EquationBuilder.buildEquation(p, calculation);
+        else
+            Logger.log("Rechnung erstellt");
 
-
-        //System.out.println("Rechnung erstellt");
-
-        //Nur temporär
-        //Wird auch beim rechten Teil einer gleichung ausgeführt (nicht erwünscht)
-        return calc;
+        return calculation;
     }
 }

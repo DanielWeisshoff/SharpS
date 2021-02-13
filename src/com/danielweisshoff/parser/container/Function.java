@@ -1,6 +1,6 @@
 package com.danielweisshoff.parser.container;
 
-import com.danielweisshoff.parser.nodesystem.node.EntryNode;
+import com.danielweisshoff.interpreter.nodesystem.node.EntryNode;
 
 public class Function {
 
