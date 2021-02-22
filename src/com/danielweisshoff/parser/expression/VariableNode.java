@@ -1,11 +1,10 @@
 package com.danielweisshoff.parser.expression;
 
-import com.danielweisshoff.interpreter.builtin.BuiltInVariable;
 import com.danielweisshoff.interpreter.nodesystem.node.Node;
-import com.danielweisshoff.parser.Parser;
 
 /* TODO
  *   - Sollte eventuell ID anstatt Name speichern
+ *   - Execute ist hier unnötig -> Umweg finden
  */
 
 /**
@@ -21,13 +20,16 @@ public class VariableNode extends ExpressionNode {
 
     @Override
     public double execute() {
-        double data = 0;
+       /* double data = 0;
         if (Parser.variables.containsKey(name)) {
             data = Parser.variables.get(name).toDouble();
         } else if (BuiltInVariable.builtInVariables.containsKey(name)) {
             data = BuiltInVariable.builtInVariables.get(name).getData().toDouble();
         }
-        return data;
+        System.out.println("data: " + data);
+        return data;*/
+
+        return 0;
     }
 
     @Override
