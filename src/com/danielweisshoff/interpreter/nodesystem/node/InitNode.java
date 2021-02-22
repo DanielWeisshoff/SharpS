@@ -1,10 +1,12 @@
 package com.danielweisshoff.interpreter.nodesystem.node;
 
-
 import com.danielweisshoff.interpreter.nodesystem.Data;
 import com.danielweisshoff.interpreter.nodesystem.DataType;
 import com.danielweisshoff.parser.Parser;
 
+/**
+ * Initializes a variable
+ */
 public class InitNode extends Node {
     private final String name;
     private final Node expression;
