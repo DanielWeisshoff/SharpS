@@ -14,10 +14,10 @@ public class Log {
     public Log(String message) {
         this.message = message;
 
-        dateTime = buildDateTime();
+        dateTime = getCurrentTimeStamp();
     }
 
-    private String buildDateTime() {
+    private String getCurrentTimeStamp() {
 
         String dateStr = buildDateString();
         String timeStr = buildTimeString();
