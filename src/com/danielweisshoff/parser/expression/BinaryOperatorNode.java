@@ -1,17 +1,12 @@
 package com.danielweisshoff.parser.expression;
 
-import com.danielweisshoff.interpreter.nodesystem.BinaryOperator;
-import com.danielweisshoff.interpreter.nodesystem.node.Node;
+import com.danielweisshoff.interpreter.nodesystem.node.*;
 import com.danielweisshoff.lexer.Token;
 
 /*TODO
  * - execute kann rausgenommen werden, da die Klasse nur zum aufbauen des AST'S ist
  */
 
-/**
- * Calculates the result of the two given Nodes.
- * Is able to use the four basic operators
- */
 class BinaryOperatorNode extends ExpressionNode {
 
     private ExpressionNode leftNode;
@@ -30,7 +25,12 @@ class BinaryOperatorNode extends ExpressionNode {
     }
 
     public Node toNode() {
-        return new com.danielweisshoff.interpreter.nodesystem.node.BinaryOperatorNode(leftNode.toNode(), operator, rightNode.toNode());
+        return switch (operator) {
+            case ADD -> new BinaryAddNode(leftNode.toNode(), rightNode.toNode());
+            case SUB -> new BinarySubNode(leftNode.toNode(), rightNode.toNode());
+            case MUL -> new BinaryMulNode(leftNode.toNode(), rightNode.toNode());
+            case DIV -> new BinaryDivNode(leftNode.toNode(), rightNode.toNode());
+        };
     }
 
     private void toAST(Token[] tokens) {
