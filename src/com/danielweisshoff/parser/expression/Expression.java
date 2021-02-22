@@ -4,8 +4,7 @@ import com.danielweisshoff.interpreter.nodesystem.node.Node;
 import com.danielweisshoff.lexer.Token;
 
 /* TODO
- * - RECHNEN MIT KLAMMERN
- * - Rechnen mit unary soll funktionieren
+ *  - RECHNEN MIT KLAMMERN
  */
 
 /**
@@ -21,9 +20,9 @@ public class Expression {
 
     public Node toAST() {
         var root = new BinaryOperatorNode(tokens);
-        System.out.println(root.execute());
+        root.execute();
 
-        //Optimierung
+        //Hier Optimierung
 
         //In Interpreter-Nodes umwandeln
         return root.toNode();
