@@ -6,9 +6,6 @@ import com.danielweisshoff.parser.container.Variable;
 
 import java.util.HashMap;
 
-/*TODO
- * - testen ob die variablen nutzbar sind
- */
 public abstract class BuiltInVariable {
 
     public static HashMap<String, Variable> builtInVariables = new HashMap<>();
