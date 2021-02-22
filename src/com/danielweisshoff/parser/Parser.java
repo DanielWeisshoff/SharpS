@@ -22,9 +22,8 @@ import java.util.List;
 /*TODO
  * - Einen Weg finden, Methoden mit gleichen Namen aber unterschiedlichen Parametern zu speichern
  * - Dictionary<String,MethodGroup>
- *
  * - Alle Variablen werden schon bevor der Interpreter das Programm ausführt gespeichert. Stattdessen sollte
- *   an der Stelle eine AssignNode eingetragen werden, da lokale Variablen während Laufzeit erstellt werden müssen
+ *    an der Stelle eine AssignNode eingetragen werden, da lokale Variablen während Laufzeit erstellt werden müssen
  */
 
 /**
@@ -39,7 +38,6 @@ public class Parser {
 
     private final Token[] tokens;
     private final List<Class> classes = new ArrayList<>();
-    private final List<EntryNode> entries = new ArrayList<>();
 
     public Token currentToken;
     public Class currentClass = null;
@@ -138,7 +136,6 @@ public class Parser {
         if (currentToken.type() == TokenType.KEYWORD) {
             advance();
             currentFunction.add(VariableBuilder.initializeVariable(this));
-            //variables.put(v.getName(), v.getData());
         } else
             VariableBuilder.assignVariable(this);
         nextLine();
@@ -154,7 +151,6 @@ public class Parser {
         if (currentToken.type() == TokenType.KEYWORD) {
             advance();
             currentFunction.add(VariableBuilder.initializeVariable(this));
-            //variables.put(v.getName(), v.getData());
             nextLine();
         } else if (currentToken.type() == TokenType.IDENTIFIER && next().type() == TokenType.ASSIGN) {
             VariableBuilder.assignVariable(this);
