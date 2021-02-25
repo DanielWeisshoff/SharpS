@@ -5,9 +5,9 @@ import com.danielweisshoff.logger.Logger;
 /**
  * Logs the error message and exits the program
  */
-public class Error {
+public class PError {
 
-    public Error(String errorMessage) {
+    public PError(String errorMessage) {
         System.out.println(errorMessage);
         Logger.log(errorMessage);
         System.exit(1);
