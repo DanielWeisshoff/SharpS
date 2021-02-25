@@ -3,10 +3,6 @@ package com.danielweisshoff.parser.expression;
 import com.danielweisshoff.interpreter.nodesystem.node.Node;
 import com.danielweisshoff.lexer.Token;
 
-/* TODO
- *  - RECHNEN MIT KLAMMERN
- */
-
 /**
  * Builds an expression
  */
