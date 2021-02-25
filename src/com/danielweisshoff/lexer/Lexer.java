@@ -3,27 +3,18 @@ package com.danielweisshoff.lexer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/*TODO
- * Wenn der Text mit Leerzeichen endet, gibt es Fehler
- *
- * Problem mit Unaryoperator
- * 1-1  wird falsch gewertet
- *
- * lasttoken entfernen und ll(1) einf?hren
- */
 public class Lexer {
 
-    public static String VERSION = "V 0.8";
+    public static String VERSION = "V 0.8.1";
     private final String text;
-    private int charIndex = -1;
-    private char currentChar;
     private final HashMap<Character, TokenType> tokenMap = new HashMap<>();
     private final String[] keywords = new String[]{"int", "con", "fnc", "ntr", "cls"};
-    private Token lastToken;
+    private int charIndex = -1;
+    private char currentChar;
 
     public Lexer(String text) {
         this.text = text;
-        initializeSingleCharacterTokens();
+        initializeSingleCharTokens();
         advance();
     }
 
@@ -56,7 +47,6 @@ public class Lexer {
                     case '<' -> tokens.add(buildComparisonToken('<'));
                     case '>' -> tokens.add(buildComparisonToken('>'));
                     case '!' -> tokens.add(buildComparisonToken('!'));
-                    case '-' -> tokens.add(buildUnaryNumberToken());
                     default -> advance();
                 }
             }
@@ -86,12 +76,10 @@ public class Lexer {
                     case '<' -> token = buildComparisonToken('<');
                     case '>' -> token = buildComparisonToken('>');
                     case '!' -> token = buildComparisonToken('!');
-                    case '-' -> token = buildUnaryNumberToken();
                     default -> advance();
                 }
             }
         }
-        lastToken = token;
         return token;
     }
 
@@ -115,7 +103,7 @@ public class Lexer {
         Token t = null;
         int whitespaceCount = 1;
         advance();
-        while (currentChar == ' ') {
+        while (currentChar == ' ' && charIndex < text.length()) {
             whitespaceCount++;
             advance();
         }
@@ -141,24 +129,6 @@ public class Lexer {
                     text.substring(start, charIndex));
         return new Token(TokenType.NUMBER,
                 text.substring(start, charIndex));
-    }
-
-    private Token buildUnaryNumberToken() {
-        boolean canBeUnary = false;
-        if (lastToken == null)
-            canBeUnary = true;
-        else if (lastToken.isOP())
-            canBeUnary = true;
-
-        if (canBeUnary) {
-            advance();
-            if (Character.isDigit(currentChar)) {
-                Token t = buildNumberToken();
-                return new Token(t.type(), "" + -Double.parseDouble(t.getValue()));
-            }
-        }
-        advance();
-        return new Token(TokenType.SUB, "");
     }
 
     private Token buildComparisonToken(char c) {
@@ -197,11 +167,12 @@ public class Lexer {
         }
     }
 
-    /**
-     * Hier k?nnen alle Einzeltokens eingetragen werden
+    /*
+     * Hier k�nnen alle Einzeltokens eingetragen werden
      */
-    private void initializeSingleCharacterTokens() {
+    private void initializeSingleCharTokens() {
         tokenMap.put('+', TokenType.ADD);
+        tokenMap.put('-', TokenType.SUB);
         tokenMap.put('*', TokenType.MUL);
         tokenMap.put('/', TokenType.DIV);
         tokenMap.put('(', TokenType.O_ROUND_BRACKET);

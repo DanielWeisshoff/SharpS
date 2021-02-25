@@ -1,7 +1,12 @@
-package com.danielweisshoff.parser.nodesystem;
+package com.danielweisshoff.interpreter.nodesystem;
 
+/**
+ * Storage for all datatypes.
+ * Is used to receive and send data between Nodes
+ *
+ * @param <T> Any datatype
+ */
 public class Data<T extends Number> {
-
 
     private final DataType dataType;
     private final T data;

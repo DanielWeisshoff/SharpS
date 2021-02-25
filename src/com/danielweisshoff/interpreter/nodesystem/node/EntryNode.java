@@ -1,11 +1,15 @@
-package com.danielweisshoff.parser.nodesystem.node;
+package com.danielweisshoff.interpreter.nodesystem.node;
 
 
-import com.danielweisshoff.parser.nodesystem.Data;
-import com.danielweisshoff.parser.nodesystem.DataType;
+import com.danielweisshoff.interpreter.nodesystem.Data;
+import com.danielweisshoff.interpreter.nodesystem.DataType;
 
 import java.util.ArrayList;
 
+/**
+ * Forms an entry point for the program
+ * Executes all child nodes like a queue
+ */
 public class EntryNode extends Node {
 
     private final ArrayList<Node> children;
@@ -28,7 +32,7 @@ public class EntryNode extends Node {
     @Override
     public Data<Integer> execute() {
         for (Node n : children) {
-            n.execute().print();
+            n.execute();
         }
         return new Data<>(1, DataType.INT);
     }

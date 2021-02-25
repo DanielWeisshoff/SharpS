@@ -1,6 +1,6 @@
 package com.danielweisshoff.parser.container;
 
-import com.danielweisshoff.parser.nodesystem.Data;
+import com.danielweisshoff.interpreter.nodesystem.Data;
 
 public class Variable {
 
@@ -19,5 +19,9 @@ public class Variable {
 
     public String getName() {
         return name;
+    }
+
+    public Data<?> getData() {
+        return data;
     }
 }
