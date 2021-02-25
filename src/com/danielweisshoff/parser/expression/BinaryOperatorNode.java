@@ -2,6 +2,7 @@ package com.danielweisshoff.parser.expression;
 
 import com.danielweisshoff.interpreter.nodesystem.node.*;
 import com.danielweisshoff.lexer.Token;
+import com.danielweisshoff.lexer.TokenType;
 
 /*TODO
  * - execute kann rausgenommen werden, da die Klasse nur zum aufbauen des AST'S ist
@@ -34,16 +35,26 @@ class BinaryOperatorNode extends ExpressionNode {
     }
 
     private void toAST(Token[] tokens) {
-        int firstDotOP = 0;
+        int inClamp = 0;
+        int firstDotOP = -1;
+
         for (int i = 0; i < tokens.length; i++) {
-            if (tokens[i].isDotOP()) {
+            if (tokens[i].type() == TokenType.O_ROUND_BRACKET)
+                inClamp++;
+            else if (tokens[i].type() == TokenType.C_ROUND_BRACKET)
+                inClamp--;
+            else if (tokens[i].isDotOP() && inClamp == 0)
                 firstDotOP = i;
-            } else if (tokens[i].isLineOP()) {
+            else if (tokens[i].isLineOP() && inClamp == 0) {
                 split(tokens, i);
                 return;
             }
         }
-        split(tokens, firstDotOP);
+        if (firstDotOP != -1)
+            split(tokens, firstDotOP);
+        else if (tokens.length > 1)
+            //Wenn Operator gefunden wurde, ist die gesamte Rechnung eingeklammert
+            unclamp(tokens);
     }
 
     private void split(Token[] tokens, int pos) {
@@ -77,6 +88,13 @@ class BinaryOperatorNode extends ExpressionNode {
             }
         } else
             rightNode = new BinaryOperatorNode(right);
+    }
+
+    private void unclamp(Token[] tokens) {
+        Token[] newTokens = new Token[tokens.length - 2];
+        for (int i = 1; i < tokens.length - 1; i++)
+            newTokens[i - 1] = tokens[i];
+        toAST(newTokens);
     }
 
     private void calculateResult() {
