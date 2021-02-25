@@ -29,6 +29,7 @@ public class VariableBuilder {
             n = new InitNode(varName);
             Logger.log("Variable deklariert");
         }
+        Parser.variables.put(varName,n.execute());
         return n;
     }
 
