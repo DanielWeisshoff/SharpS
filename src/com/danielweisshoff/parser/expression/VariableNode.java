@@ -7,9 +7,6 @@ import com.danielweisshoff.interpreter.nodesystem.node.Node;
  *   - Execute ist hier unnötig -> Umweg finden
  */
 
-/**
- * Holds the name of a variable and returns the stored data
- */
 public class VariableNode extends ExpressionNode {
 
     private final String name;

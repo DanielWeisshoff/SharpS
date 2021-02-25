@@ -7,8 +7,8 @@ import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.Parser;
 
 /* TODO
- * - Nachschauen ob Funktion existiert in FunctionBuilder verschieben
- * - Nicht mehr namen, sondern ID benutzen
+ *  - Nachschauen ob Funktion existiert in FunctionBuilder verschieben
+ *  - Nicht mehr namen, sondern ID benutzen
  */
 
 /**

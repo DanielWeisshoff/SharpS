@@ -4,14 +4,8 @@ import com.danielweisshoff.interpreter.nodesystem.Data;
 import com.danielweisshoff.interpreter.nodesystem.DataType;
 import com.danielweisshoff.parser.container.Variable;
 
-/*TODO
- * - Soll dafür da sein während der Laufzeit Variablen im aktuellen Scope zu erstellen / verändern
- * - Funktionalität aufteilen. Denn momentan müsste immer nachgeschaut werden, ob die Variable existiert.
- * Anhand der Syntax kann der Parser aber jetzt schon zwischen initialisieren|deklarieren|zuweisen unterscheiden
- */
-
 /**
- * Still under development
+ * Sets the value of a variable
  */
 public class AssignNode extends Node {
 

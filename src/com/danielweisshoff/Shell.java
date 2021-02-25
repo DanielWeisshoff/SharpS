@@ -10,10 +10,6 @@ import com.danielweisshoff.parser.container.Program;
 import java.time.Duration;
 import java.time.Instant;
 
-/*TODO
- * - Rechnen mit Klammern soll möglich sein
- */
-
 public class Shell {
 
     public Shell() {

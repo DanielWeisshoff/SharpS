@@ -4,10 +4,9 @@ import com.danielweisshoff.interpreter.nodesystem.Data;
 import com.danielweisshoff.interpreter.nodesystem.DataType;
 
 /* TODO
- * - Eventuell für Kommazahlen eine separate Node
- * - Generell sollte es eine gute und adaptierbare Alternative geben,
- *   falls viele unterschiedliche Datentypen wie int,float,double,short etc... genutzt werden
- * - Nochmals wegen Unary informieren (Negative Zahlen)
+ *  - Eventuell für Kommazahlen eine separate Node
+ *  - Generell sollte es eine gute und adaptierbare Alternative geben,
+ *    falls viele unterschiedliche Datentypen wie int,float,double,short etc... genutzt werden
  */
 
 /**
