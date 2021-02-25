@@ -12,7 +12,7 @@ import com.danielweisshoff.parser.expression.Expression;
 import java.util.ArrayList;
 
 /* TODO
- * - Bei einer Equatipn wird rekusiv aufgerufen -> bessere Lösung finden
+ *  - Bei einer Equation wird rekusiv aufgerufen -> bessere Lösung finden
  */
 public class ExpressionBuilder {
 
@@ -22,12 +22,14 @@ public class ExpressionBuilder {
         while (!p.currentToken.isEOF() && p.currentToken.type() != TokenType.NEWLINE) {
             if (p.currentToken.isOP()
                     || p.currentToken.isNumeric()
-                    || p.currentToken.type() == TokenType.IDENTIFIER) {
+                    || p.currentToken.type() == TokenType.IDENTIFIER
+                    || p.currentToken.type() == TokenType.O_ROUND_BRACKET
+                    || p.currentToken.type() == TokenType.C_ROUND_BRACKET) {
                 buffer.add(p.currentToken);
                 p.advance();
             } else break;
         }
-        Token[] arr = convertToUnary(buffer);
+        Token[] arr = convertUnarys(buffer);
 
         Node calculation;
         if (arr.length == 1)
@@ -47,7 +49,7 @@ public class ExpressionBuilder {
         return calculation;
     }
 
-    private static Token[] convertToUnary(ArrayList<Token> tokens) {
+    private static Token[] convertUnarys(ArrayList<Token> tokens) {
         if (tokens.get(0).type() == TokenType.SUB) {
             tokens.get(1).setValue("-" + tokens.get(1).getValue());
             tokens.remove(0);
