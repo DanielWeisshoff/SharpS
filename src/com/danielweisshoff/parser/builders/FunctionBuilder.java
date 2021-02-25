@@ -3,16 +3,16 @@ package com.danielweisshoff.parser.builders;
 import com.danielweisshoff.interpreter.nodesystem.node.EntryNode;
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.logger.Logger;
-import com.danielweisshoff.parser.Error;
+import com.danielweisshoff.parser.PError;
 import com.danielweisshoff.parser.Parser;
 import com.danielweisshoff.parser.container.Function;
 
 /* TODO
- * - Da Methoden unveränderbar sind und nicht erzeugt / gelöscht werden können,
+ *  - Da Methoden unveränderbar sind und nicht erzeugt / gelöscht werden können,
  *   sollten sie direkt mit IDs aufgerufen werden. Dazu wird hier eine ArrayList<String,int> angegeben um
  *   eingegebene Methodennamen zu vergleichen und anschließend die daraus entstehende id anstatt des
  *   Namens in der CallNode eintragen.
- * - Nach bearbeitung die Todolist in VariableBuilder kopieren
+ *  - Nach bearbeitung die Todolist in VariableBuilder kopieren
  */
 public class FunctionBuilder {
 
@@ -34,7 +34,7 @@ public class FunctionBuilder {
         String functionName = p.currentToken.getValue();
 
         if (!p.compareNextTokens(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON))
-            new Error("Falsches Format");
+            new PError("Falsches Format");
 
         EntryNode function = new EntryNode(functionName);
 
@@ -51,7 +51,7 @@ public class FunctionBuilder {
         String functionName = "constructor";
 
         if (!p.compareNextTokens(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON))
-            new Error("Falsches Format");
+            new PError("Falsches Format");
 
         EntryNode functionRoot = new EntryNode(functionName);
 
@@ -70,7 +70,7 @@ public class FunctionBuilder {
         }
 
         if (!p.compareNextTokens(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON))
-            new Error("Falsches Format");
+            new PError("Falsches Format");
 
         EntryNode functionRoot = new EntryNode(functionName);
         p.currentClass.addEntry(functionRoot);
