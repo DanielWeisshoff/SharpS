@@ -1,7 +1,8 @@
 package com.danielweisshoff.parser;
 
-import com.danielweisshoff.nodesystem.Data;
-import com.danielweisshoff.nodesystem.node.Node;
+
+import com.danielweisshoff.interpreter.nodesystem.Data;
+import com.danielweisshoff.interpreter.nodesystem.node.Node;
 
 import java.util.HashMap;
 
