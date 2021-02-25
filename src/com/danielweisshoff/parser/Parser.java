@@ -20,14 +20,9 @@ import java.util.HashMap;
 import java.util.List;
 
 /*TODO
+ * - Entries k�nnen auch Namen haben
  * - Einen Weg finden, Methoden mit gleichen Namen aber unterschiedlichen Parametern zu speichern
  * - Dictionary<String,MethodGroup>
- * - Alle Variablen werden schon bevor der Interpreter das Programm ausf�hrt gespeichert. Stattdessen sollte
- *    an der Stelle eine AssignNode eingetragen werden, da lokale Variablen w�hrend Laufzeit erstellt werden m�ssen
- */
-
-/**
- * Takes in tokens and converts them to a runnable AST
  */
 public class Parser {
 
