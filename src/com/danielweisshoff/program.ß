@@ -18,7 +18,7 @@ cls Test:
             help()
             print()
 
-cls EveryThingIsStillGlobal:
+cls EverythingIsStillGlobal:
         ntr classTest():
             int thisIsClassTwo = 1 + 1
             help()
