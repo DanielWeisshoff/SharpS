@@ -1,3 +1,24 @@
-cls Test():
-        ntr ():
+#   _____ _                         _____
+#  / ____| |                       / ____|
+# | (___ | |__   __ _ _ __ _ __   | (___
+#  \___ \| '_ \ / _` | '__| '_ \   \___ \
+#  ____) | | | | (_| | |  | |_) |  ____) |
+# |_____/|_| |_|\__,_|_|  | .__/  |_____/
+#                         | |
+#                         |_|
+
+#Put your amazing code Here
+cls Test:
+        ntr calculation():
+            int a = 10 * pi
+            int equ1 = 1+2 == 3
+            int equ2 = (2+3)*4 == 20
+            int isTrue = equ1 * equ2
+        ntr functionTest():
+            help()
+            print()
+
+cls EveryThingIsStillGlobal:
+        ntr classTest():
+            int thisIsClassTwo = 1 + 1
             help()
