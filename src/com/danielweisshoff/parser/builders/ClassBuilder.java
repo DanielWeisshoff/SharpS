@@ -9,11 +9,12 @@ import com.danielweisshoff.parser.container.Class;
 public class ClassBuilder {
     public static Class buildClass(Parser p) {
         p.advance();
-        if (p.currentToken.type() != TokenType.IDENTIFIER)
+        if (!p.is(TokenType.IDENTIFIER))
             new PError("Klassenname fehlt");
         String className = p.currentToken.getValue();
 
-        if (!p.compareNextTokens(TokenType.COLON)) {
+        p.advance();
+        if (!p.are(TokenType.COLON)) {
             new PError("Methodenstruktur falsch");
         }
 

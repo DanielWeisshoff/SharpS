@@ -17,8 +17,8 @@ public class CallBuilder {
 
     public static CallNode buildCall(Parser p) {
         String name = p.currentToken.getValue();
-
-        if (!p.compareNextTokens(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET))
+        p.advance();
+        if (!p.are(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET))
             new PError("Falsche Funktionsstruktur");
 
         if (!BuiltInFunction.builtInFunctions.containsKey(name))

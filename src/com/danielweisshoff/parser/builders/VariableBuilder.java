@@ -15,14 +15,14 @@ import com.danielweisshoff.parser.Parser;
 public class VariableBuilder {
 
     public static Node initializeVariable(Parser p) {
-        if (p.currentToken.type() != TokenType.IDENTIFIER)
+        if (!p.is(TokenType.IDENTIFIER))
             new PError("Fehler beim Initialisieren einer Variable");
         String varName = p.currentToken.getValue();
 
         p.advance();
 
         Node n;
-        if (p.currentToken.type() == TokenType.ASSIGN) {
+        if (p.is(TokenType.ASSIGN)) {
             n = initializeVariable(varName, p);
             Logger.log("Variable initialisiert");
         } else {

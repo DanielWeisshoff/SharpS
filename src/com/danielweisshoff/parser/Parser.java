@@ -27,7 +27,7 @@ import java.util.List;
  */
 
 /**
- * Takes in tokens and converts them to a runnable AST
+ * Converts tokens to a runnable AST
  */
 public class Parser {
 
@@ -52,6 +52,28 @@ public class Parser {
         advance();
     }
 
+    public Program parse() {
+        while (!currentToken.isEOF()) {
+            if (is(TokenType.TAB)) {
+                switch (currentToken.getValue()) {
+                    case "1" -> {
+                        advance();
+                        validateAttributeLane();
+                    }
+                    case "2" -> {
+                        advance();
+                        validateMethodLane();
+                    }
+                    default -> validateScopeLane();
+                }
+            } else
+                validateClassLane();
+        }
+        Class[] classArray = new Class[classes.size()];
+        classes.toArray(classArray);
+        return new Program(classArray);
+    }
+
     public void advance() {
         position++;
         if (position < tokens.length)
@@ -65,57 +87,45 @@ public class Parser {
     }
 
     public void nextLine() {
-        while (currentToken.type() != TokenType.EOF) {
-            if (currentToken.type() == TokenType.NEWLINE && next().type() != TokenType.NEWLINE) {
+        while (!is(TokenType.EOF)) {
+            if (is(TokenType.NEWLINE) && next().type() != TokenType.NEWLINE)
                 break;
-            } else
+            else
                 advance();
         }
         advance();
     }
 
-    public Program parse() {
-
-        while (!currentToken.isEOF()) {
-            if (currentToken.type() == TokenType.TAB && next().type() == TokenType.NEWLINE)
-                nextLine();
-            else if (currentToken.type() == TokenType.TAB) {
-                switch (currentToken.getValue()) {
-                    case "1" -> {
-                        advance();
-                        validateAttributeLane();
-                    }
-                    case "2" -> {
-                        advance();
-                        validateMethodLane();
-                    }
-                    default -> {
-                        advance();
-                        validateScopeLane();
-                    }
-                }
-            } else {
-                validateClassLane();
-            }
-        }
-
-        Class[] classArray = new Class[classes.size()];
-        classArray = classes.toArray(classArray);
-        Program program = new Program(classArray);
-        return program;
+    /**
+     * Vergleicht den aktuellen Token
+     */
+    public boolean is(TokenType type) {
+        return currentToken.type() == type;
     }
 
-    public boolean compareNextTokens(TokenType... type) {
+    /**
+     * Vergleicht den aktuellen und alle danach folgenden Tokens und ruft
+     * advance() auf. Sollte ein Token unpassend sein bleibt er an dieser Stelle stehen
+     * --> somit ist der Unpassende Token dann der CurrentToken
+     */
+    public boolean are(TokenType... type) {
         for (TokenType t : type) {
-            advance();
-            if (currentToken.type() != t) {
+            if (is(t))
                 advance();
+            else {
                 return false;
             }
         }
-        advance();
         return true;
     }
+
+
+
+    /*
+     *===================================================================
+     *    VALIDATION   VALIDATION  VALIDATION   VALIDATION VALIDATION
+     *===================================================================
+     */
 
     public void validateClassLane() {
         //Class, Enum, Interface, Struct
@@ -128,12 +138,11 @@ public class Parser {
                 break;
             default:
                 nextLine();
-                // new Error("Class-lane falsch " + currentToken.getDescription());
         }
     }
 
     public void validateAttributeLane() {
-        if (currentToken.type() == TokenType.KEYWORD) {
+        if (is(TokenType.KEYWORD)) {
             advance();
             currentFunction.add(VariableBuilder.initializeVariable(this));
         } else
@@ -142,26 +151,24 @@ public class Parser {
     }
 
     public void validateMethodLane() {
-        if (currentToken.type() == TokenType.KEYWORD)
-            currentFunction = FunctionBuilder.buildFunction(this);
+        if (is(TokenType.KEYWORD))
+            currentFunction = FunctionBuilder.build(this);
         nextLine();
     }
 
     public void validateScopeLane() {
-        if (currentToken.type() == TokenType.KEYWORD) {
+        int tabs = Integer.parseInt(currentToken.getValue());
+        advance();
+
+        if (is(TokenType.KEYWORD)) {
             advance();
             currentFunction.add(VariableBuilder.initializeVariable(this));
-            nextLine();
-        } else if (currentToken.type() == TokenType.IDENTIFIER && next().type() == TokenType.ASSIGN) {
+        } else if (is(TokenType.IDENTIFIER) && next().type() == TokenType.ASSIGN)
             VariableBuilder.assignVariable(this);
-            nextLine();
-        } else if (currentToken.type() == TokenType.IDENTIFIER) {
+        else if (is(TokenType.IDENTIFIER)) {
             CallNode n = CallBuilder.buildCall(this);
             currentFunction.add(n);
-            nextLine();
-        } else {
-            //Fehlende Syntax erstmal überspringen
-            nextLine();
         }
+        nextLine();
     }
 }

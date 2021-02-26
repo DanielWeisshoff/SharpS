@@ -16,7 +16,7 @@ import com.danielweisshoff.parser.container.Function;
  */
 public class FunctionBuilder {
 
-    public static EntryNode buildFunction(Parser p) {
+    public static EntryNode build(Parser p) {
         boolean isEntry = false;
         boolean isConstructor = false;
         String functionName;
@@ -25,16 +25,17 @@ public class FunctionBuilder {
         } else if (p.currentToken.getValue().equals("con")) {
             return buildConstructor(p);
         } else {
-            return build(p);
+            return buildFunction(p);
         }
     }
 
-    private static EntryNode build(Parser p) {
+    private static EntryNode buildFunction(Parser p) {
         p.advance();
         String functionName = p.currentToken.getValue();
-
-        if (!p.compareNextTokens(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON))
-            new PError("Falsches Format");
+        p.advance();
+        int i = ParameterBuilder.buildParameters(p);
+        if (!p.is(TokenType.COLON))
+            new PError("Body Deklarator fehlt");
 
         EntryNode function = new EntryNode(functionName);
 
@@ -50,7 +51,8 @@ public class FunctionBuilder {
     private static EntryNode buildConstructor(Parser p) {
         String functionName = "constructor";
 
-        if (!p.compareNextTokens(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON))
+        p.advance();
+        if (!p.are(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON))
             new PError("Falsches Format");
 
         EntryNode functionRoot = new EntryNode(functionName);
@@ -69,7 +71,8 @@ public class FunctionBuilder {
             functionName = p.currentToken.getValue();
         }
 
-        if (!p.compareNextTokens(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON))
+        p.advance();
+        if (!p.are(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON))
             new PError("Falsches Format");
 
         EntryNode functionRoot = new EntryNode(functionName);

@@ -19,12 +19,12 @@ public class ExpressionBuilder {
     public static Node buildExpression(Parser p) {
         ArrayList<Token> buffer = new ArrayList<>();
 
-        while (!p.currentToken.isEOF() && p.currentToken.type() != TokenType.NEWLINE) {
+        while (!p.currentToken.isEOF() && !p.is(TokenType.NEWLINE)) {
             if (p.currentToken.isOP()
                     || p.currentToken.isNumeric()
-                    || p.currentToken.type() == TokenType.IDENTIFIER
-                    || p.currentToken.type() == TokenType.O_ROUND_BRACKET
-                    || p.currentToken.type() == TokenType.C_ROUND_BRACKET) {
+                    || p.is(TokenType.IDENTIFIER)
+                    || p.is(TokenType.O_ROUND_BRACKET)
+                    || p.is(TokenType.C_ROUND_BRACKET)) {
                 buffer.add(p.currentToken);
                 p.advance();
             } else break;
@@ -41,7 +41,7 @@ public class ExpressionBuilder {
             calculation = new Expression(arr).toAST();
 
 
-        if (p.currentToken.type() == TokenType.COMPARISON)
+        if (p.is(TokenType.COMPARISON))
             calculation = EquationBuilder.buildEquation(p, calculation);
         else
             Logger.log("Rechnung erstellt");
