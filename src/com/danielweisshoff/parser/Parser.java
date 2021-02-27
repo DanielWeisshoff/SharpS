@@ -64,7 +64,7 @@ public class Parser {
                         advance();
                         validateMethodLane();
                     }
-                    default -> validateScopeLane();
+                    default -> validateScope();
                 }
             } else
                 validateClassLane();
@@ -146,7 +146,7 @@ public class Parser {
             advance();
             currentFunction.add(VariableBuilder.initializeVariable(this));
         } else
-            VariableBuilder.assignVariable(this);
+            new PError("Class Lane: Falsche Syntax");
         nextLine();
     }
 
@@ -156,7 +156,10 @@ public class Parser {
         nextLine();
     }
 
-    public void validateScopeLane() {
+    /* TODO
+     *  - Ich schätze das wird später in einen eigenen Builder gepackt
+     */
+    public void validateScope() {
         int tabs = Integer.parseInt(currentToken.getValue());
         advance();
 
@@ -164,7 +167,7 @@ public class Parser {
             advance();
             currentFunction.add(VariableBuilder.initializeVariable(this));
         } else if (is(TokenType.IDENTIFIER) && next().type() == TokenType.ASSIGN)
-            VariableBuilder.assignVariable(this);
+            currentFunction.add(VariableBuilder.assignVariable(this));
         else if (is(TokenType.IDENTIFIER)) {
             CallNode n = CallBuilder.buildCall(this);
             currentFunction.add(n);

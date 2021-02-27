@@ -1,6 +1,6 @@
 package com.danielweisshoff.parser.builders;
 
-import com.danielweisshoff.interpreter.nodesystem.Data;
+import com.danielweisshoff.interpreter.nodesystem.node.AssignNode;
 import com.danielweisshoff.interpreter.nodesystem.node.InitNode;
 import com.danielweisshoff.interpreter.nodesystem.node.Node;
 import com.danielweisshoff.lexer.TokenType;
@@ -8,10 +8,6 @@ import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.PError;
 import com.danielweisshoff.parser.Parser;
 
-/* TODO
- *  - Anstatt direkt Variablen zu erstellen, sollten Assign-nodes erstellt werden,
- *    welche erst bei Programmausführung Variablen anlegen
- */
 public class VariableBuilder {
 
     public static Node initializeVariable(Parser p) {
@@ -40,20 +36,15 @@ public class VariableBuilder {
         return new InitNode(varName, expr);
     }
 
-    public static void assignVariable(Parser p) {
-        if (p.next().type() != TokenType.ASSIGN) {
-            ExpressionBuilder.buildExpression(p);
-            return;
-        }
+    public static AssignNode assignVariable(Parser p) {
         String varName = p.currentToken.getValue();
         if (!Parser.variables.containsKey(varName))
             new PError("Variable existiert nicht");
 
-        p.advance();
-        p.advance();
+        p.advance(); //Varname
+        p.advance(); //Gleichzeichen
         Node expr = ExpressionBuilder.buildExpression(p);
-        Data<?> result = expr.execute();
-        Parser.variables.put(varName, result);
         Logger.log("Variablenwert verändert");
+        return new AssignNode(varName, expr);
     }
 }
