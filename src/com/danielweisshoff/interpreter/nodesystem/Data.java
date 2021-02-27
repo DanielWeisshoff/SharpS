@@ -25,10 +25,6 @@ public class Data<T extends Number> {
         return data;
     }
 
-    public void print() {
-        System.out.println(data);
-    }
-
     public double toDouble() {
         return data.doubleValue();
     }
