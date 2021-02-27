@@ -29,7 +29,7 @@ public class ExpressionBuilder {
                 p.advance();
             } else break;
         }
-        Token[] arr = convertUnarys(buffer);
+        Token[] arr = convertUnaries(buffer);
 
         Node calculation;
         if (arr.length == 1)
@@ -49,7 +49,7 @@ public class ExpressionBuilder {
         return calculation;
     }
 
-    private static Token[] convertUnarys(ArrayList<Token> tokens) {
+    private static Token[] convertUnaries(ArrayList<Token> tokens) {
         if (tokens.get(0).type() == TokenType.SUB) {
             tokens.get(1).setValue("-" + tokens.get(1).getValue());
             tokens.remove(0);

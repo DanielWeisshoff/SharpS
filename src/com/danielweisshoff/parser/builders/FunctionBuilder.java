@@ -16,32 +16,28 @@ import com.danielweisshoff.parser.container.Function;
  */
 public class FunctionBuilder {
 
+    private static int entryCounter;
+
     public static EntryNode build(Parser p) {
-        boolean isEntry = false;
-        boolean isConstructor = false;
-        String functionName;
-        if (p.currentToken.getValue().equals("ntr")) {
+        if (p.is("ntr"))
             return buildEntry(p);
-        } else if (p.currentToken.getValue().equals("con")) {
+        else if (p.is("con"))
             return buildConstructor(p);
-        } else {
+        else
             return buildFunction(p);
-        }
     }
 
     private static EntryNode buildFunction(Parser p) {
         p.advance();
         String functionName = p.currentToken.getValue();
         p.advance();
-        int i = ParameterBuilder.buildParameters(p);
+        ParameterBuilder.buildParameters(p);
         if (!p.is(TokenType.COLON))
-            new PError("Body Deklarator fehlt");
-
-        EntryNode function = new EntryNode(functionName);
+            new PError("Body Declarator fehlt");
 
         Logger.log("Funktion '" + functionName + "' erkannt ");
 
-        //Eintragen einer normalen Funktion
+        EntryNode function = new EntryNode(functionName);
         Function f = new Function(function);
         Parser.methods.put(functionName, f);
 
@@ -52,33 +48,32 @@ public class FunctionBuilder {
         String functionName = "constructor";
 
         p.advance();
-        if (!p.are(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON))
+        ParameterBuilder.buildParameters(p);
+        if (!p.is(TokenType.COLON))
             new PError("Falsches Format");
 
-        EntryNode functionRoot = new EntryNode(functionName);
-
         Logger.log("Konstruktor '" + functionName + "' erkannt ");
-
-        return functionRoot;
+        return new EntryNode(functionName);
     }
 
     private static EntryNode buildEntry(Parser p) {
-
-        String functionName = "entry";
+        String functionName;
 
         if (p.next().type() == TokenType.IDENTIFIER) {
             p.advance();
             functionName = p.currentToken.getValue();
-        }
+        } else
+            functionName = "entry" + entryCounter++;
 
         p.advance();
-        if (!p.are(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON))
+        ParameterBuilder.buildParameters(p);
+        if (!p.is(TokenType.COLON))
             new PError("Falsches Format");
+
+        Logger.log("Entry '" + functionName + "' erkannt");
 
         EntryNode functionRoot = new EntryNode(functionName);
         p.currentClass.addEntry(functionRoot);
-        Logger.log("Entry '" + functionName + "' erkannt");
-
         return functionRoot;
     }
 }

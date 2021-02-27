@@ -14,7 +14,7 @@ public class ClassBuilder {
         String className = p.currentToken.getValue();
 
         p.advance();
-        if (!p.are(TokenType.COLON)) {
+        if (!p.is(TokenType.COLON)) {
             new PError("Methodenstruktur falsch");
         }
 

@@ -86,9 +86,15 @@ public class Parser {
         return new Token(TokenType.EOF, "");
     }
 
+    public boolean next(TokenType t) {
+        if (position < tokens.length - 1)
+            return tokens[position + 1].type() == t;
+        return false;
+    }
+
     public void nextLine() {
         while (!is(TokenType.EOF)) {
-            if (is(TokenType.NEWLINE) && next().type() != TokenType.NEWLINE)
+            if (is(TokenType.NEWLINE) && !next(TokenType.NEWLINE))
                 break;
             else
                 advance();
@@ -103,23 +109,9 @@ public class Parser {
         return currentToken.type() == type;
     }
 
-    /**
-     * Vergleicht den aktuellen und alle danach folgenden Tokens und ruft
-     * advance() auf. Sollte ein Token unpassend sein bleibt er an dieser Stelle stehen
-     * --> somit ist der Unpassende Token dann der CurrentToken
-     */
-    public boolean are(TokenType... type) {
-        for (TokenType t : type) {
-            if (is(t))
-                advance();
-            else {
-                return false;
-            }
-        }
-        return true;
+    public boolean is(String value) {
+        return currentToken.getValue().equals(value);
     }
-
-
 
     /*
      *===================================================================
@@ -166,7 +158,7 @@ public class Parser {
         if (is(TokenType.KEYWORD)) {
             advance();
             currentFunction.add(VariableBuilder.initializeVariable(this));
-        } else if (is(TokenType.IDENTIFIER) && next().type() == TokenType.ASSIGN)
+        } else if (is(TokenType.IDENTIFIER) && next(TokenType.ASSIGN))
             currentFunction.add(VariableBuilder.assignVariable(this));
         else if (is(TokenType.IDENTIFIER)) {
             CallNode n = CallBuilder.buildCall(this);
