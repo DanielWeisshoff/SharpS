@@ -3,7 +3,6 @@ package com.danielweisshoff.parser;
 import com.danielweisshoff.interpreter.builtin.BuiltInFunction;
 import com.danielweisshoff.interpreter.builtin.BuiltInVariable;
 import com.danielweisshoff.interpreter.nodesystem.Data;
-import com.danielweisshoff.interpreter.nodesystem.node.CallNode;
 import com.danielweisshoff.interpreter.nodesystem.node.EntryNode;
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
@@ -17,7 +16,6 @@ import com.danielweisshoff.parser.container.Program;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /*TODO
  * - Einen Weg finden, Methoden mit gleichen Namen aber unterschiedlichen Parametern zu speichern
@@ -37,7 +35,7 @@ public class Parser {
     public static HashMap<String, Function> methods = new HashMap<>();
 
     private final Token[] tokens;
-    private final List<Class> classes = new ArrayList<>();
+    private final ArrayList<Class> classes = new ArrayList<>();
 
     public Token currentToken;
     public Class currentClass = null;
@@ -122,14 +120,13 @@ public class Parser {
     public void validateClassLane() {
         //Class, Enum, Interface, Struct
         switch (currentToken.getValue()) {
-            case "cls":
+            case "cls" -> {
                 Class c = ClassBuilder.buildClass(this);
                 classes.add(c);
                 currentClass = c;
                 nextLine();
-                break;
-            default:
-                nextLine();
+            }
+            default -> nextLine();
         }
     }
 
@@ -160,10 +157,8 @@ public class Parser {
             currentFunction.add(VariableBuilder.initializeVariable(this));
         } else if (is(TokenType.IDENTIFIER) && next(TokenType.ASSIGN))
             currentFunction.add(VariableBuilder.assignVariable(this));
-        else if (is(TokenType.IDENTIFIER)) {
-            CallNode n = CallBuilder.buildCall(this);
-            currentFunction.add(n);
-        }
+        else if (is(TokenType.IDENTIFIER))
+            currentFunction.add(CallBuilder.buildCall(this));
         nextLine();
     }
 }
