@@ -1,5 +1,6 @@
 package com.danielweisshoff.parser.builders;
 
+import com.danielweisshoff.interpreter.nodesystem.Data;
 import com.danielweisshoff.interpreter.nodesystem.node.AssignNode;
 import com.danielweisshoff.interpreter.nodesystem.node.InitNode;
 import com.danielweisshoff.interpreter.nodesystem.node.Node;
@@ -25,7 +26,8 @@ public class VariableBuilder {
             n = new InitNode(varName);
             Logger.log("Variable deklariert");
         }
-        Parser.variables.put(varName, n.execute());
+        //Nur tewmporär
+        Parser.variables.put(varName, new Data<>());
         return n;
     }
 
