@@ -19,16 +19,21 @@ public class Interpreter {
 
 
     public void run() {
-        program.printEntries();
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("\nselect: ");
+        String entry = "";
+        Data<?> errorCode;
 
+        if (program.printEntries()) {
 
-        int input = scanner.nextInt();
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("\nselect: ");
+            int input = scanner.nextInt();
+            errorCode = program.getEntry(input).execute();
+        } else
+            errorCode = program.getEntry(0).execute();
+
 
         Instant start = Instant.now();
-        Logger.log("--->Starting program on entry " + input + "<---");
-        Data<?> errorCode = program.getEntry(input).execute();
+        Logger.log("--->Starting program on entry " + entry + "<---");
         Instant end = Instant.now();
 
         Logger.log("Program finished in " + Duration.between(start, end).toMillis() + "ms");
