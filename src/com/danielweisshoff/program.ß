@@ -9,16 +9,13 @@
 
 #Put your amazing code Here
 cls Test:
-        ntr calculation():
-            int a = 10 * pi
-            int equ1 = 1+2 == 3
-            int equ2 = (2+3)*4 == 20
-            int isTrue = equ1 * equ2
-        ntr functionTest():
-            help()
-            print()
+        ntr():
+            int b
+            int c
+            int d
 
-cls EverythingIsStillGlobal:
-        ntr classTest():
-            int thisIsClassTwo = 1 + 1
-            help()
+        ntr main():
+            int e
+            int f
+            int g
+            int h
