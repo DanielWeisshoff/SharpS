@@ -1,11 +1,11 @@
 package com.danielweisshoff.parser.expression;
 
-import com.danielweisshoff.interpreter.nodesystem.node.Node;
-
 /* TODO
  *   - Sollte eventuell ID anstatt Name speichern
  *   - Execute ist hier unnötig -> Umweg finden
  */
+
+import com.danielweisshoff.interpreter.nodesystem.node.Node;
 
 public class VariableNode extends ExpressionNode {
 
@@ -31,6 +31,6 @@ public class VariableNode extends ExpressionNode {
 
     @Override
     public Node toNode() {
-        return new com.danielweisshoff.interpreter.nodesystem.node.VariableNode(name);
+        return new com.danielweisshoff.interpreter.nodesystem.node.data.VariableNode(name);
     }
 }

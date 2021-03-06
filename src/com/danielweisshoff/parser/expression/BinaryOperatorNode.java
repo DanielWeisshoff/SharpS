@@ -1,6 +1,6 @@
 package com.danielweisshoff.parser.expression;
 
-import com.danielweisshoff.interpreter.nodesystem.node.*;
+import com.danielweisshoff.interpreter.nodesystem.node.Node;
 import com.danielweisshoff.interpreter.nodesystem.node.binaryoperations.BinaryAddNode;
 import com.danielweisshoff.interpreter.nodesystem.node.binaryoperations.BinaryDivNode;
 import com.danielweisshoff.interpreter.nodesystem.node.binaryoperations.BinaryMulNode;

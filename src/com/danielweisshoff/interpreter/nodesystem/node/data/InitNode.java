@@ -2,6 +2,7 @@ package com.danielweisshoff.interpreter.nodesystem.node.data;
 
 import com.danielweisshoff.interpreter.nodesystem.Data;
 import com.danielweisshoff.interpreter.nodesystem.DataType;
+import com.danielweisshoff.interpreter.nodesystem.node.Node;
 import com.danielweisshoff.parser.Parser;
 
 /**

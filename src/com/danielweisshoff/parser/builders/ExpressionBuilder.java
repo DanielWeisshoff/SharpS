@@ -1,13 +1,14 @@
 package com.danielweisshoff.parser.builders;
 
 import com.danielweisshoff.interpreter.nodesystem.node.Node;
-import com.danielweisshoff.interpreter.nodesystem.node.NumberNode;
-import com.danielweisshoff.interpreter.nodesystem.node.VariableNode;
+import com.danielweisshoff.interpreter.nodesystem.node.data.NumberNode;
+import com.danielweisshoff.interpreter.nodesystem.node.data.VariableNode;
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.Parser;
 import com.danielweisshoff.parser.expression.Expression;
+
 
 import java.util.ArrayList;
 

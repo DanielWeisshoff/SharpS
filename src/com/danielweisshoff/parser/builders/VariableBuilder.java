@@ -1,9 +1,9 @@
 package com.danielweisshoff.parser.builders;
 
 import com.danielweisshoff.interpreter.nodesystem.Data;
-import com.danielweisshoff.interpreter.nodesystem.node.AssignNode;
-import com.danielweisshoff.interpreter.nodesystem.node.InitNode;
 import com.danielweisshoff.interpreter.nodesystem.node.Node;
+import com.danielweisshoff.interpreter.nodesystem.node.data.AssignNode;
+import com.danielweisshoff.interpreter.nodesystem.node.data.InitNode;
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.PError;
