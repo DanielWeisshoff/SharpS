@@ -70,12 +70,10 @@ class BinaryOperatorNode extends ExpressionNode {
 
         if (left.length == 1) {
             if (left[0].isNumeric()) {
-
                 double value = Double.parseDouble(left[0].getValue());
                 leftNode = new NumberNode(value);
-            } else {
+            } else
                 leftNode = new VariableNode(left[0].getValue());
-            }
         } else
             leftNode = new BinaryOperatorNode(left);
 
@@ -83,9 +81,8 @@ class BinaryOperatorNode extends ExpressionNode {
             if (right[0].isNumeric()) {
                 double value = Double.parseDouble(right[0].getValue());
                 rightNode = new NumberNode(value);
-            } else {
+            } else
                 rightNode = new VariableNode(right[0].getValue());
-            }
         } else
             rightNode = new BinaryOperatorNode(right);
     }
