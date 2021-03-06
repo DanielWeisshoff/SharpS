@@ -8,6 +8,8 @@ import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.PError;
 import com.danielweisshoff.parser.Parser;
+import com.danielweisshoff.parser.symboltable.DataType;
+import com.danielweisshoff.parser.symboltable.ReturnType;
 
 public class VariableBuilder {
 
@@ -28,6 +30,8 @@ public class VariableBuilder {
         }
         //Nur tewmporär
         Parser.variables.put(varName, new Data<>());
+
+        p.manager.addToScope(varName, DataType.VARIABLE, ReturnType.INT);
         return n;
     }
 

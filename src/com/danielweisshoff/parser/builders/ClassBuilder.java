@@ -19,6 +19,10 @@ public class ClassBuilder {
         }
 
         Logger.log("Klasse " + className + " erkannt");
+
+
+        p.manager.toRoot();
+        p.manager.newScope(className);
         return new Class(className);
     }
 }

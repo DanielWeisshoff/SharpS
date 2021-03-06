@@ -27,35 +27,6 @@ public class FunctionBuilder {
             return buildFunction(p);
     }
 
-    private static EntryNode buildFunction(Parser p) {
-        p.advance();
-        String functionName = p.currentToken.getValue();
-        p.advance();
-        ParameterBuilder.buildParameters(p);
-        if (!p.is(TokenType.COLON))
-            new PError("Body Declarator fehlt");
-
-        Logger.log("Funktion '" + functionName + "' erkannt ");
-
-        EntryNode function = new EntryNode(functionName);
-        Function f = new Function(function);
-        Parser.methods.put(functionName, f);
-
-        return function;
-    }
-
-    private static EntryNode buildConstructor(Parser p) {
-        String functionName = "constructor";
-
-        p.advance();
-        ParameterBuilder.buildParameters(p);
-        if (!p.is(TokenType.COLON))
-            new PError("Falsches Format");
-
-        Logger.log("Konstruktor '" + functionName + "' erkannt ");
-        return new EntryNode(functionName);
-    }
-
     private static EntryNode buildEntry(Parser p) {
         String functionName;
 
@@ -74,6 +45,43 @@ public class FunctionBuilder {
 
         EntryNode functionRoot = new EntryNode(functionName);
         p.currentClass.addEntry(functionRoot);
+
+        p.manager.newScope(functionName);
+
         return functionRoot;
+    }
+
+    private static EntryNode buildConstructor(Parser p) {
+        String functionName = "constructor";
+
+        p.advance();
+        ParameterBuilder.buildParameters(p);
+        if (!p.is(TokenType.COLON))
+            new PError("Falsches Format");
+
+        Logger.log("Konstruktor '" + functionName + "' erkannt ");
+
+        p.manager.newScope(functionName);
+
+        return new EntryNode(functionName);
+    }
+
+    private static EntryNode buildFunction(Parser p) {
+        p.advance();
+        String functionName = p.currentToken.getValue();
+        p.advance();
+        ParameterBuilder.buildParameters(p);
+        if (!p.is(TokenType.COLON))
+            new PError("Body Declarator fehlt");
+
+        Logger.log("Funktion '" + functionName + "' erkannt ");
+
+        EntryNode function = new EntryNode(functionName);
+        Function f = new Function(function);
+        Parser.methods.put(functionName, f);
+
+        p.manager.newScope(functionName);
+
+        return function;
     }
 }

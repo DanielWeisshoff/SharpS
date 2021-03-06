@@ -10,12 +10,20 @@
 #Put your amazing code Here
 cls Test:
         ntr():
-            int b
-            int c
-            int d
-
-        ntr main():
+            int a
+                int b
+                int c
+                    int d
             int e
-            int f
-            int g
-            int h
+                int f
+                    int g
+                int h
+            int i
+cls Start:
+        ntr test():
+            int aa
+            int bb
+                int cc
+                    int dd
+                int ee
+            int ff
