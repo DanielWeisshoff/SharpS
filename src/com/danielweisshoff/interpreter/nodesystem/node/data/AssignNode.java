@@ -1,4 +1,4 @@
-package com.danielweisshoff.interpreter.nodesystem.node;
+package com.danielweisshoff.interpreter.nodesystem.node.data;
 
 import com.danielweisshoff.interpreter.nodesystem.Data;
 import com.danielweisshoff.interpreter.nodesystem.DataType;

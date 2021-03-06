@@ -1,18 +1,19 @@
-package com.danielweisshoff.interpreter.nodesystem.node;
+package com.danielweisshoff.interpreter.nodesystem.node.binaryoperations;
 
 import com.danielweisshoff.interpreter.nodesystem.Data;
 import com.danielweisshoff.interpreter.nodesystem.DataType;
+import com.danielweisshoff.interpreter.nodesystem.node.Node;
 
 /**
- * Multiplies two values and returns the result
+ * Adds two values and returns the result
  */
-public class BinaryMulNode extends Node {
+public class BinaryAddNode extends Node {
 
     private final Node left;
     private final Node right;
     private Data<Double> result;
 
-    public BinaryMulNode(Node leftNode, Node rightNode) {
+    public BinaryAddNode(Node leftNode, Node rightNode) {
         super(new DataType[]{DataType.DOUBLE, DataType.DOUBLE}, DataType.DOUBLE);
         this.left = leftNode;
         this.right = rightNode;
@@ -30,6 +31,6 @@ public class BinaryMulNode extends Node {
         double leftResult = left.execute().toDouble();
         double rightResult = right.execute().toDouble();
 
-        result = new Data<Double>(leftResult * rightResult, DataType.DOUBLE);
+        result = new Data<Double>(leftResult + rightResult, DataType.DOUBLE);
     }
 }
