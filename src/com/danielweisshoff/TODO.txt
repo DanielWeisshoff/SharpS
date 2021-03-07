@@ -1,0 +1,35 @@
+/////////////////////////////////////////////////////////////////////////
+  MASTER TODOLIST   MASTER TODOLIST MASTER TODOLIST     MASTER TODOLIST
+/////////////////////////////////////////////////////////////////////////
+
+TODO
+ -  Bitwise operationen einfügen
+       * The & (bitwise AND) The result of AND is 1 if both of the two bits are 1.
+       * The | (bitwise OR)  The result of OR is 1 if any of the two bits is 1.
+       * The ^ (bitwise XOR) The result of XOR is 1 if the two bits are different.
+       * The ~ (bitwise NOT) all bits are swapped
+       * The << (left shift) takes two numbers, left shifts the bits of the first operand, the second operand decides the number of places to shift.
+       * The >> (right shift) takes two numbers, right shifts the bits of the first operand, the second operand decides the number of places to shift.
+    Je nachdem worin das Ergebnis gespeichert werden soll, wird entweder bitwise oder boolean algebra angewandt.
+ -   Booleans werden und sollen wie bytes behandelt werden. Man soll mit ihnen ganz normal rechnen können.
+     Um zum Beispiel die Summe aller bools zu berechnen, die true sind.
+ - Variablen sollen nicht mehr im Parser gespeichert werden sondern den Stack/Heap nutzen
+ - Das erzeugen von Objekten soll möglich sein
+ - Parameter
+ - Rückgabewerte
+ - Abfrage, ob Rückgabewert und zieladresse vom gleichen Datentypen sind
+ - Objekte sollen als Parameter/Rückgabewert möglich sein -> evtl. Data überarbeiten ?
+ - Enums
+ - Interfaces
+ - Vererbung
+ - Casting
+ - Lexer aktualisieren ( & | ^ ~ << >> )
+ - access modifier hinzufügen
+    * public +
+    * private -
+    * static *
+    * (protected?) /
+    * mögliche Zeichen:  § $ % & ? ~ _ . , : ; < > |
+    Werden dann im Symboltable eingetragen. Wenn die get() Methode aufgerufen wird, müssen einfach nur neue
+    Regelungen basierend auf dem AccessModifier der gesuchten Variable erklärt werden.
+ - Parser Klasse wird zur Abstrakten Oberklasse. wird unterteilt in -> SharpSParser,EditorParser
