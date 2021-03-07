@@ -22,6 +22,6 @@ public class BooleanOrNode extends Node {
     public Data<?> execute() {
         byte l = left.execute().toByte();
         byte r = right.execute().toByte();
-        return new Data<>(l == 1 || r == 1 ? 1 : 0, DataType.BOOL);
+        return new Data<>(l == 1 || r == 1 ? 1 : 0, DataType.BOOLEAN);
     }
 }

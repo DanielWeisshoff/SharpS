@@ -14,7 +14,7 @@ public class EqualNode extends Node {
     private final Node right;
 
     public EqualNode(Node left, Node right) {
-        super(new DataType[]{DataType.ANY}, DataType.BOOL);
+        super(null, DataType.BOOLEAN);
         this.left = left;
         this.right = right;
     }

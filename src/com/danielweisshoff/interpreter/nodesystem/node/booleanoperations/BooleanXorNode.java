@@ -22,6 +22,6 @@ public class BooleanXorNode extends Node {
     public Data<?> execute() {
         byte l = left.execute().toByte();
         byte r = right.execute().toByte();
-        return new Data<>(l != r ? 1 : 0, DataType.BOOL);
+        return new Data<>(l != r ? 1 : 0, DataType.BOOLEAN);
     }
 }

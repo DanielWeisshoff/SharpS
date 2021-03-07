@@ -16,7 +16,7 @@ public class EntryNode extends Node {
     private final String name;
 
     public EntryNode(String name) {
-        super(new DataType[]{DataType.ANY}, DataType.INT);
+        super(null, DataType.INT);
         children = new ArrayList<>();
         this.name = name;
     }

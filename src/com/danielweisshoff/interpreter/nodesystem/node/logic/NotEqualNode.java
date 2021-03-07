@@ -14,7 +14,7 @@ public class NotEqualNode extends Node {
     private final Node right;
 
     public NotEqualNode(Node left, Node right) {
-        super(new DataType[]{DataType.ANY}, DataType.BOOL);
+        super(null, DataType.BOOLEAN);
         this.left = left;
         this.right = right;
     }
