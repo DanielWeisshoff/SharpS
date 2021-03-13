@@ -20,8 +20,8 @@ public class BooleanOrNode extends Node {
 
     @Override
     public Data<?> execute() {
-        byte l = left.execute().toByte();
-        byte r = right.execute().toByte();
+        byte l = left.execute().asByte();
+        byte r = right.execute().asByte();
         return new Data<>(l == 1 || r == 1 ? 1 : 0, DataType.BOOLEAN);
     }
 }

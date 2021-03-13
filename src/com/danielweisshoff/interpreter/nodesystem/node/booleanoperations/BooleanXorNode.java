@@ -20,8 +20,8 @@ public class BooleanXorNode extends Node {
 
     @Override
     public Data<?> execute() {
-        byte l = left.execute().toByte();
-        byte r = right.execute().toByte();
+        byte l = left.execute().asByte();
+        byte r = right.execute().asByte();
         return new Data<>(l != r ? 1 : 0, DataType.BOOLEAN);
     }
 }

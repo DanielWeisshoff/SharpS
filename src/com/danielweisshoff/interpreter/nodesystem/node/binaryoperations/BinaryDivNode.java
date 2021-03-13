@@ -28,8 +28,8 @@ public class BinaryDivNode extends Node {
     }
 
     private void calculateResult() {
-        double leftResult = left.execute().toDouble();
-        double rightResult = right.execute().toDouble();
+        double leftResult = left.execute().asDouble();
+        double rightResult = right.execute().asDouble();
 
         result = new Data<Double>(leftResult / rightResult, DataType.DOUBLE);
     }
