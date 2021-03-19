@@ -22,14 +22,6 @@ public class Token {
         return list.toArray(tokens);
     }
 
-    public void print() {
-        if (value != null)
-            System.out.println(
-                    "[" + type + ", " + value + "]");
-        else
-            System.out.println("[" + type + "]");
-    }
-
     public String getDescription() {
         if (value != null)
             return ("[" + type + ", " + value + "]");

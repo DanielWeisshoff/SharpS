@@ -17,7 +17,6 @@ public class Lexer {
     public static String VERSION = "V 0.8.1";
     private final String text;
     private final HashMap<Character, TokenType> tokenMap = new HashMap<>();
-    private final String[] keywords = new String[]{"int", "con", "fnc", "ntr", "cls"};
     private int charIndex = -1;
     private char currentChar;
 
@@ -102,7 +101,7 @@ public class Lexer {
                 break;
         }
         String subString = text.substring(start, charIndex);
-        for (String s : keywords)
+        for (String s : Keywords.keywords)
             if (subString.equals(s))
                 return new Token(TokenType.KEYWORD, subString);
         return new Token(TokenType.IDENTIFIER, subString);

@@ -16,66 +16,72 @@ import com.danielweisshoff.parser.container.Function;
  */
 public class FunctionBuilder {
 
-    public static EntryNode buildFunction(Parser p) {
-        boolean isEntry = false;
-        boolean isConstructor = false;
-        String functionName;
-        if (p.currentToken.getValue().equals("ntr")) {
+    private static int entryCounter;
+
+    public static EntryNode build(Parser p) {
+        if (p.is("ntr"))
             return buildEntry(p);
-        } else if (p.currentToken.getValue().equals("con")) {
+        else if (p.is("con"))
             return buildConstructor(p);
-        } else {
-            return build(p);
-        }
+        else
+            return buildFunction(p);
     }
 
-    private static EntryNode build(Parser p) {
-        p.advance();
-        String functionName = p.currentToken.getValue();
+    private static EntryNode buildEntry(Parser p) {
+        String functionName;
 
-        if (!p.compareNextTokens(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON))
+        if (p.next().type() == TokenType.IDENTIFIER) {
+            p.advance();
+            functionName = p.currentToken.getValue();
+        } else
+            functionName = "entry" + entryCounter++;
+
+        p.advance();
+        ParameterBuilder.buildParameters(p);
+        if (!p.is(TokenType.COLON))
             new PError("Falsches Format");
 
-        EntryNode function = new EntryNode(functionName);
+        Logger.log("Entry '" + functionName + "' erkannt");
 
-        Logger.log("Funktion '" + functionName + "' erkannt ");
+        EntryNode functionRoot = new EntryNode(functionName);
+        p.currentClass.addEntry(functionRoot);
 
-        //Eintragen einer normalen Funktion
-        Function f = new Function(function);
-        Parser.methods.put(functionName, f);
+        p.manager.newScope(functionName);
 
-        return function;
+        return functionRoot;
     }
 
     private static EntryNode buildConstructor(Parser p) {
         String functionName = "constructor";
 
-        if (!p.compareNextTokens(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON))
+        p.advance();
+        ParameterBuilder.buildParameters(p);
+        if (!p.is(TokenType.COLON))
             new PError("Falsches Format");
-
-        EntryNode functionRoot = new EntryNode(functionName);
 
         Logger.log("Konstruktor '" + functionName + "' erkannt ");
 
-        return functionRoot;
+        p.manager.newScope(functionName);
+
+        return new EntryNode(functionName);
     }
 
-    private static EntryNode buildEntry(Parser p) {
+    private static EntryNode buildFunction(Parser p) {
+        p.advance();
+        String functionName = p.currentToken.getValue();
+        p.advance();
+        ParameterBuilder.buildParameters(p);
+        if (!p.is(TokenType.COLON))
+            new PError("Body Declarator fehlt");
 
-        String functionName = "entry";
+        Logger.log("Funktion '" + functionName + "' erkannt ");
 
-        if (p.next().type() == TokenType.IDENTIFIER) {
-            p.advance();
-            functionName = p.currentToken.getValue();
-        }
+        EntryNode function = new EntryNode(functionName);
+        Function f = new Function(function);
+        Parser.methods.put(functionName, f);
 
-        if (!p.compareNextTokens(TokenType.O_ROUND_BRACKET, TokenType.C_ROUND_BRACKET, TokenType.COLON))
-            new PError("Falsches Format");
+        p.manager.newScope(functionName);
 
-        EntryNode functionRoot = new EntryNode(functionName);
-        p.currentClass.addEntry(functionRoot);
-        Logger.log("Entry '" + functionName + "' erkannt");
-
-        return functionRoot;
+        return function;
     }
 }

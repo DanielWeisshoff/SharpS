@@ -1,8 +1,0 @@
-[2021/FEB/1	19:43:07]  Lexer done in 22ms
-[2021/FEB/1	19:43:07]  Klasse Test erkannt
-[2021/FEB/1	19:43:07]  Entry 'entry' erkannt
-[2021/FEB/1	19:43:07]  Funktionsaufruf help wurde erkannt
-[2021/FEB/1	19:43:07]  Parser done in 13ms
-[2021/FEB/1	19:43:09]  --->Starting program on entry 0<---
-[2021/FEB/1	19:43:09]  Program finished in 1ms
-[2021/FEB/1	19:43:09]  Exited program with code 1

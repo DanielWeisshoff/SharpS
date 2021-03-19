@@ -17,9 +17,7 @@ public class Expression {
     public Node toAST() {
         var root = new BinaryOperatorNode(tokens);
         root.execute();
-
         //Hier Optimierung
-
         //In Interpreter-Nodes umwandeln
         return root.toNode();
     }

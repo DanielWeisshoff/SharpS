@@ -1,18 +1,19 @@
-package com.danielweisshoff.interpreter.nodesystem.node;
+package com.danielweisshoff.interpreter.nodesystem.node.binaryoperations;
 
 import com.danielweisshoff.interpreter.nodesystem.Data;
 import com.danielweisshoff.interpreter.nodesystem.DataType;
+import com.danielweisshoff.interpreter.nodesystem.node.Node;
 
 /**
- * Divides two values and returns the result
+ * Subtracts two values and returns the result
  */
-public class BinaryDivNode extends Node {
+public class BinarySubNode extends Node {
 
     private final Node left;
     private final Node right;
     private Data<Double> result;
 
-    public BinaryDivNode(Node leftNode, Node rightNode) {
+    public BinarySubNode(Node leftNode, Node rightNode) {
         super(new DataType[]{DataType.DOUBLE, DataType.DOUBLE}, DataType.DOUBLE);
         this.left = leftNode;
         this.right = rightNode;
@@ -27,9 +28,9 @@ public class BinaryDivNode extends Node {
     }
 
     private void calculateResult() {
-        double leftResult = left.execute().toDouble();
-        double rightResult = right.execute().toDouble();
+        double leftResult = left.execute().asDouble();
+        double rightResult = right.execute().asDouble();
 
-        result = new Data<Double>(leftResult / rightResult, DataType.DOUBLE);
+        result = new Data<Double>(leftResult - rightResult, DataType.DOUBLE);
     }
 }

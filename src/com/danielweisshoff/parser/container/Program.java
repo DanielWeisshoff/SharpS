@@ -27,13 +27,16 @@ public class Program {
         }
     }
 
-    public void printEntries() {
+    public boolean printEntries() {
+        if (entries.size() == 1)
+            return false;
         int counter = 0;
         System.out.println("Entrypoints:");
         for (EntryNode n : entries) {
             System.out.println("[" + counter + "] " + n.getName());
             counter++;
         }
+        return true;
     }
 
     public EntryNode getEntry(int num) {

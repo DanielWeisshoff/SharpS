@@ -17,6 +17,6 @@ class NumberNode extends ExpressionNode {
 
     @Override
     public Node toNode() {
-        return new com.danielweisshoff.interpreter.nodesystem.node.NumberNode(value);
+        return new com.danielweisshoff.interpreter.nodesystem.node.data.NumberNode(value);
     }
 }

@@ -1,13 +1,14 @@
 package com.danielweisshoff.parser.builders;
 
 import com.danielweisshoff.interpreter.nodesystem.node.Node;
-import com.danielweisshoff.interpreter.nodesystem.node.NumberNode;
-import com.danielweisshoff.interpreter.nodesystem.node.VariableNode;
+import com.danielweisshoff.interpreter.nodesystem.node.data.NumberNode;
+import com.danielweisshoff.interpreter.nodesystem.node.data.VariableNode;
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.Parser;
 import com.danielweisshoff.parser.expression.Expression;
+
 
 import java.util.ArrayList;
 
@@ -19,17 +20,17 @@ public class ExpressionBuilder {
     public static Node buildExpression(Parser p) {
         ArrayList<Token> buffer = new ArrayList<>();
 
-        while (!p.currentToken.isEOF() && p.currentToken.type() != TokenType.NEWLINE) {
+        while (!p.currentToken.isEOF() && !p.is(TokenType.NEWLINE)) {
             if (p.currentToken.isOP()
                     || p.currentToken.isNumeric()
-                    || p.currentToken.type() == TokenType.IDENTIFIER
-                    || p.currentToken.type() == TokenType.O_ROUND_BRACKET
-                    || p.currentToken.type() == TokenType.C_ROUND_BRACKET) {
+                    || p.is(TokenType.IDENTIFIER)
+                    || p.is(TokenType.O_ROUND_BRACKET)
+                    || p.is(TokenType.C_ROUND_BRACKET)) {
                 buffer.add(p.currentToken);
                 p.advance();
             } else break;
         }
-        Token[] arr = convertUnarys(buffer);
+        Token[] arr = convertUnaries(buffer);
 
         Node calculation;
         if (arr.length == 1)
@@ -41,7 +42,7 @@ public class ExpressionBuilder {
             calculation = new Expression(arr).toAST();
 
 
-        if (p.currentToken.type() == TokenType.COMPARISON)
+        if (p.is(TokenType.COMPARISON))
             calculation = EquationBuilder.buildEquation(p, calculation);
         else
             Logger.log("Rechnung erstellt");
@@ -49,7 +50,7 @@ public class ExpressionBuilder {
         return calculation;
     }
 
-    private static Token[] convertUnarys(ArrayList<Token> tokens) {
+    private static Token[] convertUnaries(ArrayList<Token> tokens) {
         if (tokens.get(0).type() == TokenType.SUB) {
             tokens.get(1).setValue("-" + tokens.get(1).getValue());
             tokens.remove(0);

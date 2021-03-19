@@ -14,7 +14,7 @@ public class LessNode extends Node {
     private final Node right;
 
     public LessNode(Node left, Node right) {
-        super(new DataType[]{DataType.ANY}, DataType.BOOL);
+        super(null, DataType.BOOLEAN);
         this.left = left;
         this.right = right;
     }
