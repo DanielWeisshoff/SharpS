@@ -27,3 +27,4 @@ cls Start:
                     int dd
                 int ee
             int ff
+            help()
