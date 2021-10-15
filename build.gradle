@@ -1,0 +1,24 @@
+//Plugin einbinden, welches cli's aktiviert
+plugins{
+	id 'application'
+}
+
+//Die Hauptklasse festlegen
+application{
+	mainClass='src/com/danielweisshoff/Shell.java'
+}
+
+//Den root-Ordner ändern, da Gradle standardmäßig sein eigene Ordnerstruktur benutzt
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/']
+        }
+    }
+}
+
+
+//Die Eingabe festlegen, damit Userinput funktioniert
+run {
+    standardInput = System.in
+}
