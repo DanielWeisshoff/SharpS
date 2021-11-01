@@ -77,6 +77,7 @@ public class Parser {
         Class[] classArray = new Class[classes.size()];
         classes.toArray(classArray);
 
+        //TODO SymbolTable test
         manager.print();
 
         return new Program(classArray);
@@ -177,7 +178,6 @@ public class Parser {
                 manager.endScope();
         }
         currentTabs = tabs;
-
 
         advance();
         if (is(TokenType.KEYWORD)) {
