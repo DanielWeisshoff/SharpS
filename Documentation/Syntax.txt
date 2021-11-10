@@ -72,10 +72,10 @@ int i = 10
 
 ===== Methoden =====
 #Standard
-+   fnc sagHallo():         # fnc = Funktion ohne Rückgabewert
++   fnc sagHallo():         # fnc = Funktion ohne RÃ¼ckgabewert
         print("Hallo")
 
-#Mit Rückgabe
+#Mit RÃ¼ckgabe
 +   int getZahl():
         ->5
 
@@ -97,7 +97,7 @@ int i = 10
 for(int i = 0,100,1):
     #code
 
-for 20:         # 20 durchläufe ohne variable, naive for-schleife
+for (20):         # 20 durchlÃ¤ufe ohne variable, naive for-schleife
 
 for(0,20,2):    # definierter durchlauf ohne variable
 
@@ -137,7 +137,7 @@ else:
     #code
 
 ===== Switch =====
-switch(variable):       #break wird nicht benötigt, da automatisch aufgehört wird
+switch(variable):       #break wird nicht benÃ¶tigt, da automatisch aufgehÃ¶rt wird
     case 0:
         #code
     case 1,2,3:
@@ -145,9 +145,9 @@ switch(variable):       #break wird nicht benötigt, da automatisch aufgehört wir
     def:
         #code
 
-evtl. aus spaß:
+evtl. aus spaÃŸ:
 
-boomerswitch(variable):       #break wird benötigt, da der Nutzer ein boomer ist
+boomerswitch(variable):       #break wird benÃ¶tigt, da der Nutzer ein boomer ist
     case 0:
         #code
         break
