@@ -2,8 +2,22 @@
   MASTER TODOLIST   MASTER TODOLIST MASTER TODOLIST     MASTER TODOLIST
 /////////////////////////////////////////////////////////////////////////
 
+
+TODO IMPORTANT
+GroÃŸe Planaenderung:
+Die Programmiersprache soll zuerst voll-funktionsfÃ¤hig interpretiert sein.
+Kompilierung kommt dann irgendwann nach.
+Deswegen:
+- erstmal alles, was mit Kompilierung zu tun hat entfernen.
+- zu unbenutzten packages readme.md hinzufuegen 
+- Die Kette von Lexer bis hin zu Interpreter soll zeilenweise abgearbeitet werden und nicht den ganzen Code vorinterpretieren.
+- Die *Build Klassen sind verwirrend
+- Die Symboltable sollen wÃ¤hrend der Laufzeit gefÃ¼llt werden
+-  Nodes sollen nurnoch Strukturen ohne Logik sein -> Logik von Nodes zum Interpreter schieben
+- Variablen sollen nicht mehr im Parser gespeichert werden sondern den Stack/Heap nutzen
+
 TODO
- -  Bitwise operationen einfügen
+ -  Bitwise operationen einfuegen -> Lexer aktualisieren ( & | ^ ~ << >> )
        * The & (bitwise AND) The result of AND is 1 if both of the two bits are 1.
        * The | (bitwise OR)  The result of OR is 1 if any of the two bits is 1.
        * The ^ (bitwise XOR) The result of XOR is 1 if the two bits are different.
@@ -11,25 +25,31 @@ TODO
        * The << (left shift) takes two numbers, left shifts the bits of the first operand, the second operand decides the number of places to shift.
        * The >> (right shift) takes two numbers, right shifts the bits of the first operand, the second operand decides the number of places to shift.
     Je nachdem worin das Ergebnis gespeichert werden soll, wird entweder bitwise oder boolean algebra angewandt.
- -   Booleans werden und sollen wie bytes behandelt werden. Man soll mit ihnen ganz normal rechnen können.
+ -   Booleans werden und sollen wie bytes behandelt werden. Man soll mit ihnen ganz normal rechnen kï¿½nnen.
      Um zum Beispiel die Summe aller bools zu berechnen, die true sind.
- - Variablen sollen nicht mehr im Parser gespeichert werden sondern den Stack/Heap nutzen
- - Das erzeugen von Objekten soll möglich sein
+ - ? Wie werden Pointer funktionieren, denn '*' Ã¼berschneidet sich mit dem static access modifier ? 
+ - Das erzeugen von Objekten soll mï¿½glich sein
  - Parameter
- - Rückgabewerte
- - Abfrage, ob Rückgabewert und zieladresse vom gleichen Datentypen sind
- - Objekte sollen als Parameter/Rückgabewert möglich sein -> evtl. Data überarbeiten ?
+ - Rï¿½ckgabewerte
+ - Objekte sollen als Parameter/Rï¿½ckgabewert mï¿½glich sein -> evtl. Data ï¿½berarbeiten ?
  - Enums
  - Interfaces
  - Vererbung
  - Casting
- - Lexer aktualisieren ( & | ^ ~ << >> )
- - access modifier hinzufügen
+ - access modifier hinzufuegen
     * public +
     * private -
     * static *
     * (protected?) /
-    * mögliche Zeichen:  § $ % & ? ~ _ . , : ; < > |
-    Werden dann im Symboltable eingetragen. Wenn die get() Methode aufgerufen wird, müssen einfach nur neue
-    Regelungen basierend auf dem AccessModifier der gesuchten Variable erklärt werden.
- - Parser Klasse wird zur Abstrakten Oberklasse. wird unterteilt in -> SharpSParser,EditorParser
+    * mï¿½gliche Zeichen:  ï¿½ $ % & ? ~ _ . , : ; < > |
+    Werden dann im Symboltable eingetragen. Wenn die get() Methode aufgerufen wird, mï¿½ssen einfach nur neue
+    Regelungen basierend auf dem AccessModifier der gesuchten Variable erklï¿½rt werden.
+ - ? Parser Klasse wird zur Abstrakten Oberklasse. wird unterteilt in -> SharpSParser,EditorParser ?
+ - lexer.txt, log.txt zu .log aendern und in eigenem /log Ordner aufbewahren
+ - booleansche Logik &, && ; |, || richtig implementieren
+ - ? Betragsstriche |a|?
+ - ?skalar (a|a) ?
+ - Ãœberschreiben von Rechenoperationen fÃ¼r Objekte
+
+int a = 2Â² + |test()| * (a|a)
+int a = pow(2,2) + abs(test()) * (a*a)
