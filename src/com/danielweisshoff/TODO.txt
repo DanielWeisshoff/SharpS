@@ -2,6 +2,19 @@
   MASTER TODOLIST   MASTER TODOLIST MASTER TODOLIST     MASTER TODOLIST
 /////////////////////////////////////////////////////////////////////////
 
+TODO MOST-IMPORTANT
+Lexer nimmt gesamten Text als input
+zeilenweise Lexen -> zeilenweise Parsen
+es wäre dumm, einen Text mit 10.000 Zeilen zu lexen,
+wenn in der ersten schon ein Fehler ist
+D.h pro Datei ein Lexer, aber insg. nur ein Parser, da statische Variablen
+
+erstmal nur als Scriptsprache(keine Tababstände), die Logik kann dann nachher easy
+ins OOP übertragen werden
+
+
+
+
 
 TODO IMPORTANT
 Große Planaenderung:

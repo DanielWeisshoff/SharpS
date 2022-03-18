@@ -1,6 +1,6 @@
 package com.danielweisshoff.interpreter.heap;
 
-import com.danielweisshoff.interpreter.nodesystem.node.Node;
+import com.danielweisshoff.parser.nodesystem.node.Node;
 import com.danielweisshoff.parser.symboltable.SymbolTable;
 
 /**
@@ -8,15 +8,15 @@ import com.danielweisshoff.parser.symboltable.SymbolTable;
  */
 public class StaticHeap {
 
-    public Node[] heapSpace;
+	public Node[] heapSpace;
 
-    public StaticHeap(SymbolTable table) {
-        /*
-         *Alle Einträge des SymbolTables in verweise zu den Variablen/Funktionen umbauen
-         */
-    }
+	public StaticHeap(SymbolTable table) {
+		/*
+		 *Alle Eintrï¿½ge des SymbolTables in verweise zu den Variablen/Funktionen umbauen
+		 */
+	}
 
-    public Node get(int id) {
-        return heapSpace[id];
-    }
+	public Node get(int id) {
+		return heapSpace[id];
+	}
 }

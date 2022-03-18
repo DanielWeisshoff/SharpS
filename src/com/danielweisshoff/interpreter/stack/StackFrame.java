@@ -1,10 +1,10 @@
 package com.danielweisshoff.interpreter.stack;
 
-import com.danielweisshoff.interpreter.nodesystem.Data;
+import com.danielweisshoff.parser.nodesystem.Data;
 
 /*
  * TODO
- *  - returnType wird durch die Funktion definiert, für die der StackFrame erstellt wird
+ *  - returnType wird durch die Funktion definiert, fï¿½r die der StackFrame erstellt wird
  */
 
 /*
@@ -19,14 +19,14 @@ import com.danielweisshoff.interpreter.nodesystem.Data;
  */
 public class StackFrame {
 
-    private final Data<?>[] variables;
-    private long returnAdress;
+	private final Data<?>[] variables;
+	private long returnAdress;
 
-    public StackFrame(Data... variables) {
-        this.variables = variables;
-    }
+	public StackFrame(Data... variables) {
+		this.variables = variables;
+	}
 
-    public Data<?> get(int id) {
-        return variables[id];
-    }
+	public Data<?> get(int id) {
+		return variables[id];
+	}
 }

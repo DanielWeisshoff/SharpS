@@ -1,69 +1,86 @@
 package com.danielweisshoff.parser.builders;
 
-import com.danielweisshoff.interpreter.nodesystem.node.Node;
-import com.danielweisshoff.interpreter.nodesystem.node.data.NumberNode;
-import com.danielweisshoff.interpreter.nodesystem.node.data.VariableNode;
-import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
-import com.danielweisshoff.logger.Logger;
+import com.danielweisshoff.parser.PError;
 import com.danielweisshoff.parser.Parser;
-import com.danielweisshoff.parser.expression.Expression;
+import com.danielweisshoff.parser.nodesystem.node.Node;
+import com.danielweisshoff.parser.nodesystem.node.binaryoperations.BinaryAddNode;
+import com.danielweisshoff.parser.nodesystem.node.binaryoperations.BinaryDivNode;
+import com.danielweisshoff.parser.nodesystem.node.binaryoperations.BinaryMulNode;
+import com.danielweisshoff.parser.nodesystem.node.binaryoperations.BinaryOperationNode;
+import com.danielweisshoff.parser.nodesystem.node.binaryoperations.BinarySubNode;
+import com.danielweisshoff.parser.nodesystem.node.data.NumberNode;
 
-
-import java.util.ArrayList;
-
-/* TODO
- *  - Bei einer Equation wird rekusiv aufgerufen -> bessere Lösung finden
- */
 public class ExpressionBuilder {
 
-    public static Node buildExpression(Parser p) {
-        ArrayList<Token> buffer = new ArrayList<>();
+	public static Node buildExpression(Parser p) {
+		Node left = buildTerm(p);
 
-        while (!p.currentToken.isEOF() && !p.is(TokenType.NEWLINE)) {
-            if (p.currentToken.isOP()
-                    || p.currentToken.isNumeric()
-                    || p.is(TokenType.IDENTIFIER)
-                    || p.is(TokenType.O_ROUND_BRACKET)
-                    || p.is(TokenType.C_ROUND_BRACKET)) {
-                buffer.add(p.currentToken);
-                p.advance();
-            } else break;
-        }
-        Token[] arr = convertUnaries(buffer);
+		Node op = null;
+		while (p.curToken.isLineOP()) {
 
-        Node calculation;
-        if (arr.length == 1)
-            if (arr[0].isNumeric())
-                calculation = new NumberNode(Double.parseDouble(arr[0].getValue()));
-            else
-                calculation = new VariableNode(arr[0].getValue());
-        else
-            calculation = new Expression(arr).toAST();
+			if (p.curToken.type() == TokenType.ADD)
+				op = new BinaryAddNode();
+			else if (p.curToken.type() == TokenType.SUB)
+				op = new BinarySubNode();
+			p.advance();
 
+			Node right = buildTerm(p);
 
-        if (p.is(TokenType.COMPARISON))
-            calculation = EquationBuilder.buildEquation(p, calculation);
-        else
-            Logger.log("Rechnung erstellt");
+			((BinaryOperationNode) op).left = left;
+			((BinaryOperationNode) op).right = right;
+			left = op;
+		}
+		//new PError("Error building term. Symbol '" + p.curToken.getValue() + "' is not a known operator");
+		return left;
+	}
 
-        return calculation;
-    }
+	private static Node buildTerm(Parser p) {
+		Node left = buildFactor(p);
 
-    private static Token[] convertUnaries(ArrayList<Token> tokens) {
-        if (tokens.get(0).type() == TokenType.SUB) {
-            tokens.get(1).setValue("-" + tokens.get(1).getValue());
-            tokens.remove(0);
-        }
+		Node op = null;
+		while (p.curToken.isDotOP()) {
 
-        for (int i = 0; i < tokens.size() - 1; i++) {
-            if (tokens.get(i).isOP() && tokens.get(i + 1).type() == TokenType.SUB) {
-                tokens.get(i + 2).setValue("-" + tokens.get(i + 2).getValue());
-                tokens.remove(i + 1);
-            }
-        }
+			if (p.curToken.type() == TokenType.MUL)
+				op = new BinaryMulNode();
+			else if (p.curToken.type() == TokenType.DIV)
+				op = new BinaryDivNode();
+			p.advance();
 
-        Token[] arr = new Token[tokens.size()];
-        return tokens.toArray(arr);
-    }
+			Node right = buildFactor(p);
+
+			((BinaryOperationNode) op).left = left;
+			((BinaryOperationNode) op).right = right;
+			left = op;
+		}
+		//new PError("Error building term. Symbol '" + p.curToken.getValue() + "' is not a known operator");
+
+		return left;
+	}
+
+	private static Node buildFactor(Parser p) {
+		int isUnary = 1;
+
+		if (p.curToken.type() == TokenType.SUB) {
+			isUnary = -1;
+			p.advance();
+		}
+
+		if (p.curToken.type() == TokenType.NUMBER) {
+			Node n = new NumberNode(Integer.parseInt(p.curToken.getValue()) * isUnary);
+			p.advance();
+			return n;
+		} else if (p.curToken.type() == TokenType.O_ROUND_BRACKET) {
+			p.advance();
+
+			Node n = buildExpression(p);
+
+			if (p.curToken.type() != TokenType.C_ROUND_BRACKET)
+				new PError("Expression error. Bracket not properly closed");
+			p.advance();
+			return n;
+		} else
+			new PError("Expr error, couldnt build factor");
+		return null;
+	}
 }
