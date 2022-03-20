@@ -3,15 +3,6 @@ package com.danielweisshoff.lexer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/*TODO
- * Wenn der Text mit Leerzeichen endet, gibt es Fehler
- *
- * Problem mit Unaryoperator
- * 1-1  wird falsch gewertet
- *
- * lasttoken entfernen und ll(1) einf�hren
- * Wenn der Text mit whitespace endet, crasht der Parser
- */
 public class Lexer {
 
 	public static String VERSION = "V 0.8.1";

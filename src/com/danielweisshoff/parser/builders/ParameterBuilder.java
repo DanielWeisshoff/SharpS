@@ -5,7 +5,7 @@ import com.danielweisshoff.parser.Parser;
 
 public class ParameterBuilder {
 
-	/*TODO
+	/*
 	 *erstmals nur placeholder
 	 */
 	public static String buildParameters(Parser p) {

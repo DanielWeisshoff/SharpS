@@ -1,10 +1,8 @@
 package com.danielweisshoff.parser;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.danielweisshoff.parser.nodesystem.node.ClassNode;
-import com.danielweisshoff.parser.nodesystem.node.Node;
 import com.danielweisshoff.parser.nodesystem.node.RootNode;
 
 public class AST {

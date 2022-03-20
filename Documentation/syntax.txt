@@ -182,10 +182,10 @@ textLabel.text = "Hallo Welt!"
 
 wird zu:
 Label textLabel = Label():
-    setBackground(Color.pink)
-	setSize(200,50)
-	setFont("Calibri",12)
-    text = "Hallo Welt!"
+    .setBackground(Color.pink)
+	.setSize(200,50)
+	.setFont("Calibri",12)
+    .text = "Hallo Welt!"
 
 # erzeugt ein Scope, in dem die Lokalen Funktionen/Variablen direkt genutzt werden können
 

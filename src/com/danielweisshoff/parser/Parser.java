@@ -91,7 +91,7 @@ public class Parser {
 			addInstruction = false;
 		}
 
-		//TODO ELIF
+		//ELIF
 		else if (curToken.type() == TokenType.KEYWORD && (curToken.getValue().equals("ELIF"))) {
 			advance();
 
@@ -107,7 +107,7 @@ public class Parser {
 			addInstruction = false;
 		}
 
-		//TODO FUNCTION
+		//FUNCTION
 		else if (curToken.type() == TokenType.IDENTIFIER) {
 			String name = curToken.getValue();
 			advance();

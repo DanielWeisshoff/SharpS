@@ -2,7 +2,6 @@ package com.danielweisshoff.parser.nodesystem.node.binaryoperations;
 
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
-import com.danielweisshoff.parser.nodesystem.node.Node;
 
 /**
  * Divides two values and returns the result

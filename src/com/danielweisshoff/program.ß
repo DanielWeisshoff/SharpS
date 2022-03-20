@@ -1,3 +1,8 @@
+
+exit()
+print()
+
+
 if (1+2*3 != 7):
 	print()
 elif (20 < 10):

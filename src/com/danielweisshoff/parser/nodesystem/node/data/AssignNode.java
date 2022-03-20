@@ -1,6 +1,5 @@
 package com.danielweisshoff.parser.nodesystem.node.data;
 
-import com.danielweisshoff.parser.Parser;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.Node;

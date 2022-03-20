@@ -22,7 +22,7 @@ public class StackFrame {
 	private final Data<?>[] variables;
 	private long returnAdress;
 
-	public StackFrame(Data... variables) {
+	public StackFrame(Data<?>... variables) {
 		this.variables = variables;
 	}
 

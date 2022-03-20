@@ -5,11 +5,6 @@ import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 
-/* TODO
- *  - Nachschauen ob Funktion existiert in FunctionBuilder verschieben
- *  - Nicht mehr namen, sondern ID benutzen
- */
-
 /**
  * Calls the defined function
  */

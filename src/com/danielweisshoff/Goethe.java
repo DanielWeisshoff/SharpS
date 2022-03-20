@@ -24,6 +24,7 @@ public class Goethe {
 			Scanner scanner = new Scanner(programPath).useDelimiter("(\\b|\\B)");
 			while (scanner.hasNext())
 				program.append(scanner.next());
+			scanner.close();
 		} catch (Exception e) {
 			System.out.println(e.getLocalizedMessage());
 		}

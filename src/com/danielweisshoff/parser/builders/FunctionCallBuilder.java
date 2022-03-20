@@ -1,15 +1,10 @@
 package com.danielweisshoff.parser.builders;
 
-import java.util.zip.Adler32;
-
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.PError;
 import com.danielweisshoff.parser.Parser;
 import com.danielweisshoff.parser.nodesystem.node.CallNode;
-import com.danielweisshoff.parser.nodesystem.node.ConstructorNode;
-import com.danielweisshoff.parser.nodesystem.node.FunctionNode;
-import com.danielweisshoff.parser.nodesystem.node.Node;
 
 /* TODO
 *  - Da Methoden unver�nderbar sind und nicht erzeugt / gel�scht werden k�nnen,
