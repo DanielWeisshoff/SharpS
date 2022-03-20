@@ -2,7 +2,6 @@ package com.danielweisshoff.parser.nodesystem.node;
 
 import com.danielweisshoff.interpreter.builtin.BuiltInFunction;
 import com.danielweisshoff.logger.Logger;
-import com.danielweisshoff.parser.Parser;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 

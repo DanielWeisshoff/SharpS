@@ -8,5 +8,4 @@ public class Interpreter {
 
 		n.execute();
 	}
-
 }

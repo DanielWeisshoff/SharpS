@@ -1,74 +1,193 @@
 package com.danielweisshoff.parser;
 
+import java.util.Stack;
+
 import com.danielweisshoff.interpreter.builtin.BuiltInFunction;
-import com.danielweisshoff.interpreter.builtin.BuiltInVariable;
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
+import com.danielweisshoff.parser.builders.FunctionCallBuilder;
+import com.danielweisshoff.parser.builders.IfBuilder;
 import com.danielweisshoff.parser.builders.VariableBuilder;
 import com.danielweisshoff.parser.nodesystem.node.*;
-
-/*TODO
- * - Entries k�nnen auch Namen haben
- * - Einen Weg finden, Methoden mit gleichen Namen aber unterschiedlichen Parametern zu speichern
- * - Dictionary<String,MethodGroup>
- */
 
 /**
  * Converts tokens to a runnable AST
  */
 public class Parser {
 
-	private RootNode root = new RootNode();
-	private ClassNode currentClass;
-	private Node currentNode = root;
+	//?change to RootNode later?
+	private BlockNode root = new BlockNode();
 
 	private Token[] tokens;
 
 	public Token curToken;
 	private int position = -1;
 
+	private boolean error = false;
+
+	//For block building
+	private Stack<BlockNode> scopeNode = new Stack<>();
+	private int scopeDepth = -1;
+
+	//some quirky code for scoping
+	private boolean lateScopeIn = false;
+	private BlockNode scopeInBlock;
+	private boolean addInstruction = true;
+
 	public Parser() {
 		BuiltInFunction.registerAll();
-		BuiltInVariable.registerAll();
+		root = new BlockNode();
+		scopeDepth = 0;
+		scopeNode.add(root);
 	}
 
+	/**
+	 * Assumes it gets a non empty array
+	 * @param tokens
+	 */
 	public void parseLine(Token[] tokens) {
 		this.tokens = tokens;
 		position = -1;
 		advance();
 
-		if (curToken.type() == TokenType.KEYWORD)
-			VariableBuilder.buildVariable(this);
+		Node instruction = new ErrorNode();
+		addInstruction = true;
 
-		if (curToken.type() == TokenType.IDENTIFIER) {
+		int curScope = 0;
+		if (curToken.type() == TokenType.TAB) {
+			curScope = Integer.parseInt(curToken.getValue());
+			advance();
+		}
+		//SCOPING
+		//curScope duefte niemals groesser sein als scopeDepth
+		if (curScope < scopeDepth) {
+			int diff = scopeDepth - (curScope);
+			scopeOut(diff);
+		}
+
+		//VARIABLE
+		if (curToken.isPrimitive())
+			instruction = VariableBuilder.buildVariable(this);
+
+		//IF
+		else if (curToken.type() == TokenType.KEYWORD && curToken.getValue().equals("IF")) {
+			advance();
+			IfNode in = IfBuilder.buildIf(this);
+			instruction = in;
+			lateScopeIn(in.condBlock);
+		}
+		//ELSE
+		else if (curToken.type() == TokenType.KEYWORD && (curToken.getValue().equals("ELSE"))) {
+			advance();
+
+			IfNode in = findLatestIfNode(scopeNode.peek());
+			if (in == null || in.elseBlock != null)
+				new PError("the else statement doesnt have an if part");
+
+			instruction = IfBuilder.buildElse(this);
+
+			in.elseBlock = new BlockNode();
+			scopeIn(in.elseBlock);
+			addInstruction = false;
+		}
+
+		//TODO ELIF
+		else if (curToken.type() == TokenType.KEYWORD && (curToken.getValue().equals("ELIF"))) {
+			advance();
+
+			IfNode in = findLatestIfNode(scopeNode.peek());
+			if (in == null || in.elseBlock != null)
+				new PError("the else statement doesnt have an if part");
+
+			instruction = IfBuilder.buildIf(this);
+
+			in.elseBlock = new BlockNode();
+			in.elseBlock.add(instruction);
+			scopeIn(((IfNode) instruction).condBlock);
+			addInstruction = false;
+		}
+
+		//TODO FUNCTION
+		else if (curToken.type() == TokenType.IDENTIFIER) {
 			String name = curToken.getValue();
 			advance();
 
 			if (curToken.type() == TokenType.O_ROUND_BRACKET) {
-				CallNode cn = new CallNode(name);
-			}
+				advance();
+				instruction = FunctionCallBuilder.buildFunctionCall(this, name);
+			} else if (curToken.type() == TokenType.ASSIGN)
+				instruction = VariableBuilder.assignVariable(this, name);
+			else
+				error = true;
+		} else
+			error = true;
+
+		if (error) {
+			String tokenList = "";
+			for (Token t : tokens)
+				tokenList += t.getDescription() + "\n";
+			new PError("Parsing error. Unknown instruction:\n" + tokenList);
 		}
 
-		//TODO Erstmal unwichtig
-		// if (is(TokenType.TAB)) {
-		// 	String tabs = currentToken.getValue();
-		// 	System.out.println(tabs);
-		// 	advance();
+		//add instrucent to current scope
+		if (addInstruction)
+			scopeNode.peek().add(instruction);
 
-		// 	if (tabs.equals("1"))
-		// 		validateAttributeLane();
-		// 	else if (tabs.equals("2"))
-		// 		validateFunctionLane();
-		// 	else
-		// 		validateScope();
-		// } else //Ansonsten gehen wir von einer Klassendefinition aus
-		// 	validateClassLane();
+		//could need an overhaul LMAO 
+		if (lateScopeIn) {
+			scopeDepth++;
+			scopeNode.add(scopeInBlock);
+			lateScopeIn = false;
+		}
+	}
+
+	//searches for the latest IfNode (if/elseif) in the present scope
+	private IfNode findLatestIfNode(BlockNode n) {
+		for (int i = n.children.size() - 1; i >= 0; i--) {
+			if (n.children.get(i) instanceof IfNode) {
+				BlockNode bn = ((IfNode) n.children.get(i)).elseBlock;
+				if (bn != null) {
+					IfNode in = findLatestIfNode(bn);
+					if (in != null)
+						return in;
+				}
+				return (IfNode) n.children.get(i);
+			}
+		}
+		return null;
+	}
+
+	private void lateScopeIn(BlockNode bn) {
+		lateScopeIn = true;
+		scopeInBlock = bn;
+	}
+
+	private void scopeIn(BlockNode bn) {
+		scopeDepth++;
+		scopeNode.add(bn);
+	}
+
+	private void scopeOut(int amount) {
+		for (int i = 0; i < amount; i++) {
+			scopeNode.pop();
+			scopeDepth--;
+		}
 	}
 
 	public void advance() {
 		position++;
 		if (position < tokens.length)
 			curToken = tokens[position];
+	}
+
+	/**
+	 * Check, if current token type equals r, if not print error
+	 */
+	public void assume(TokenType t, String error) {
+		if (curToken.type() == t)
+			advance();
+		else
+			new PError(error);
 	}
 
 	public Token next() {
@@ -92,6 +211,10 @@ public class Parser {
 
 	public boolean is(String value) {
 		return curToken.getValue().equals(value);
+	}
+
+	public BlockNode getAST() {
+		return root;
 	}
 
 	//OOP ZEUGS

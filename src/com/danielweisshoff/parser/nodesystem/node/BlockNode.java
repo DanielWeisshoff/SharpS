@@ -6,26 +6,19 @@ import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 
 /**
- * Forms an entry point for the program
- * Executes all child nodes like a queue
+ * Represents a code block.
  */
-public class EntryNode extends Node {
+public class BlockNode extends Node {
 
-	private final ArrayList<Node> children;
-	private final String name;
+	public ArrayList<Node> children;
 
-	public EntryNode(String name) {
+	public BlockNode() {
 		super(null, DataType.INT);
 		children = new ArrayList<>();
-		this.name = name;
 	}
 
 	public void add(Node n) {
 		children.add(n);
-	}
-
-	public String getName() {
-		return name;
 	}
 
 	@Override

@@ -17,7 +17,6 @@ public class BinarySubNode extends BinaryOperationNode {
 	public Data<Double> execute() {
 		if (result == null)
 			calculateResult();
-		System.out.println(result);
 		return result;
 	}
 

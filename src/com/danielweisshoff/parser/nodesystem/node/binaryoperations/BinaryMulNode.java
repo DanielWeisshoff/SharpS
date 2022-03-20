@@ -2,7 +2,6 @@ package com.danielweisshoff.parser.nodesystem.node.binaryoperations;
 
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
-import com.danielweisshoff.parser.nodesystem.node.Node;
 
 /**
  * Multiplies two values and returns the result
@@ -17,7 +16,6 @@ public class BinaryMulNode extends BinaryOperationNode {
 	public Data<Double> execute() {
 		if (result == null)
 			calculateResult();
-		System.out.println(result);
 		return result;
 	}
 

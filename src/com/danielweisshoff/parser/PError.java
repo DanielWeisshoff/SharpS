@@ -7,9 +7,9 @@ import com.danielweisshoff.logger.Logger;
  */
 public class PError {
 
-    public PError(String errorMessage) {
-        System.out.println(errorMessage);
-        Logger.log(errorMessage);
-        System.exit(1);
-    }
+	public PError(String errorMessage) {
+		System.out.println("\n" + errorMessage);
+		Logger.log(errorMessage);
+		System.exit(1);
+	}
 }

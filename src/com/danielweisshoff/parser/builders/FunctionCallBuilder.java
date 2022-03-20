@@ -1,24 +1,40 @@
 package com.danielweisshoff.parser.builders;
 
+import java.util.zip.Adler32;
+
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.PError;
 import com.danielweisshoff.parser.Parser;
+import com.danielweisshoff.parser.nodesystem.node.CallNode;
 import com.danielweisshoff.parser.nodesystem.node.ConstructorNode;
-import com.danielweisshoff.parser.nodesystem.node.EntryNode;
 import com.danielweisshoff.parser.nodesystem.node.FunctionNode;
 import com.danielweisshoff.parser.nodesystem.node.Node;
 
 /* TODO
- *  - Da Methoden unver�nderbar sind und nicht erzeugt / gel�scht werden k�nnen,
- *   sollten sie direkt mit IDs aufgerufen werden. Dazu wird hier eine ArrayList<String,int> angegeben um
- *   eingegebene Methodennamen zu vergleichen und anschlie�end die daraus entstehende id anstatt des
- *   Namens in der CallNode eintragen.
- *  - Nach bearbeitung die Todolist in VariableBuilder kopieren
- */
-public class FunctionBuilder {
+*  - Da Methoden unver�nderbar sind und nicht erzeugt / gel�scht werden k�nnen,
+*   sollten sie direkt mit IDs aufgerufen werden. Dazu wird hier eine ArrayList<String,int> angegeben um
+*   eingegebene Methodennamen zu vergleichen und anschlie�end die daraus entstehende id anstatt des
+*   Namens in der CallNode eintragen.
+*  - Nach bearbeitung die Todolist in VariableBuilder kopieren
+*/
+public class FunctionCallBuilder {
 
 	// private static int entryCounter;
+
+	public static CallNode buildFunctionCall(Parser p, String functionName) {
+		String params = ParameterBuilder.buildParameters(p);
+
+		if (!p.is(TokenType.C_ROUND_BRACKET))
+			new PError("Parameterlist not closed");
+		p.advance();
+
+		Logger.log("Funktionsaufruf '" + functionName + "'(" + params + ")");
+
+		CallNode cn = new CallNode(functionName);
+
+		return cn;
+	}
 
 	// public static Node build(Parser p) {
 	// 	if (p.is("ntr"))
@@ -62,18 +78,4 @@ public class FunctionBuilder {
 
 	// 	return new ConstructorNode(functionName);
 	// }
-
-	private static FunctionNode buildFunction(Parser p) {
-		String functionName = p.curToken.getValue();
-		p.advance();
-		ParameterBuilder.buildParameters(p);
-		if (!p.is(TokenType.COLON))
-			new PError("Body Declarator fehlt");
-
-		Logger.log("Funktion '" + functionName + "' erkannt ");
-
-		FunctionNode function = new FunctionNode(functionName);
-
-		return function;
-	}
 }

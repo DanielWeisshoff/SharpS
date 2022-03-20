@@ -53,6 +53,10 @@ public class Goethe {
 		writeText(logPath, l.getLogFormat(), true);
 	}
 
+	public static void clearLog() {
+		writeText(logPath, "", false);
+	}
+
 	/*public File getFile(String totalPath) {
 	    ClassLoader classLoader = getClass().getClassLoader();
 	    return new File(classLoader.getResource(totalPath).getFile());

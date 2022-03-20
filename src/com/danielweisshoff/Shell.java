@@ -1,16 +1,16 @@
 package com.danielweisshoff;
 
-import java.util.Scanner;
-
-import com.danielweisshoff.interpreter.Interpreter;
 import com.danielweisshoff.lexer.Lexer;
 import com.danielweisshoff.lexer.Token;
+import com.danielweisshoff.lexer.TokenType;
+import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.Parser;
-import com.danielweisshoff.parser.nodesystem.node.EntryNode;
 
 public class Shell {
 
 	public static void main(String[] args) {
+
+		Goethe.clearLog();
 
 		String text = Goethe.getText();
 		Lexer lexer = new Lexer(text);
@@ -20,13 +20,20 @@ public class Shell {
 		int counter = 1;
 		while (lexer.hasNextLine()) {
 			line = lexer.nextLine();
+			if (line.length == 0 || (line.length == 1 && line[0].type() == TokenType.TAB))
+				continue;
+
 			parser.parseLine(line);
 
 			//DEBUGGING
-			System.out.print("\n[" + counter++ + "] ");
+			String msg = "\n[" + counter++ + "] ";
 			for (Token t : line)
-				System.out.print(t.type() + " ");
+				msg += t.type() + " ";
+			Logger.log(msg);
+
 		}
+
+		parser.getAST().execute();
 		System.exit(0);
 	}
 

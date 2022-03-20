@@ -8,8 +8,8 @@ import com.danielweisshoff.parser.nodesystem.node.Node;
  * Initializes a variable
  */
 public class InitNode extends Node {
-	private final String name;
-	private final Node expression;
+	public final String name;
+	public final Node expression;
 
 	public InitNode(String name, Node expression) {
 		super(null, null);

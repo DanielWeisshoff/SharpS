@@ -8,13 +8,12 @@ import com.danielweisshoff.parser.nodesystem.node.Node;
  * Compares the given Nodes
  * returns 1 or 0
  */
-public class MoreNode extends Node {
+public class MoreNode extends ConditionNode {
 
 	private final Node left;
 	private final Node right;
 
 	public MoreNode(Node left, Node right) {
-		super(null, DataType.BOOLEAN);
 		this.left = left;
 		this.right = right;
 	}

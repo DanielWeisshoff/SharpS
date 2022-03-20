@@ -8,9 +8,23 @@ public class ParameterBuilder {
 	/*TODO
 	 *erstmals nur placeholder
 	 */
-	public static void buildParameters(Parser parser) {
-		while (parser.curToken.type() != TokenType.C_ROUND_BRACKET)
-			parser.advance();
-		parser.advance();
+	public static String buildParameters(Parser p) {
+		String params = "";
+
+		while (p.curToken.type() != TokenType.C_ROUND_BRACKET) {
+			if (p.curToken.type() == TokenType.NUMBER || p.curToken.type() == TokenType.IDENTIFIER) {
+				params += p.curToken.getValue();
+				p.advance();
+				if (p.curToken.type() == TokenType.COMMA) {
+					params += ", ";
+					p.advance();
+				} else
+					break;
+
+			}
+		}
+		p.advance();
+
+		return params;
 	}
 }

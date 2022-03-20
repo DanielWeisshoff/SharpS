@@ -1,5 +1,6 @@
-package com.danielweisshoff.parser.expression;
+package com.danielweisshoff.parser;
 
+import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.nodesystem.node.Node;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.BinaryAddNode;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.BinaryDivNode;
@@ -24,11 +25,9 @@ public class ExpressionPrinter {
 	public void print(Node n) {
 
 		if (n instanceof NumberNode) {
-			System.out.print(n.execute().asFloat()); //NumberNode
+			Logger.log("" + n.execute().asFloat()); //NumberNode
 			return;
 		}
-
-		System.out.print("(");
 
 		print(((BinaryOperationNode) n).left);
 
@@ -41,10 +40,9 @@ public class ExpressionPrinter {
 			op = "MUL";
 		else if (n instanceof BinaryDivNode)
 			op = "DIV";
-		System.out.print(" " + op + " ");
 
 		print(((BinaryOperationNode) n).right);
 
-		System.out.print(")");
+		Logger.log("( " + op + " )");
 	}
 }

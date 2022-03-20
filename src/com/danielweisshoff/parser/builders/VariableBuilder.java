@@ -2,10 +2,11 @@ package com.danielweisshoff.parser.builders;
 
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.logger.Logger;
+import com.danielweisshoff.parser.ExpressionPrinter;
 import com.danielweisshoff.parser.PError;
 import com.danielweisshoff.parser.Parser;
-import com.danielweisshoff.parser.expression.ExpressionPrinter;
 import com.danielweisshoff.parser.nodesystem.node.Node;
+import com.danielweisshoff.parser.nodesystem.node.data.AssignNode;
 import com.danielweisshoff.parser.nodesystem.node.data.InitNode;
 
 public class VariableBuilder {
@@ -30,7 +31,7 @@ public class VariableBuilder {
 
 			p.advance();
 			Node expr = ExpressionBuilder.buildExpression(p);
-			System.out.println(expr.execute().asFloat()); //TODO testing
+			Logger.log(expr.execute().asFloat()); //TODO testing
 			new ExpressionPrinter(expr).print();
 
 			Logger.log("Variable " + varName + " initialisiert");
@@ -43,6 +44,18 @@ public class VariableBuilder {
 		p.advance();
 
 		return n;
+	}
+
+	public static AssignNode assignVariable(Parser p, String varName) {
+
+		p.advance();
+
+		Node expr = ExpressionBuilder.buildExpression(p);
+
+		AssignNode an = new AssignNode(varName, expr);
+
+		Logger.log("Assigned value to variable '" + varName + "'");
+		return an;
 	}
 
 	// public static AssignNode assignVariable(Parser p) {

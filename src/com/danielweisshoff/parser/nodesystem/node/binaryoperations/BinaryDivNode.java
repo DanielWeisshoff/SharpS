@@ -17,7 +17,6 @@ public class BinaryDivNode extends BinaryOperationNode {
 	public Data<Double> execute() {
 		if (result == null)
 			calculateResult();
-		System.out.println(result);
 		return result;
 	}
 

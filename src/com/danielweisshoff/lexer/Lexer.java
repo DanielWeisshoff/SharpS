@@ -54,13 +54,13 @@ public class Lexer {
 					tokens.add(t);
 			} else {
 				switch (currentChar) {
-					case '"' -> tokens.add(buildStringToken());
-					case '#' -> skipComment();
-					case '=' -> tokens.add(buildComparisonToken('='));
-					case '<' -> tokens.add(buildComparisonToken('<'));
-					case '>' -> tokens.add(buildComparisonToken('>'));
-					case '!' -> tokens.add(buildComparisonToken('!'));
-					default -> advance();
+				case '"' -> tokens.add(buildStringToken());
+				case '#' -> skipComment();
+				case '=' -> tokens.add(buildComparisonToken('='));
+				case '<' -> tokens.add(buildComparisonToken('<'));
+				case '>' -> tokens.add(buildComparisonToken('>'));
+				case '!' -> tokens.add(buildComparisonToken('!'));
+				default -> advance();
 				}
 			}
 		}
@@ -97,13 +97,13 @@ public class Lexer {
 				token = buildNumberToken();
 			} else {
 				switch (currentChar) {
-					case '"' -> token = (buildStringToken());
-					case '#' -> skipComment();
-					case '=' -> token = buildComparisonToken('=');
-					case '<' -> token = buildComparisonToken('<');
-					case '>' -> token = buildComparisonToken('>');
-					case '!' -> token = buildComparisonToken('!');
-					default -> advance();
+				case '"' -> token = (buildStringToken());
+				case '#' -> skipComment();
+				case '=' -> token = buildComparisonToken('=');
+				case '<' -> token = buildComparisonToken('<');
+				case '>' -> token = buildComparisonToken('>');
+				case '!' -> token = buildComparisonToken('!');
+				default -> advance();
 				}
 			}
 		}
@@ -164,10 +164,8 @@ public class Lexer {
 				break;
 		}
 		if (isFloat)
-			return new Token(TokenType.FLOAT,
-					text.substring(start, charIndex));
-		return new Token(TokenType.NUMBER,
-				text.substring(start, charIndex));
+			return new Token(TokenType.FLOAT, text.substring(start, charIndex));
+		return new Token(TokenType.NUMBER, text.substring(start, charIndex));
 	}
 
 	private Token buildComparisonToken(char c) {
@@ -193,8 +191,7 @@ public class Lexer {
 				break;
 			}
 		}
-		return new Token(TokenType.STRING,
-				text.substring(start, charIndex - 1));
+		return new Token(TokenType.STRING, text.substring(start, charIndex - 1));
 	}
 
 	private void skipComment() {
