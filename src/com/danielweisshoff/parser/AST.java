@@ -1,27 +1,19 @@
 package com.danielweisshoff.parser;
 
-import java.util.HashMap;
-
-import com.danielweisshoff.parser.nodesystem.node.ClassNode;
+import com.danielweisshoff.parser.nodesystem.node.Node;
 import com.danielweisshoff.parser.nodesystem.node.RootNode;
 
+/*
+API for the NodeSystem
+?Make Node protected?
+*/
 public class AST {
 
 	private RootNode root;
-
-	public HashMap<String, ClassNode> classes;
+	//pointer for Node that is currently visited
+	private Node visitNode;
 
 	public AST(RootNode root) {
 		this.root = root;
-
-		//Just finding the nodes in the AST
-		initClassesDictionary();
-	}
-
-	private void initClassesDictionary() {
-		classes = new HashMap<>();
-
-		for (ClassNode cn : root.getClasses())
-			classes.put(cn.getName(), cn);
 	}
 }

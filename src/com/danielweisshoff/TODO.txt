@@ -6,6 +6,7 @@
 TODO
 erstmal nur als Scriptsprache(keine Tababstände), die Logik kann dann nachher easy
 ins OOP übertragen werden
+	- Nodes sollen nurnoch Strukturen ohne Logik sein -> Logik von Nodes zum Interpreter schieben
 	- Ein paar builIn Funktionen
 	- Variablen (Symboltable wieder einbinden)
 	- Conditions verketten (&& || und (,) )
@@ -20,7 +21,6 @@ ins OOP übertragen werden
  	- Rueckgabewerte
 nicht so wichtig:
 	- Die *Build Klassen sind verwirrend
-	- Nodes sollen nurnoch Strukturen ohne Logik sein -> Logik von Nodes zum Interpreter schieben
 
 
 TODO

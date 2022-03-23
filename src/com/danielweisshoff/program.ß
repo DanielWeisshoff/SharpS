@@ -1,11 +1,6 @@
-
-exit()
-print()
-
-
-if (1+2*3 != 7):
+if(13 > 222):
+	int a
+elif(2 > 21):
+	int b
+elif (1+2 == 3):
 	print()
-elif (20 < 10):
-	int i = 5
-else:
-	help()
