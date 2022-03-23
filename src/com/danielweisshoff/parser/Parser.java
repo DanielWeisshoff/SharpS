@@ -58,7 +58,7 @@ public class Parser {
 		//if tab count is reduced, scope out
 		scopeOutIfNeeded();
 
-		if (curToken.type() == TokenType.KEYWORD) {
+		if (is(TokenType.KEYWORD)) {
 			String value = curToken.getValue();
 			advance();
 
@@ -71,14 +71,14 @@ public class Parser {
 			}
 		}
 		//FUNCTION
-		else if (curToken.type() == TokenType.IDENTIFIER) {
+		else if (is(TokenType.IDENTIFIER)) {
 			String name = curToken.getValue();
 			advance();
 
-			if (curToken.type() == TokenType.O_ROUND_BRACKET) {
+			if (is(TokenType.O_ROUND_BRACKET)) {
 				advance();
 				instruction = parseFunctionCall(name);
-			} else if (curToken.type() == TokenType.ASSIGN) {
+			} else if (is(TokenType.ASSIGN)) {
 				advance();
 				instruction = parseVariableAssignment(name);
 			} else
@@ -129,7 +129,7 @@ public class Parser {
 
 	private void scopeOutIfNeeded() {
 		int curScope = 0;
-		if (curToken.type() == TokenType.TAB) {
+		if (is(TokenType.TAB)) {
 			curScope = Integer.parseInt(curToken.getValue());
 			advance();
 		}
@@ -167,7 +167,7 @@ public class Parser {
 	 * Check, if current token type equals r, if not print error
 	 */
 	public void assume(TokenType t, String error) {
-		if (curToken.type() == t)
+		if (is(t))
 			advance();
 		else
 			new PError(error);
@@ -219,11 +219,11 @@ public class Parser {
 
 	private IfNode parseElif() {
 		IfNode in = findIfWithoutElse(scopeNode.peek());
+		in.elseBlock = new BlockNode();
 
 		IfNode elif = parseIf();
-
-		in.elseBlock = new BlockNode();
 		in.elseBlock.add(elif);
+
 		scopeIn(elif.condBlock);
 		addInstruction = false;
 
@@ -267,7 +267,6 @@ public class Parser {
 			op.right = right;
 			left = op;
 		}
-		//new PError("Error building term. Symbol '" + p.curToken.getValue() + "' is not a known operator");
 		return left;
 	}
 
@@ -277,9 +276,9 @@ public class Parser {
 		BinaryOperationNode op = null;
 		while (curToken.isDotOP()) {
 
-			if (curToken.type() == TokenType.MUL)
+			if (is(TokenType.MUL))
 				op = new BinaryMulNode();
-			else if (curToken.type() == TokenType.DIV)
+			else if (is(TokenType.DIV))
 				op = new BinaryDivNode();
 			advance();
 
@@ -289,30 +288,29 @@ public class Parser {
 			op.right = right;
 			left = op;
 		}
-		//new PError("Error building term. Symbol '" + p.curToken.getValue() + "' is not a known operator");
 		return left;
 	}
 
 	private Node parseFactor() {
 		int isUnary = 1;
 
-		if (curToken.type() == TokenType.SUB) {
+		if (is(TokenType.SUB)) {
 			isUnary = -1;
 			advance();
 		}
 
-		if (curToken.type() == TokenType.NUMBER) {
+		if (is(TokenType.NUMBER)) {
 			Node n = new NumberNode(Integer.parseInt(curToken.getValue()) * isUnary);
 			advance();
 			return n;
-		} else if (curToken.type() == TokenType.O_ROUND_BRACKET) {
+		} else if (is(TokenType.O_ROUND_BRACKET)) {
 			advance();
 
 			Node n = parseExpression();
 
-			if (curToken.type() != TokenType.C_ROUND_BRACKET)
-				new PError("Expression error. Bracket not properly closed");
+			assume(TokenType.C_ROUND_BRACKET, "Expression error. Bracket not properly closed");
 			advance();
+
 			return n;
 		} else
 			new PError("Expr error, couldnt build factor");
@@ -322,11 +320,10 @@ public class Parser {
 	private CallNode parseFunctionCall(String functionName) {
 		String params = buildParameters();
 
-		if (!is(TokenType.C_ROUND_BRACKET))
-			new PError("Parameterlist not closed");
+		assume(TokenType.C_ROUND_BRACKET, "Parameterlist not closed");
 		advance();
 
-		Logger.log("Funktionsaufruf '" + functionName + "'(" + params + ")");
+		Logger.log("Functioncall '" + functionName + "'(" + params + ")");
 
 		CallNode cn = new CallNode(functionName);
 
@@ -339,11 +336,11 @@ public class Parser {
 	private String buildParameters() {
 		String params = "";
 
-		while (curToken.type() != TokenType.C_ROUND_BRACKET) {
-			if (curToken.type() == TokenType.NUMBER || curToken.type() == TokenType.IDENTIFIER) {
+		while (!is(TokenType.C_ROUND_BRACKET)) {
+			if (is(TokenType.NUMBER) || is(TokenType.IDENTIFIER)) {
 				params += curToken.getValue();
 				advance();
-				if (curToken.type() == TokenType.COMMA) {
+				if (is(TokenType.COMMA)) {
 					params += ", ";
 					advance();
 				} else
@@ -363,10 +360,8 @@ public class Parser {
 			new PError("Unknown primitive type " + keyword);
 		advance();
 
-		if (!is(TokenType.IDENTIFIER))
-			new PError("Fehler beim Initialisieren einer Variable");
+		assume(TokenType.IDENTIFIER, "Fehler beim Initialisieren einer Variable");
 		String varName = curToken.getValue();
-
 		advance();
 
 		Node n;
