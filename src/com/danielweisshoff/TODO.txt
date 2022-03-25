@@ -24,6 +24,8 @@ nicht so wichtig:
 
 
 TODO
+ -	Strings als erste Klasse
+ - Formatierte Strings   f("Das {} ist {}",fahrzeug,farbe)
  -  Bitwise operationen einfuegen -> Lexer aktualisieren ( & | ^ ~ << >> )
        * The & (bitwise AND) The result of AND is 1 if both of the two bits are 1.
        * The | (bitwise OR)  The result of OR is 1 if any of the two bits is 1.
