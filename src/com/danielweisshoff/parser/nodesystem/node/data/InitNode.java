@@ -8,7 +8,7 @@ import com.danielweisshoff.parser.nodesystem.node.Node;
  * Initializes a variable
  */
 public class InitNode extends Node {
-	public final String name;
+	private final String name;
 	public final Node expression;
 
 	public InitNode(String name, Node expression) {
@@ -26,5 +26,9 @@ public class InitNode extends Node {
 	@Override
 	public Data<?> execute() {
 		return new Data<>(1, DataType.INT);
+	}
+
+	public String getName() {
+		return name;
 	}
 }

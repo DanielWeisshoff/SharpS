@@ -4,7 +4,7 @@ public enum DataType {
 	BYTE, SHORT, INT, LONG, //Ganzzahlen
 	FLOAT, DOUBLE, //Dezimal
 	CHAR, BOOLEAN, //Sonder
-	POINTER, NULL
+	POINTER, VOID
 }
 /*
  *

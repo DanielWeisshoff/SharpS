@@ -18,7 +18,7 @@ public class Data<T extends Number> {
 	private final T data;
 
 	public Data() {
-		dataType = DataType.NULL;
+		dataType = DataType.VOID;
 		data = null;
 	}
 

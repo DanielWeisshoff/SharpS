@@ -8,30 +8,27 @@ public class SymbolTable {
 
 	public SymbolTable parent;
 	private final ArrayList<Entry> entries = new ArrayList<>();
-	private long idCounter; // Bei 32-Bit Systemen sollte es ein int sein
 	private String name;
 
 	public SymbolTable(String name) {
 		this.name = name;
 	}
 
-	public void add(String name, DataType type, ReturnType dataType) {
-		entries.add(new Entry(name, type, dataType, idCounter));
-		idCounter++;
+	public void add(Entry entry) {
+		entries.add(entry);
 	}
 
 	/*
 	 *Sucht in sich und allen seinen �bergeordneten SymbolTables nach dem Eintrag und gibt diesen zur�ck
 	 */
-	public Entry get(String name) {
+	public Entry find(String name, Type type) {
 		for (Entry e : entries) {
-			if (e.getName().equals(name))
+			if (e.getName().equals(name) && e.getType() == type)
 				return e;
 		}
 		if (parent != null)
-			return parent.get(name);
+			return parent.find(name, type);
 
-		new PError("Parser Error: Die Variable/Funktion '" + name + "' existiert nicht");
 		return null;
 	}
 
@@ -47,9 +44,5 @@ public class SymbolTable {
 		if (parent != null)
 			parentName = parent.getName();
 		return parentName + "/" + name;
-	}
-
-	public void setParent(SymbolTable t) {
-		parent = t;
 	}
 }

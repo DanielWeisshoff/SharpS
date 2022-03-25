@@ -303,6 +303,10 @@ public class Parser {
 			Node n = new NumberNode(Integer.parseInt(curToken.getValue()) * isUnary);
 			advance();
 			return n;
+		} else if (is(TokenType.IDENTIFIER)) {
+			Node n = new VariableNode(curToken.getValue());
+			advance();
+			return n;
 		} else if (is(TokenType.O_ROUND_BRACKET)) {
 			advance();
 
@@ -353,16 +357,11 @@ public class Parser {
 		return params;
 	}
 
+	//TODO keyword ist spaeter zum unterscheiden der primitiven da
 	private Node parseVariable(String keyword) {
 
-		//keyword checken
-		if (!keyword.equals("INT"))
-			new PError("Unknown primitive type " + keyword);
-		advance();
-
-		assume(TokenType.IDENTIFIER, "Fehler beim Initialisieren einer Variable");
 		String varName = curToken.getValue();
-		advance();
+		assume(TokenType.IDENTIFIER, "Fehler beim Initialisieren einer Variable");
 
 		Node n;
 		if (is(TokenType.ASSIGN)) {
@@ -370,17 +369,14 @@ public class Parser {
 
 			advance();
 			Node expr = parseExpression();
-			Logger.log(expr.execute().asFloat()); //TODO testing
-			new ExpressionPrinter(expr).print();
 
 			Logger.log("Variable " + varName + " initialisiert");
-			return new InitNode(varName, expr);
+			n = new InitNode(varName, expr);
 		} else {
 			//Variable wird deklariert
 			n = new InitNode(varName);
 			Logger.log("Variable " + varName + " deklariert");
 		}
-		advance();
 		return n;
 	}
 

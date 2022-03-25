@@ -10,10 +10,8 @@ import com.danielweisshoff.parser.nodesystem.node.Node;
  */
 public class EqualNode extends ConditionNode {
 
-	private final Node left;
-	private final Node right;
-
 	public EqualNode(Node left, Node right) {
+
 		this.left = left;
 		this.right = right;
 	}

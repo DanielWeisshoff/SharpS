@@ -8,6 +8,7 @@ import com.danielweisshoff.parser.nodesystem.node.binaryoperations.BinaryMulNode
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.BinaryOperationNode;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.BinarySubNode;
 import com.danielweisshoff.parser.nodesystem.node.data.NumberNode;
+import com.danielweisshoff.parser.nodesystem.node.data.VariableNode;
 
 //Helps printing out the order of operations for expressions
 public class ExpressionPrinter {
@@ -22,10 +23,17 @@ public class ExpressionPrinter {
 		print(expression);
 	}
 
+	//TODO schlecht geregelt
 	public void print(Node n) {
 
 		if (n instanceof NumberNode) {
-			Logger.log("" + n.execute().asFloat()); //NumberNode
+			NumberNode nn = (NumberNode) n;
+			Logger.log("" + nn.getData().asDouble());
+			return;
+		} else if (n instanceof VariableNode) {
+			VariableNode vn = (VariableNode) n;
+			String varName = vn.getName();
+			Logger.log(varName);
 			return;
 		}
 

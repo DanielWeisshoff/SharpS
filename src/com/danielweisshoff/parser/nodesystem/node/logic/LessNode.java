@@ -10,9 +10,6 @@ import com.danielweisshoff.parser.nodesystem.node.Node;
  */
 public class LessNode extends ConditionNode {
 
-	private final Node left;
-	private final Node right;
-
 	public LessNode(Node left, Node right) {
 		this.left = left;
 		this.right = right;

@@ -18,7 +18,7 @@ public class CallNode extends Node {
 
 	@Override
 	public Data<?> execute() {
-		Data<?> data = new Data<>(null, DataType.NULL);
+		Data<?> data = new Data<>(null, DataType.VOID);
 
 		if (BuiltInFunction.builtInFunctions.containsKey(name)) {
 			data = BuiltInFunction.builtInFunctions.get(name).call();
@@ -26,5 +26,9 @@ public class CallNode extends Node {
 		}
 
 		return data;
+	}
+
+	public String getName() {
+		return name;
 	}
 }

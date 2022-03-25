@@ -9,18 +9,21 @@ import com.danielweisshoff.parser.nodesystem.node.Node;
  */
 public class AssignNode extends Node {
 
-	private final String varName;
-	private final Node expression;
+	private final String name;
+	public final Node expression;
 
 	public AssignNode(String varName, Node expression) {
 		super(null, null);
-		this.varName = varName;
+		this.name = varName;
 		this.expression = expression;
 	}
 
 	@Override
 	public Data<?> execute() {
-		// Parser.variables.put(varName, expression.execute());
 		return new Data<>(1, DataType.INT);
+	}
+
+	public String getName() {
+		return name;
 	}
 }

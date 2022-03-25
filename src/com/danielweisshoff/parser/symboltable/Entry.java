@@ -1,36 +1,24 @@
 package com.danielweisshoff.parser.symboltable;
 
-class Entry {
+public abstract class Entry {
 
-    private final String name;
-    private final DataType type;
-    private final ReturnType returnType;
-    private final long id;
+	private final String name;
+	private final Type type;
 
-    public Entry(String name, DataType type, ReturnType dataType, long id) {
-        this.name = name;
-        this.type = type;
-        this.returnType = dataType;
-        this.id = id;
-    }
+	public Entry(String name, Type type) {
+		this.name = name;
+		this.type = type;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public DataType getType() {
-        return type;
-    }
+	public Type getType() {
+		return type;
+	}
 
-    public ReturnType getReturnType() {
-        return returnType;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getDescription() {
-        return name + "\t" + type + "\t" + type + "\t" + id;
-    }
+	public String getDescription() {
+		return name + "\t" + type;
+	}
 }

@@ -15,7 +15,7 @@ public class ConstructorNode extends Node {
 	private final String name;
 
 	public ConstructorNode(String name) {
-		super(null, DataType.NULL);
+		super(null, DataType.VOID);
 		children = new ArrayList<>();
 		this.name = name;
 	}
@@ -33,6 +33,6 @@ public class ConstructorNode extends Node {
 		for (Node n : children) {
 			n.execute();
 		}
-		return new Data<>(1, DataType.NULL);
+		return new Data<>(1, DataType.VOID);
 	}
 }

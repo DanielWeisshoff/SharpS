@@ -9,6 +9,7 @@ import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.parser.Parser;
 import com.danielweisshoff.parser.nodesystem.node.Node;
+import com.danielweisshoff.parser.symboltable.SymbolTableManager;
 
 public class Shell {
 
@@ -38,6 +39,9 @@ public class Shell {
 		Interpreter interpreter = new Interpreter();
 		Node ast = parser.getAST();
 		interpreter.interpret(ast);
+
+		SymbolTableManager stm = interpreter.getSymbolTableManager();
+		stm.print();
 	}
 
 	public static void benchmark() {
