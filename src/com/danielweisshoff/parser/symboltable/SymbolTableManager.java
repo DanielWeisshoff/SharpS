@@ -3,7 +3,6 @@ package com.danielweisshoff.parser.symboltable;
 import java.util.ArrayList;
 
 import com.danielweisshoff.logger.Logger;
-import com.danielweisshoff.parser.PError;
 
 /**
  * Manages all SymbolTables and builds them in a hierarchical order
@@ -12,19 +11,27 @@ public class SymbolTableManager {
 
 	private SymbolTable root;
 	private SymbolTable currentTable;
+	public boolean deleteTableOnScopeEnd = false;
+
+	//for hashing
+	int idCounter = 0;
 
 	//collection of all SymbolTables
 	private ArrayList<SymbolTable> lookup = new ArrayList<>();
 
+	private void initRoot() {
+		root = new SymbolTable("STATIC_TABLE");
+		lookup.add(root);
+		currentTable = root;
+	}
+
 	public void newScope(String name) {
 		if (root == null) {
-			root = new SymbolTable("Static Table");
-			lookup.add(root);
-			currentTable = root;
+			initRoot();
 			return;
 		}
 
-		SymbolTable st = new SymbolTable(name);
+		SymbolTable st = new SymbolTable(name + "_" + (idCounter++));
 		st.parent = currentTable;
 		currentTable = st;
 
@@ -33,40 +40,58 @@ public class SymbolTableManager {
 	}
 
 	public void endScope() {
+		SymbolTable temp = currentTable;
 		currentTable = currentTable.parent;
 
-		if (currentTable == null)
-			new PError("SymboltableManager out of bounds");
+		if (deleteTableOnScopeEnd) {
+			lookup.remove(temp);
+		}
 	}
 
-	public void addToScope(Entry entry) {
-		currentTable.add(entry);
+	public void addVariableToScope(String name, VariableEntry entry) {
+		currentTable.addVariable(name, entry);
 	}
 
-	public void addToStatic(Entry entry) {
-		root.add(entry);
+	public void addFunctionToScope(String name, FunctionEntry entry) {
+		currentTable.addFunction(name, entry);
+	}
+
+	public void addVariableToStatic(String name, VariableEntry entry) {
+		root.addVariable(name, entry);
+	}
+
+	public void addFunctionToStatic(String name, FunctionEntry entry) {
+		root.addFunction(name, entry);
 	}
 
 	public void toRoot() {
 		currentTable = root;
 	}
 
-	public void print() {
-		System.out.println("=====SYMBOLTABLE=====");
-		for (SymbolTable st : lookup) {
-			Entry[] arr = st.getEntries();
-			System.out.println(st.getName());
-			for (Entry e : arr)
-				System.out.println(e.getDescription());
-			System.out.println();
-		}
+	// public void print() {
+	// 	System.out.println("=====SYMBOLTABLE=====");
+	// 	for (SymbolTable st : lookup) {
+	// 		Entry[] arr = st.getEntries();
+	// 		System.out.println(st.getName());
+	// 		for (Entry e : arr)
+	// 			System.out.println(e.getDescription());
+	// 		System.out.println();
+	// 	}
+	// }
+
+	public Entry findVariableInScope(String name) {
+		return currentTable.findVariable(name);
 	}
 
-	public Entry findInCurrentScope(String name, Type type) {
-		return currentTable.find(name, type);
+	public Entry findFunctionInScope(String name) {
+		return currentTable.findFunction(name);
 	}
 
-	public Entry findStatic(String name, Type type) {
-		return root.find(name, type);
+	public Entry findStaticVariable(String name) {
+		return root.findVariable(name);
+	}
+
+	public Entry findStaticFunction(String name) {
+		return root.findFunction(name);
 	}
 }

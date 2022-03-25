@@ -10,6 +10,8 @@ import com.danielweisshoff.parser.nodesystem.node.*;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.*;
 import com.danielweisshoff.parser.nodesystem.node.data.*;
 import com.danielweisshoff.parser.nodesystem.node.logic.*;
+import com.danielweisshoff.parser.nodesystem.node.loops.ForNode;
+import com.danielweisshoff.parser.nodesystem.node.loops.WhileNode;
 
 /**
  * Converts tokens to a runnable AST
@@ -68,6 +70,9 @@ public class Parser {
 			case "ELIF" -> instruction = parseElif();
 			//ALL PRIMITIVES
 			case "INT" -> instruction = parseVariable("INT");
+			case "WHILE" -> instruction = parseWhile();
+			case "FOR" -> instruction = parseFor();
+			default -> new PError("[PARSER] Action for keyword " + value + " not implemented");
 			}
 		}
 		//FUNCTION
@@ -192,9 +197,9 @@ public class Parser {
 
 	private IfNode parseIf() {
 		assume(TokenType.O_ROUND_BRACKET, "Parameterlist not found");
-		ConditionNode condition = buildCondition();
+		ConditionNode condition = parseCondition();
 		assume(TokenType.C_ROUND_BRACKET, "Parameterlist not closed");
-		assume(TokenType.COLON, "Block missing");
+		assume(TokenType.COLON, "if-block missing");
 
 		IfNode in = new IfNode();
 		in.condition = condition;
@@ -208,7 +213,6 @@ public class Parser {
 		IfNode in = findIfWithoutElse(scopeNode.peek());
 
 		assume(TokenType.COLON, "unknown syntax for else statement");
-		advance();
 
 		in.elseBlock = new BlockNode();
 		scopeIn(in.elseBlock);
@@ -230,7 +234,7 @@ public class Parser {
 		return elif;
 	}
 
-	private ConditionNode buildCondition() {
+	private ConditionNode parseCondition() {
 		Node leftExpr = parseExpression();
 		Token compareType = curToken;
 		advance();
@@ -274,12 +278,14 @@ public class Parser {
 		Node left = parseFactor();
 
 		BinaryOperationNode op = null;
-		while (curToken.isDotOP()) {
+		while (curToken.isDotOP() || curToken.type() == TokenType.MOD) {
 
 			if (is(TokenType.MUL))
 				op = new BinaryMulNode();
 			else if (is(TokenType.DIV))
 				op = new BinaryDivNode();
+			else
+				op = new BinaryModNode();
 			advance();
 
 			Node right = parseFactor();
@@ -313,7 +319,6 @@ public class Parser {
 			Node n = parseExpression();
 
 			assume(TokenType.C_ROUND_BRACKET, "Expression error. Bracket not properly closed");
-			advance();
 
 			return n;
 		} else
@@ -322,10 +327,9 @@ public class Parser {
 	}
 
 	private CallNode parseFunctionCall(String functionName) {
-		String params = buildParameters();
+		String params = parseParameters();
 
 		assume(TokenType.C_ROUND_BRACKET, "Parameterlist not closed");
-		advance();
 
 		Logger.log("Functioncall '" + functionName + "'(" + params + ")");
 
@@ -337,7 +341,7 @@ public class Parser {
 	/*
 	 *erstmals nur placeholder
 	 */
-	private String buildParameters() {
+	private String parseParameters() {
 		String params = "";
 
 		while (!is(TokenType.C_ROUND_BRACKET)) {
@@ -358,12 +362,15 @@ public class Parser {
 	}
 
 	//TODO keyword ist spaeter zum unterscheiden der primitiven da
-	private Node parseVariable(String keyword) {
+	private InitNode parseVariable(String keyword) {
+
+		if (keyword != "INT")
+			new PError("[PARSER]: Unknown primitive type '" + keyword + "'");
 
 		String varName = curToken.getValue();
 		assume(TokenType.IDENTIFIER, "Fehler beim Initialisieren einer Variable");
 
-		Node n;
+		InitNode n;
 		if (is(TokenType.ASSIGN)) {
 			//Variable wird initialisiert
 
@@ -387,6 +394,59 @@ public class Parser {
 
 		Logger.log("Assigned value to variable '" + varName + "'");
 		return an;
+	}
+
+	//
+	//LOOPS
+	//
+
+	private WhileNode parseWhile() {
+		assume(TokenType.O_ROUND_BRACKET, "Missing open bracket for while-loop");
+
+		ConditionNode cn = parseCondition();
+
+		assume(TokenType.C_ROUND_BRACKET, "Missing close bracket for while-loop");
+		assume(TokenType.COLON, "while-body not defined");
+
+		WhileNode wn = new WhileNode();
+		wn.condition = cn;
+		wn.whileBlock = new BlockNode();
+
+		lateScopeIn(wn.whileBlock);
+
+		return wn;
+	}
+
+	//TODO this needs a major overhaul someday when more variations will be added
+	private ForNode parseFor() {
+		assume(TokenType.O_ROUND_BRACKET, "Missing open bracket for while-loop");
+
+		assume(TokenType.KEYWORD, "if-var init missing");
+		InitNode in = parseVariable("INT");
+
+		assume(TokenType.COMMA, "OOF");
+
+		ConditionNode cn = parseCondition();
+
+		assume(TokenType.COMMA, "OOF");
+
+		if (curToken.type() != TokenType.IDENTIFIER)
+			new PError("if-assign missing");
+		String varName = curToken.getValue();
+		advance();
+
+		advance(); // '='
+
+		AssignNode an = parseVariableAssignment(varName);
+
+		ForNode fn = new ForNode();
+		fn.init = in;
+		fn.condition = cn;
+		fn.assignment = an;
+		fn.block = new BlockNode();
+
+		lateScopeIn(fn.block);
+		return fn;
 	}
 
 	/**

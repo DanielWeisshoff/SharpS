@@ -13,12 +13,10 @@ import com.danielweisshoff.parser.symboltable.SymbolTableManager;
 
 public class Shell {
 
-	public static void main(String[] args) {
-		interpret();
-		//benchmark();
-	}
+	public static boolean benchmark = true;
+	private static Instant start, end;
 
-	public static void interpret() {
+	public static void main(String[] args) {
 
 		Goethe.clearLog();
 
@@ -36,46 +34,22 @@ public class Shell {
 			parser.parseLine(line);
 		}
 
+		//INTERPRETATION
 		Interpreter interpreter = new Interpreter();
+		interpreter.stepper = false;
+
+		if (benchmark)
+			start = Instant.now();
+
 		Node ast = parser.getAST();
 		interpreter.interpret(ast);
+
+		if (benchmark) {
+			end = Instant.now();
+			System.out.println("Interpreter done in " + Duration.between(start, end).toMillis() + "ms");
+		}
 
 		SymbolTableManager stm = interpreter.getSymbolTableManager();
-		stm.print();
-	}
-
-	public static void benchmark() {
-
-		Goethe.clearLog();
-
-		String text = Goethe.getText();
-		Lexer lexer = new Lexer(text);
-		Parser parser = new Parser();
-
-		Token[] line;
-		//int counter = 1;
-
-		Instant start = Instant.now();
-		while (lexer.hasNextLine()) {
-			line = lexer.nextLine();
-			if (line.length == 0 || (line.length == 1 && line[0].type() == TokenType.TAB))
-				continue;
-
-			parser.parseLine(line);
-			// //DEBUGGING
-			// String msg = "\n[" + counter++ + "] ";
-			// for (Token t : line)
-			// 	msg += t.type() + " ";
-			// Logger.log(msg);
-
-		}
-		Instant end = Instant.now();
-		System.out.println("Lexer + Parser done in " + Duration.between(start, end).toMillis() + "ms");
-
-		Interpreter interpreter = new Interpreter();
-		Node ast = parser.getAST();
-		interpreter.interpret(ast);
-
-		System.exit(0);
+		//	stm.print();
 	}
 }

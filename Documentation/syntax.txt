@@ -2,9 +2,11 @@
 *
  SYNTAX
 *
+TODO evtl. operatoren mit zahl als bindung speichern
 
 CONDITION		:	EXPR COND EXPR	
-EXPR			:	TERM +|- TERM
+EXPR			:	MOD +|- MOD
+MOD				:	TERM % TERM
 TERM			:	FACTOR *|/ FACTOR
 FACTOR			:	NUMBER | VARIABLE
 

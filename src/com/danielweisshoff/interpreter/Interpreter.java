@@ -1,37 +1,24 @@
 package com.danielweisshoff.interpreter;
 
+import java.util.Scanner;
+
 import com.danielweisshoff.interpreter.builtin.BuiltInFunction;
 import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.PError;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
-import com.danielweisshoff.parser.nodesystem.node.BlockNode;
-import com.danielweisshoff.parser.nodesystem.node.CallNode;
-import com.danielweisshoff.parser.nodesystem.node.IfNode;
-import com.danielweisshoff.parser.nodesystem.node.Node;
-import com.danielweisshoff.parser.nodesystem.node.binaryoperations.BinaryAddNode;
-import com.danielweisshoff.parser.nodesystem.node.binaryoperations.BinaryDivNode;
-import com.danielweisshoff.parser.nodesystem.node.binaryoperations.BinaryMulNode;
-import com.danielweisshoff.parser.nodesystem.node.binaryoperations.BinaryOperationNode;
-import com.danielweisshoff.parser.nodesystem.node.binaryoperations.BinarySubNode;
-import com.danielweisshoff.parser.nodesystem.node.data.AssignNode;
-import com.danielweisshoff.parser.nodesystem.node.data.InitNode;
-import com.danielweisshoff.parser.nodesystem.node.data.NumberNode;
-import com.danielweisshoff.parser.nodesystem.node.data.VariableNode;
-import com.danielweisshoff.parser.nodesystem.node.logic.ConditionNode;
-import com.danielweisshoff.parser.nodesystem.node.logic.EqualNode;
-import com.danielweisshoff.parser.nodesystem.node.logic.LessEqualNode;
-import com.danielweisshoff.parser.nodesystem.node.logic.LessNode;
-import com.danielweisshoff.parser.nodesystem.node.logic.MoreEqualNode;
-import com.danielweisshoff.parser.nodesystem.node.logic.MoreNode;
-import com.danielweisshoff.parser.nodesystem.node.logic.NotEqualNode;
+import com.danielweisshoff.parser.nodesystem.node.*;
+import com.danielweisshoff.parser.nodesystem.node.binaryoperations.*;
+import com.danielweisshoff.parser.nodesystem.node.data.*;
+import com.danielweisshoff.parser.nodesystem.node.logic.*;
+import com.danielweisshoff.parser.nodesystem.node.loops.*;
 import com.danielweisshoff.parser.symboltable.Entry;
 import com.danielweisshoff.parser.symboltable.SymbolTableManager;
-import com.danielweisshoff.parser.symboltable.Type;
 import com.danielweisshoff.parser.symboltable.VariableEntry;
 
 /*
 * Data<>(1, DataType.INT); ist vorerst standard für "erfolgreiche Operation"
+TODO: StepperMode -> Debug mode ?!?
 *
 */
 public class Interpreter {
@@ -41,6 +28,14 @@ public class Interpreter {
 
 	private Node curInstruction;
 
+	//when stepper is enabled, one line will be interpreted at a time on user input
+	public boolean stepper = false;
+	private boolean stepFinished = false;
+
+	public Interpreter() {
+		symbolTableManager.deleteTableOnScopeEnd = true;
+	}
+
 	public Data<?> interpret(Node n) {
 		curInstruction = n;
 		Data<?> data = null;
@@ -48,9 +43,10 @@ public class Interpreter {
 
 		if (n instanceof BlockNode)
 			data = interpretBlockNode();
-		else if (n instanceof CallNode)
+		else if (n instanceof CallNode) {
 			data = interpretCallNode();
-		else if (n instanceof IfNode)
+			stepFinished = true;
+		} else if (n instanceof IfNode)
 			data = interpretIfNode();
 		//ARITHMETIC
 		else if (n instanceof BinaryAddNode)
@@ -61,6 +57,8 @@ public class Interpreter {
 			data = interpretBinaryOperationNode('*');
 		else if (n instanceof BinaryDivNode)
 			data = interpretBinaryOperationNode('/');
+		else if (n instanceof BinaryModNode)
+			data = interpretBinaryOperationNode('%');
 		else if (n instanceof NumberNode)
 			data = interpretNumberNode();
 		//CONDITIONS
@@ -77,14 +75,29 @@ public class Interpreter {
 		else if (n instanceof NotEqualNode)
 			data = interpretConditionNode("!=");
 		//VAR STUFF
-		else if (n instanceof InitNode)
+		else if (n instanceof InitNode) {
 			data = interpretInitNode();
-		else if (n instanceof AssignNode)
+			stepFinished = true;
+		} else if (n instanceof AssignNode) {
 			data = interpretAssignNode();
-		else if (n instanceof VariableNode)
+			stepFinished = true;
+		} else if (n instanceof VariableNode)
 			data = interpretVariableNode();
+		//LOOPS
+		else if (n instanceof WhileNode)
+			data = interpretWhileNode();
+		else if (n instanceof ForNode)
+			data = interpretForNode();
 		else
 			new PError("[INTERPRETER]: visited unknown Node type " + n.getClass().getSimpleName());
+
+		//Stepper Mode
+		if (stepper && stepFinished) {
+			System.out.println("*** PRESS ENTER TO CONTINUE ***");
+			Scanner sc = new Scanner(System.in);
+			sc.nextLine();
+			stepFinished = false;
+		}
 
 		return data;
 	}
@@ -92,8 +105,11 @@ public class Interpreter {
 	private Data<?> interpretBlockNode() {
 		BlockNode bn = (BlockNode) curInstruction;
 		symbolTableManager.newScope("blockscope");
+
 		for (Node n : bn.children)
 			interpret(n);
+
+		symbolTableManager.endScope();
 		return new Data<>();
 	}
 
@@ -126,12 +142,12 @@ public class Interpreter {
 
 		double left = interpret(ban.left).asDouble();
 		double right = interpret(ban.right).asDouble();
-
 		return switch (op) {
 		case '+' -> new Data<Double>(left + right, DataType.DOUBLE);
 		case '-' -> new Data<Double>(left - right, DataType.DOUBLE);
 		case '*' -> new Data<Double>(left * right, DataType.DOUBLE);
 		case '/' -> new Data<Double>(left / right, DataType.DOUBLE);
+		case '%' -> new Data<Double>(left % right, DataType.DOUBLE);
 		default -> new Data<>();
 		};
 	}
@@ -169,7 +185,7 @@ public class Interpreter {
 
 		String name = in.getName();
 
-		Entry e = symbolTableManager.findInCurrentScope(name, Type.VARIABLE);
+		Entry e = symbolTableManager.findVariableInScope(name);
 		if (e != null)
 			new PError("var '" + name + "' is already declared");
 
@@ -178,7 +194,7 @@ public class Interpreter {
 
 		//entry in symboltable
 		VariableEntry var = new VariableEntry(name, DataType.DOUBLE, value);
-		symbolTableManager.addToScope(var);
+		symbolTableManager.addVariableToScope(name, var);
 
 		return new Data<>(1, DataType.INT);
 	}
@@ -191,12 +207,14 @@ public class Interpreter {
 		String value = "" + data.asDouble(); //TODO naja, weiss nich
 
 		//try to find and get the variable from the SymbolTable
-		VariableEntry ve = (VariableEntry) symbolTableManager.findInCurrentScope(varName, Type.VARIABLE);
+		VariableEntry ve = (VariableEntry) symbolTableManager.findVariableInScope(varName);
 		if (ve == null)
 			new PError("Parse Error: var '" + varName + "' not declared");
 
 		ve.value = value;
 
+		//TODO erstmals als print alternative
+		System.out.println(varName + ": " + value);
 		return new Data<>(1, DataType.INT);
 	}
 
@@ -204,7 +222,7 @@ public class Interpreter {
 		VariableNode vn = (VariableNode) curInstruction;
 		String varName = vn.getName();
 
-		VariableEntry var = (VariableEntry) symbolTableManager.findInCurrentScope(varName, Type.VARIABLE);
+		VariableEntry var = (VariableEntry) symbolTableManager.findVariableInScope(varName);
 		if (var == null)
 			new PError("Parse Error: var '" + varName + "' not declared");
 
@@ -212,8 +230,42 @@ public class Interpreter {
 		return new Data<Double>(value, DataType.DOUBLE);
 	}
 
+	private Data<?> interpretWhileNode() {
+		WhileNode wn = (WhileNode) curInstruction;
+
+		while (interpret(wn.condition).asDouble() == 1)
+			interpret(wn.whileBlock);
+
+		return new Data<>(1, DataType.INT);
+	}
+
+	private Data<?> interpretForNode() {
+		ForNode fn = (ForNode) curInstruction;
+
+		String varName = fn.init.getName();
+
+		double index = interpret(fn.init).asDouble();
+		double cond = interpret(fn.condition).asDouble();
+
+		while (cond == 1) {
+			interpret(fn.block);
+			interpret(fn.assignment);
+			cond = interpret(fn.condition).asDouble();
+		}
+
+		return new Data<>(1, DataType.INT);
+	}
+
 	public SymbolTableManager getSymbolTableManager() {
 		return symbolTableManager;
+	}
+
+	/**
+	 * This is a method that has to be called, while the interpeter is working
+	 */
+	//TODO currently not working bcs of hashmap impl.
+	public void printSymbolTable() {
+		//	symbolTableManager.print();
 	}
 
 }

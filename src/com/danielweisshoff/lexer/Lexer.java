@@ -208,5 +208,6 @@ public class Lexer {
 		tokenMap.put('.', TokenType.DOT);
 		tokenMap.put(',', TokenType.COMMA);
 		tokenMap.put(':', TokenType.COLON);
+		tokenMap.put('%', TokenType.MOD);
 	}
 }

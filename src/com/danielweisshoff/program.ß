@@ -1,4 +1,18 @@
-int a = 1+2*3
-if (a == 7):
-	int pow = a * a
-	help()
+for(int x = 0, x < 10, x = x+1):
+	for(int y  = 0, y < 10 , y= y+1):
+		int i
+
+
+	
+
+#for(int i = 0; i < 10; i++)
+
+#for ( INIT ; CONDITION ; ASSIGNMENT ) :
+#	#block
+
+
+
+#    INIT				
+#	CONDITION    <--
+#		BLOCK	   |
+#		ASSIGNMENT |

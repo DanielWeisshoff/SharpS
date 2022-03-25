@@ -7,20 +7,22 @@ TODO
 erstmal nur als Scriptsprache(keine Tababstände), die Logik kann dann nachher easy
 ins OOP übertragen werden
 	- Nodes sollen nurnoch Strukturen ohne Logik sein -> Logik von Nodes zum Interpreter schieben
-	- Ein paar builIn Funktionen
-	- Variablen (Symboltable wieder einbinden)
 	- Conditions verketten (&& || und (,) )
 	- booleansche Logik &, && ; |, || richtig implementieren
-	- while
+	[+] - variablen
+	- += Operand 
+	- ++ Operand
+	[+]	- while
 	- do-while
-	- for
+	[+]	- for
+	- arrays
 	- foreach
 	- ?Preprocessor?
-	- Funktionen
+	- Nutzerfunktionen
 	- Parameter
+	- Ein paar builIn Funktionen
  	- Rueckgabewerte
-nicht so wichtig:
-	- Die *Build Klassen sind verwirrend
+[+]	- Die *Build Klassen in den Parser einbauen
 
 
 TODO
