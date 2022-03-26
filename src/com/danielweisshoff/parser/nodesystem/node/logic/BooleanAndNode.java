@@ -1,21 +1,15 @@
-package com.danielweisshoff.parser.nodesystem.node.booleanoperations;
+package com.danielweisshoff.parser.nodesystem.node.logic;
 
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
-import com.danielweisshoff.parser.nodesystem.node.Node;
 
 /**
  * Returns 1 if both the booleans are true
  */
-public class BooleanAndNode extends Node {
+public class BooleanAndNode extends ConditionNode {
 
-	private final Node left;
-	private final Node right;
+	public BooleanAndNode() {
 
-	public BooleanAndNode(Node left, Node right) {
-		super(null, null);
-		this.left = left;
-		this.right = right;
 	}
 
 	@Override

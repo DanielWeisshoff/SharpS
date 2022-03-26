@@ -167,7 +167,7 @@ public class Lexer {
 				return new Token(TokenType.COMPARISON, c + "=");
 			}
 		}
-		return new Token(TokenType.ASSIGN, "" + c);
+		return new Token(TokenType.EQUAL, "" + c);
 	}
 
 	private Token buildStringToken() {
@@ -209,5 +209,7 @@ public class Lexer {
 		tokenMap.put(',', TokenType.COMMA);
 		tokenMap.put(':', TokenType.COLON);
 		tokenMap.put('%', TokenType.MOD);
+		tokenMap.put('&', TokenType.AND);
+		tokenMap.put('|', TokenType.OR);
 	}
 }

@@ -74,6 +74,14 @@ public class Interpreter {
 			data = interpretConditionNode("==");
 		else if (n instanceof NotEqualNode)
 			data = interpretConditionNode("!=");
+		else if (n instanceof BooleanAndNode)
+			data = interpretConditionNode("&&");
+		else if (n instanceof BooleanOrNode)
+			data = interpretConditionNode("||");
+		else if (n instanceof BitwiseAndNode)
+			data = interpretConditionNode("&");
+		else if (n instanceof BitWiseOrNode)
+			data = interpretConditionNode("|");
 		//VAR STUFF
 		else if (n instanceof InitNode) {
 			data = interpretInitNode();
@@ -86,6 +94,8 @@ public class Interpreter {
 		//LOOPS
 		else if (n instanceof WhileNode)
 			data = interpretWhileNode();
+		else if (n instanceof DoWhileNode)
+			data = interpretDoWhileNode();
 		else if (n instanceof ForNode)
 			data = interpretForNode();
 		else
@@ -171,6 +181,10 @@ public class Interpreter {
 		case ">=" -> cond = left >= right;
 		case "==" -> cond = left == right;
 		case "!=" -> cond = left != right;
+		case "&&" -> cond = (left == 1 && right == 1) ? true : false;
+		case "||" -> cond = (left == 1 || right == 1) ? true : false;
+		case "&" -> cond = (left == 1 & right == 1) ? true : false;
+		case "|" -> cond = (left == 1 | right == 1) ? true : false;
 		default -> cond = false;
 		}
 
@@ -235,6 +249,16 @@ public class Interpreter {
 
 		while (interpret(wn.condition).asDouble() == 1)
 			interpret(wn.whileBlock);
+
+		return new Data<>(1, DataType.INT);
+	}
+
+	private Data<?> interpretDoWhileNode() {
+		DoWhileNode dwn = (DoWhileNode) curInstruction;
+
+		interpret(dwn.whileBlock);
+		while (interpret(dwn.condition).asDouble() == 1)
+			interpret(dwn.whileBlock);
 
 		return new Data<>(1, DataType.INT);
 	}

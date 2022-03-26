@@ -10,6 +10,7 @@ import com.danielweisshoff.parser.nodesystem.node.*;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.*;
 import com.danielweisshoff.parser.nodesystem.node.data.*;
 import com.danielweisshoff.parser.nodesystem.node.logic.*;
+import com.danielweisshoff.parser.nodesystem.node.loops.DoWhileNode;
 import com.danielweisshoff.parser.nodesystem.node.loops.ForNode;
 import com.danielweisshoff.parser.nodesystem.node.loops.WhileNode;
 
@@ -62,30 +63,29 @@ public class Parser {
 
 		if (is(TokenType.KEYWORD)) {
 			String value = curToken.getValue();
-			advance();
 
 			switch (value) {
 			case "IF" -> instruction = parseIf();
 			case "ELSE" -> instruction = parseElse();
 			case "ELIF" -> instruction = parseElif();
 			//ALL PRIMITIVES
-			case "INT" -> instruction = parseVariable("INT");
+			case "INT" -> instruction = parseVariable();
 			case "WHILE" -> instruction = parseWhile();
 			case "FOR" -> instruction = parseFor();
+			case "DO" -> instruction = parseDoWhile();
 			default -> new PError("[PARSER] Action for keyword " + value + " not implemented");
 			}
 		}
 		//FUNCTION
 		else if (is(TokenType.IDENTIFIER)) {
-			String name = curToken.getValue();
 			advance();
 
 			if (is(TokenType.O_ROUND_BRACKET)) {
-				advance();
-				instruction = parseFunctionCall(name);
-			} else if (is(TokenType.ASSIGN)) {
-				advance();
-				instruction = parseVariableAssignment(name);
+				retreat();
+				instruction = parseFunctionCall();
+			} else if (is(TokenType.EQUAL)) {
+				retreat();
+				instruction = parseVariableAssignment();
 			} else
 				error = true;
 		} else
@@ -168,11 +168,24 @@ public class Parser {
 			curToken = tokens[position];
 	}
 
+	public void retreat() {
+		position--;
+		if (position > -1)
+			curToken = tokens[position];
+	}
+
 	/**
 	 * Check, if current token type equals r, if not print error
 	 */
 	public void assume(TokenType t, String error) {
 		if (is(t))
+			advance();
+		else
+			new PError(error);
+	}
+
+	public void assume(TokenType t, String value, String error) {
+		if (is(t) && curToken.getValue().equals(value))
 			advance();
 		else
 			new PError(error);
@@ -196,8 +209,11 @@ public class Parser {
 	 */
 
 	private IfNode parseIf() {
+		assume(TokenType.KEYWORD, "IF", "Keyword IF missing");
 		assume(TokenType.O_ROUND_BRACKET, "Parameterlist not found");
-		ConditionNode condition = parseCondition();
+
+		ConditionNode condition = parsePredicate();
+
 		assume(TokenType.C_ROUND_BRACKET, "Parameterlist not closed");
 		assume(TokenType.COLON, "if-block missing");
 
@@ -209,7 +225,34 @@ public class Parser {
 		return in;
 	}
 
+	private IfNode parseElif() {
+		assume(TokenType.KEYWORD, "ELIF", "Keyword ELIF missing");
+
+		IfNode in = findIfWithoutElse(scopeNode.peek());
+		in.elseBlock = new BlockNode();
+
+		assume(TokenType.O_ROUND_BRACKET, "Parameterlist not found");
+
+		ConditionNode condition = parsePredicate();
+
+		assume(TokenType.C_ROUND_BRACKET, "Parameterlist not closed");
+		assume(TokenType.COLON, "elif-block missing");
+
+		IfNode elif = new IfNode();
+		elif.condition = condition;
+		lateScopeIn(elif.condBlock);
+
+		Logger.log("found condition");
+		in.elseBlock.add(elif);
+
+		scopeIn(elif.condBlock);
+		addInstruction = false;
+
+		return elif;
+	}
+
 	private BlockNode parseElse() {
+		assume(TokenType.KEYWORD, "ELSE", "Keyword ELSE missing");
 		IfNode in = findIfWithoutElse(scopeNode.peek());
 
 		assume(TokenType.COLON, "unknown syntax for else statement");
@@ -221,20 +264,53 @@ public class Parser {
 		return new BlockNode();
 	}
 
-	private IfNode parseElif() {
-		IfNode in = findIfWithoutElse(scopeNode.peek());
-		in.elseBlock = new BlockNode();
+	private ConditionNode parsePredicate() {
+		ConditionNode left = parseCondition();
 
-		IfNode elif = parseIf();
-		in.elseBlock.add(elif);
+		ConditionNode cn = null;
 
-		scopeIn(elif.condBlock);
-		addInstruction = false;
+		//TODO idk if the while is needed anymore
+		while (is(TokenType.AND) || is(TokenType.OR)) {
+			if (is(TokenType.AND)) {
+				advance();
+				if (is(TokenType.AND)) {
+					// &&
+					advance();
+					cn = new BooleanAndNode();
+				} else {
+					// &
+					cn = new BitwiseAndNode();
+				}
+			} else if (is(TokenType.OR)) {
+				advance();
+				if (is(TokenType.OR)) {
+					// ||
+					advance();
+					cn = new BooleanOrNode();
+				} else {
+					// |
+					cn = new BitWiseOrNode();
+				}
+			}
+			ConditionNode right = parseCondition();
+			cn.left = left;
+			cn.right = right;
+			left = cn;
+		}
 
-		return elif;
+		return left;
 	}
 
 	private ConditionNode parseCondition() {
+		if (is(TokenType.O_ROUND_BRACKET)) {
+			advance();
+
+			ConditionNode n = parsePredicate();
+
+			assume(TokenType.C_ROUND_BRACKET, "Expression error. Bracket not properly closed");
+			return n;
+		}
+
 		Node leftExpr = parseExpression();
 		Token compareType = curToken;
 		advance();
@@ -257,6 +333,7 @@ public class Parser {
 		Node left = parseTerm();
 
 		BinaryOperationNode op = null;
+		//TODO idk if the while is needed anymore
 		while (curToken.isLineOP()) {
 
 			if (curToken.type() == TokenType.ADD)
@@ -322,18 +399,23 @@ public class Parser {
 
 			return n;
 		} else
-			new PError("Expr error, couldnt build factor");
+			new PError("Expr error, couldnt build factor ");
 		return null;
 	}
 
-	private CallNode parseFunctionCall(String functionName) {
+	private CallNode parseFunctionCall() {
+		String name = curToken.getValue();
+		assume(TokenType.IDENTIFIER, "Functionname missing");
+
+		assume(TokenType.O_ROUND_BRACKET, "Parameterlist not opened");
+
 		String params = parseParameters();
 
 		assume(TokenType.C_ROUND_BRACKET, "Parameterlist not closed");
 
-		Logger.log("Functioncall '" + functionName + "'(" + params + ")");
+		Logger.log("Functioncall '" + name + "'(" + params + ")");
 
-		CallNode cn = new CallNode(functionName);
+		CallNode cn = new CallNode(name);
 
 		return cn;
 	}
@@ -362,16 +444,15 @@ public class Parser {
 	}
 
 	//TODO keyword ist spaeter zum unterscheiden der primitiven da
-	private InitNode parseVariable(String keyword) {
-
-		if (keyword != "INT")
-			new PError("[PARSER]: Unknown primitive type '" + keyword + "'");
+	private InitNode parseVariable() {
+		String keyword = curToken.getValue();
+		assume(TokenType.KEYWORD, "INT", "[PARSER]: Unknown primitive type '" + keyword + "'");
 
 		String varName = curToken.getValue();
 		assume(TokenType.IDENTIFIER, "Fehler beim Initialisieren einer Variable");
 
 		InitNode n;
-		if (is(TokenType.ASSIGN)) {
+		if (is(TokenType.EQUAL)) {
 			//Variable wird initialisiert
 
 			advance();
@@ -387,7 +468,11 @@ public class Parser {
 		return n;
 	}
 
-	private AssignNode parseVariableAssignment(String varName) {
+	private AssignNode parseVariableAssignment() {
+		String varName = curToken.getValue();
+		assume(TokenType.IDENTIFIER, "variable name missing");
+		assume(TokenType.EQUAL, "EQUAL missing");
+
 		Node expr = parseExpression();
 
 		AssignNode an = new AssignNode(varName, expr);
@@ -401,9 +486,10 @@ public class Parser {
 	//
 
 	private WhileNode parseWhile() {
+		assume(TokenType.KEYWORD, "WHILE", "Keyword WHILE missing");
 		assume(TokenType.O_ROUND_BRACKET, "Missing open bracket for while-loop");
 
-		ConditionNode cn = parseCondition();
+		ConditionNode cn = parsePredicate();
 
 		assume(TokenType.C_ROUND_BRACKET, "Missing close bracket for while-loop");
 		assume(TokenType.COLON, "while-body not defined");
@@ -417,27 +503,31 @@ public class Parser {
 		return wn;
 	}
 
+	private DoWhileNode parseDoWhile() {
+		assume(TokenType.KEYWORD, "DO", "Keyword DO missing");
+		WhileNode wn = parseWhile();
+
+		DoWhileNode dwn = new DoWhileNode();
+		dwn.condition = wn.condition;
+		dwn.whileBlock = wn.whileBlock;
+
+		return dwn;
+	}
+
 	//TODO this needs a major overhaul someday when more variations will be added
 	private ForNode parseFor() {
+		assume(TokenType.KEYWORD, "FOR", "Keyword FOR missing");
 		assume(TokenType.O_ROUND_BRACKET, "Missing open bracket for while-loop");
 
-		assume(TokenType.KEYWORD, "if-var init missing");
-		InitNode in = parseVariable("INT");
+		InitNode in = parseVariable();
 
-		assume(TokenType.COMMA, "OOF");
+		assume(TokenType.COMMA, "Comma missing");
 
-		ConditionNode cn = parseCondition();
+		ConditionNode cn = parsePredicate();
 
-		assume(TokenType.COMMA, "OOF");
+		assume(TokenType.COMMA, "Comma missing");
 
-		if (curToken.type() != TokenType.IDENTIFIER)
-			new PError("if-assign missing");
-		String varName = curToken.getValue();
-		advance();
-
-		advance(); // '='
-
-		AssignNode an = parseVariableAssignment(varName);
+		AssignNode an = parseVariableAssignment();
 
 		ForNode fn = new ForNode();
 		fn.init = in;

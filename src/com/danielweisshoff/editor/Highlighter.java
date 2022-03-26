@@ -48,7 +48,7 @@ public class Highlighter {
 				case SUB -> print(OPERATOR + " - ");
 				case MUL -> print(OPERATOR + " * ");
 				case DIV -> print(OPERATOR + " / ");
-				case ASSIGN -> print(OPERATOR + " = ");
+				case EQUAL -> print(OPERATOR + " = ");
 				case COLON -> print(OPERATOR + ": ");
 				case DOT -> print(DOT + ".");
 				case COMMA -> print(DOT + ",");

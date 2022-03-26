@@ -6,15 +6,16 @@
 TODO
 erstmal nur als Scriptsprache(keine Tababstände), die Logik kann dann nachher easy
 ins OOP übertragen werden
-	- Nodes sollen nurnoch Strukturen ohne Logik sein -> Logik von Nodes zum Interpreter schieben
-	- Conditions verketten (&& || und (,) )
-	- booleansche Logik &, && ; |, || richtig implementieren
-	[+] - variablen
+[+]	- Logik von Nodes zum Interpreter schieben
+[+]	- booleansche Logik &, &&, |, || implementieren
+[+]	- verkettung von conditions
+[+] - conditions klammern
+[+] - variablen
 	- += Operand 
 	- ++ Operand
-	[+]	- while
-	- do-while
-	[+]	- for
+[+]	- while
+[+] - do-while
+[+]	- for
 	- arrays
 	- foreach
 	- ?Preprocessor?
@@ -55,6 +56,6 @@ TODO
  - ? Betragsstriche |a|?
  - ?skalar (a|a) ?
  - Überschreiben von Rechenoperationen für Objekte
-
+ - Testen, ob bitwise &,| wirklich funktionieren
 int a = 2² + |test()| * (a|a)
 int a = pow(2,2) + abs(test()) * (a*a)
