@@ -1,5 +1,2 @@
-int i = 10
-int out
 
-i %= 11
-out = i
+

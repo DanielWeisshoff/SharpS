@@ -21,15 +21,17 @@ ins OOP übertragen werden
 [+]	- while
 [+] - do-while
 [+]	- for
-[-]	- *in for-loop initialisierte var ist im falschen scope!!*
-[]	- arrays
+[+]	- *in for-loop initialisierte var ist im falschen scope!!*
+[]	- arrays -> ArrayNode
 []	- foreach
 []	- ?Preprocessor?
 []	- Nutzerfunktionen
 []	- Parameter
-[]	- Ein paar builIn Funktionen
 [] 	- Rueckgabewerte
+[]	- Ein paar builIn Funktionen
 [+]	- Die *Build Klassen in den Parser einbauen
+[] - char
+[] - string als char[]
 
 TODO
  -	Strings als erste Klasse

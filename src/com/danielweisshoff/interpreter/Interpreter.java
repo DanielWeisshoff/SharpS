@@ -292,11 +292,9 @@ public class Interpreter {
 	private Data<?> interpretForNode() {
 		ForNode fn = (ForNode) curInstruction;
 
+		symbolTableManager.newScope("if-initVar");
 		Data<?> data = interpret(fn.init);
 
-		String varName = fn.init.getName();
-
-		double index = data.asDouble();
 		double cond = interpret(fn.condition).asDouble();
 
 		while (cond == 1) {
@@ -304,6 +302,7 @@ public class Interpreter {
 			interpret(fn.assignment);
 			cond = interpret(fn.condition).asDouble();
 		}
+		symbolTableManager.endScope();
 
 		return new Data<>(1, DataType.INT);
 	}

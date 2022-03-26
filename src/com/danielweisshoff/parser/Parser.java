@@ -654,7 +654,7 @@ public class Parser {
 	//TODO this needs a major overhaul someday when more variations will be added
 	private ForNode parseFor() {
 		assume(TokenType.KEYWORD, "FOR", "Keyword FOR missing");
-		assume(TokenType.O_ROUND_BRACKET, "Missing open bracket for while-loop");
+		assume(TokenType.O_ROUND_BRACKET, "Missing open bracket for for-loop");
 
 		InitNode in = parseVariableDeclaration();
 
@@ -666,8 +666,8 @@ public class Parser {
 
 		AssignNode an = parseVariableInitialization();
 
-		assume(TokenType.C_ROUND_BRACKET, "Missing closed bracket for while-loop");
-		assume(TokenType.COLON, "while-body-declarator missing");
+		assume(TokenType.C_ROUND_BRACKET, "Missing closed bracket for for-loop");
+		assume(TokenType.COLON, "if-body-declarator missing");
 
 		ForNode fn = new ForNode();
 		fn.init = in;
