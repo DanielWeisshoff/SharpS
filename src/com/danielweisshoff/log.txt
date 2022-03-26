@@ -1,6 +1,9 @@
-[2022/MAR/26	01:17:32]  Gleichung erstellt
-[2022/MAR/26	01:17:32]  Gleichung erstellt
-[2022/MAR/26	01:17:32]  found condition
-[2022/MAR/26	01:17:32]  Functioncall 'print'()
-[2022/MAR/26	01:17:32]  [SYMBOLTABLE]: new scope
-[2022/MAR/26	01:17:32]  BuiltInFunktion print wird aufgerufen
+[2022/MAR/26	11:53:52]  Variable x initialisiert
+[2022/MAR/26	11:53:52]  Gleichung erstellt
+[2022/MAR/26	11:53:52]  found condition
+[2022/MAR/26	11:53:52]  Functioncall 'help'()
+[2022/MAR/26	11:53:52]  Gleichung erstellt
+[2022/MAR/26	11:53:52]  found condition
+[2022/MAR/26	11:53:52]  Functioncall 'print'()
+[2022/MAR/26	11:53:52]  [SYMBOLTABLE]: new scope
+[2022/MAR/26	11:53:52]  BuiltInFunktion print wird aufgerufen

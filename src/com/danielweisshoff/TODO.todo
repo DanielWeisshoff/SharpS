@@ -12,10 +12,12 @@ ins OOP übertragen werden
 [+] - conditions klammern
 [+] - variablen
 	- += Operand 
-	- ++ Operand
+[+] - ++x, x++ Operand
+[+]  - --x, x-- Operand
 [+]	- while
 [+] - do-while
 [+]	- for
+[-]	- in for-loop initialisierte var ist im falschen scope!!
 	- arrays
 	- foreach
 	- ?Preprocessor?

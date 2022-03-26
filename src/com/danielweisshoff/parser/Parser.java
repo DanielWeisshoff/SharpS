@@ -273,24 +273,18 @@ public class Parser {
 		while (is(TokenType.AND) || is(TokenType.OR)) {
 			if (is(TokenType.AND)) {
 				advance();
-				if (is(TokenType.AND)) {
-					// &&
+				if (is(TokenType.AND)) {// &&
 					advance();
 					cn = new BooleanAndNode();
-				} else {
-					// &
+				} else // &
 					cn = new BitwiseAndNode();
-				}
 			} else if (is(TokenType.OR)) {
 				advance();
-				if (is(TokenType.OR)) {
-					// ||
+				if (is(TokenType.OR)) {// ||
 					advance();
 					cn = new BooleanOrNode();
-				} else {
-					// |
+				} else // |
 					cn = new BitWiseOrNode();
-				}
 			}
 			ConditionNode right = parseCondition();
 			cn.left = left;
@@ -329,12 +323,20 @@ public class Parser {
 		};
 	}
 
+	//TODO das ist aids
 	private Node parseExpression() {
 		Node left = parseTerm();
 
 		BinaryOperationNode op = null;
 		//TODO idk if the while is needed anymore
 		while (curToken.isLineOP()) {
+			advance();
+			if (curToken.isLineOP()) { // increment /decrement
+				retreat();
+				retreat();
+				break;
+			}
+			retreat();
 
 			if (curToken.type() == TokenType.ADD)
 				op = new BinaryAddNode();
@@ -374,21 +376,69 @@ public class Parser {
 		return left;
 	}
 
+	//TODO spaghetti
 	private Node parseFactor() {
 		int isUnary = 1;
 
-		if (is(TokenType.SUB)) {
-			isUnary = -1;
+		if (is(TokenType.SUB)) { //Ternary / --x
 			advance();
+			if (is(TokenType.SUB)) {
+				retreat();
+				return parseDecrement();
+			} else
+				isUnary = -1;
 		}
 
 		if (is(TokenType.NUMBER)) {
 			Node n = new NumberNode(Integer.parseInt(curToken.getValue()) * isUnary);
 			advance();
 			return n;
-		} else if (is(TokenType.IDENTIFIER)) {
-			Node n = new VariableNode(curToken.getValue());
+		} else if (is(TokenType.ADD)) { // ++x
 			advance();
+			assume(TokenType.ADD, "second incrementor + missing");
+
+			String varName = curToken.getValue();
+			VariableNode n = new VariableNode(varName);
+
+			advance();
+
+			IncrementNode in = new IncrementNode(varName);
+			in.variable = n;
+
+			return in;
+
+		} else if (is(TokenType.IDENTIFIER)) {
+			String varName = curToken.getValue();
+			advance();
+
+			VariableNode n = new VariableNode(varName);
+
+			if (is(TokenType.ADD)) { // x++
+				advance();
+				if (!is(TokenType.ADD)) {
+					retreat();
+					return n;
+				}
+				advance();
+
+				LateIncrementNode in = new LateIncrementNode(varName);
+				in.variable = n;
+
+				return in;
+			} else if (is(TokenType.SUB)) { // x--
+				advance();
+				if (!is(TokenType.SUB)) {
+					retreat();
+					return n;
+				}
+
+				advance();
+
+				LateDecrementNode in = new LateDecrementNode(varName);
+				in.variable = n;
+
+				return in;
+			}
 			return n;
 		} else if (is(TokenType.O_ROUND_BRACKET)) {
 			advance();
@@ -468,14 +518,37 @@ public class Parser {
 		return n;
 	}
 
+	//TODO x++ und x-- sollen intern auch assignments sein, besserer errorcheck
 	private AssignNode parseVariableAssignment() {
+		//increment / decrement stuff
+		if (!is(TokenType.IDENTIFIER))
+			if (is(TokenType.ADD)) //++x
+				return parseIncrement();
+			else if (is(TokenType.SUB)) //--x
+				return parseDecrement();
+			else
+				new PError("Unknown shit, i myself dont even know what happend LMAO ");
+
 		String varName = curToken.getValue();
-		assume(TokenType.IDENTIFIER, "variable name missing");
-		assume(TokenType.EQUAL, "EQUAL missing");
+		assume(TokenType.IDENTIFIER, "var name for assignment missing");
+
+		//late- increment / decrement stuff
+		if (is(TokenType.ADD)) { //x++
+			retreat();
+			return parseLateIncrement();
+		} else if (is(TokenType.SUB)) { //x--
+			retreat();
+			return parseLateDecrement();
+		}
+
+		//else build normal assignment with expr
+		if (is(TokenType.EQUAL)) // x = expr
+			advance();
 
 		Node expr = parseExpression();
 
-		AssignNode an = new AssignNode(varName, expr);
+		EqualAssignNode an = new EqualAssignNode(varName);
+		an.expression = expr;
 
 		Logger.log("Assigned value to variable '" + varName + "'");
 		return an;
@@ -529,6 +602,9 @@ public class Parser {
 
 		AssignNode an = parseVariableAssignment();
 
+		assume(TokenType.C_ROUND_BRACKET, "Missing closed bracket for while-loop");
+		assume(TokenType.COLON, "while-body-declarator missing");
+
 		ForNode fn = new ForNode();
 		fn.init = in;
 		fn.condition = cn;
@@ -537,6 +613,60 @@ public class Parser {
 
 		lateScopeIn(fn.block);
 		return fn;
+	}
+
+	private AssignNode parseLateIncrement() {
+		String varName = curToken.getValue();
+		assume(TokenType.IDENTIFIER, "increment-assignment var missing");
+
+		assume(TokenType.ADD, "Incrementor + missing");
+		assume(TokenType.ADD, "Incrementor + missing");
+
+		LateIncrementNode lin = new LateIncrementNode(varName);
+		lin.variable = new VariableNode(varName);
+
+		return lin;
+	}
+
+	private AssignNode parseLateDecrement() {
+		String varName = curToken.getValue();
+		assume(TokenType.IDENTIFIER, "decrement-assignment var missing");
+
+		assume(TokenType.SUB, "Decrementor - missing");
+		assume(TokenType.SUB, "Decrementor - missing");
+
+		LateDecrementNode lin = new LateDecrementNode(varName);
+		lin.variable = new VariableNode(varName);
+
+		return lin;
+
+	}
+
+	private AssignNode parseIncrement() {
+		assume(TokenType.ADD, "Incrementor + missing");
+		assume(TokenType.ADD, "Incrementor + missing");
+
+		String varName = curToken.getValue();
+		assume(TokenType.IDENTIFIER, "increment-assignment var missing");
+
+		IncrementNode lin = new IncrementNode(varName);
+		lin.variable = new VariableNode(varName);
+
+		return lin;
+	}
+
+	private AssignNode parseDecrement() {
+		assume(TokenType.SUB, "Decrementor - missing");
+		assume(TokenType.SUB, "Decrementor - missing");
+
+		String varName = curToken.getValue();
+		assume(TokenType.IDENTIFIER, "decrement-assignment var missing");
+
+		DecrementNode lin = new DecrementNode(varName);
+		lin.variable = new VariableNode(varName);
+
+		return lin;
+
 	}
 
 	/**

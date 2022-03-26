@@ -7,15 +7,15 @@ import com.danielweisshoff.parser.nodesystem.node.Node;
 /**
  * Sets the value of a variable
  */
-public class AssignNode extends Node {
+public abstract class AssignNode extends Node {
 
+	public VariableNode variable;
+	public Node expression;
 	private final String name;
-	public final Node expression;
 
-	public AssignNode(String varName, Node expression) {
+	public AssignNode(String name) {
 		super(null, null);
-		this.name = varName;
-		this.expression = expression;
+		this.name = name;
 	}
 
 	@Override

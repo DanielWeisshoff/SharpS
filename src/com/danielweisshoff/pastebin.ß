@@ -19,3 +19,8 @@ else:
 int doo = 0
 do while(doo != 0):
 	print()
+
+if( 1 == 2 & 1 == 1):
+	print()
+elif((1 < 5 || 2 > 1) && 4 % 2 == 0):
+	help()

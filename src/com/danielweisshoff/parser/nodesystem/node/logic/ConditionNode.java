@@ -3,6 +3,8 @@ package com.danielweisshoff.parser.nodesystem.node.logic;
 import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.Node;
 
+//TODO
+//? In LogicNode umbenennen? 
 public abstract class ConditionNode extends Node {
 
 	public Node left;

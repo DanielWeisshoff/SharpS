@@ -2,6 +2,9 @@ package com.danielweisshoff.interpreter;
 
 import java.util.Scanner;
 
+import javax.swing.plaf.synth.SynthSeparatorUI;
+import javax.swing.plaf.synth.SynthSplitPaneUI;
+
 import com.danielweisshoff.interpreter.builtin.BuiltInFunction;
 import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.PError;
@@ -20,6 +23,8 @@ import com.danielweisshoff.parser.symboltable.VariableEntry;
 * Data<>(1, DataType.INT); ist vorerst standard für "erfolgreiche Operation"
 TODO: StepperMode -> Debug mode ?!?
 *
+* Dieser Interpreter hat keine Runtime-Optimierung, deswegen sind selbst die trivialsten
+* Unterschiede zwischen Befehlen in eigene Methoden verpackt, um ein wenig flotter unterwegs zu sein
 */
 public class Interpreter {
 
@@ -61,6 +66,18 @@ public class Interpreter {
 			data = interpretBinaryOperationNode('%');
 		else if (n instanceof NumberNode)
 			data = interpretNumberNode();
+		//VAR ASSIGNMENT
+		else if (n instanceof EqualAssignNode) {
+			data = interpretEqualAssignNode();
+			stepFinished = true;
+		} else if (n instanceof IncrementNode)
+			data = interpretIncrementNode();
+		else if (n instanceof LateIncrementNode)
+			data = interpretLateIncrementNode();
+		else if (n instanceof DecrementNode)
+			data = interpretDecrementNode();
+		else if (n instanceof LateDecrementNode)
+			data = interpretLateDecrementNode();
 		//CONDITIONS
 		else if (n instanceof LessNode)
 			data = interpretConditionNode("<");
@@ -85,9 +102,6 @@ public class Interpreter {
 		//VAR STUFF
 		else if (n instanceof InitNode) {
 			data = interpretInitNode();
-			stepFinished = true;
-		} else if (n instanceof AssignNode) {
-			data = interpretAssignNode();
 			stepFinished = true;
 		} else if (n instanceof VariableNode)
 			data = interpretVariableNode();
@@ -213,7 +227,7 @@ public class Interpreter {
 		return new Data<>(1, DataType.INT);
 	}
 
-	private Data<?> interpretAssignNode() {
+	private Data<?> interpretEqualAssignNode() {
 		AssignNode an = (AssignNode) curInstruction;
 		String varName = an.getName();
 
@@ -266,9 +280,11 @@ public class Interpreter {
 	private Data<?> interpretForNode() {
 		ForNode fn = (ForNode) curInstruction;
 
+		Data<?> data = interpret(fn.init);
+
 		String varName = fn.init.getName();
 
-		double index = interpret(fn.init).asDouble();
+		double index = data.asDouble();
 		double cond = interpret(fn.condition).asDouble();
 
 		while (cond == 1) {
@@ -278,6 +294,72 @@ public class Interpreter {
 		}
 
 		return new Data<>(1, DataType.INT);
+	}
+
+	private Data<?> interpretIncrementNode() {
+		IncrementNode in = (IncrementNode) curInstruction;
+
+		VariableNode vn = in.variable;
+		String varName = vn.getName();
+
+		VariableEntry var = (VariableEntry) symbolTableManager.findVariableInScope(varName);
+		if (var == null)
+			new PError("Parse Error: var '" + varName + "' not declared");
+
+		double value = Double.parseDouble(var.getValue());
+		var.value = "" + (value + 1);
+		value = Double.parseDouble(var.getValue());
+
+		return new Data<Double>(value, DataType.DOUBLE);
+	}
+
+	private Data<?> interpretLateIncrementNode() {
+		LateIncrementNode in = (LateIncrementNode) curInstruction;
+
+		VariableNode vn = in.variable;
+		String varName = vn.getName();
+
+		VariableEntry var = (VariableEntry) symbolTableManager.findVariableInScope(varName);
+		if (var == null)
+			new PError("Parse Error: var '" + varName + "' not declared");
+
+		double value = Double.parseDouble(var.getValue());
+		var.value = "" + (value + 1);
+
+		return new Data<Double>(value, DataType.DOUBLE);
+	}
+
+	private Data<?> interpretDecrementNode() {
+		DecrementNode in = (DecrementNode) curInstruction;
+
+		VariableNode vn = in.variable;
+		String varName = vn.getName();
+
+		VariableEntry var = (VariableEntry) symbolTableManager.findVariableInScope(varName);
+		if (var == null)
+			new PError("Parse Error: var '" + varName + "' not declared");
+
+		double value = Double.parseDouble(var.getValue());
+		var.value = "" + (value - 1);
+		value = Double.parseDouble(var.getValue());
+
+		return new Data<Double>(value, DataType.DOUBLE);
+	}
+
+	private Data<?> interpretLateDecrementNode() {
+		LateDecrementNode in = (LateDecrementNode) curInstruction;
+
+		VariableNode vn = in.variable;
+		String varName = vn.getName();
+
+		VariableEntry var = (VariableEntry) symbolTableManager.findVariableInScope(varName);
+		if (var == null)
+			new PError("Parse Error: var '" + varName + "' not declared");
+
+		double value = Double.parseDouble(var.getValue());
+		var.value = "" + (value - 1);
+
+		return new Data<Double>(value, DataType.DOUBLE);
 	}
 
 	public SymbolTableManager getSymbolTableManager() {
