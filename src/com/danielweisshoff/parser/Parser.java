@@ -2,6 +2,8 @@ package com.danielweisshoff.parser;
 
 import java.util.Stack;
 
+import javax.crypto.Cipher;
+
 import com.danielweisshoff.interpreter.builtin.BuiltInFunction;
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
@@ -9,6 +11,16 @@ import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.nodesystem.node.*;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.*;
 import com.danielweisshoff.parser.nodesystem.node.data.*;
+import com.danielweisshoff.parser.nodesystem.node.data.assigning.AddAssignNode;
+import com.danielweisshoff.parser.nodesystem.node.data.assigning.DivAssignNode;
+import com.danielweisshoff.parser.nodesystem.node.data.assigning.EqualAssignNode;
+import com.danielweisshoff.parser.nodesystem.node.data.assigning.ModAssignNode;
+import com.danielweisshoff.parser.nodesystem.node.data.assigning.MulAssignNode;
+import com.danielweisshoff.parser.nodesystem.node.data.assigning.SubAssignNode;
+import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.DecrementNode;
+import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.IncrementNode;
+import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.LateDecrementNode;
+import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.LateIncrementNode;
 import com.danielweisshoff.parser.nodesystem.node.logic.*;
 import com.danielweisshoff.parser.nodesystem.node.loops.DoWhileNode;
 import com.danielweisshoff.parser.nodesystem.node.loops.ForNode;
@@ -69,7 +81,7 @@ public class Parser {
 			case "ELSE" -> instruction = parseElse();
 			case "ELIF" -> instruction = parseElif();
 			//ALL PRIMITIVES
-			case "INT" -> instruction = parseVariable();
+			case "INT" -> instruction = parseVariableDeclaration();
 			case "WHILE" -> instruction = parseWhile();
 			case "FOR" -> instruction = parseFor();
 			case "DO" -> instruction = parseDoWhile();
@@ -83,13 +95,18 @@ public class Parser {
 			if (is(TokenType.O_ROUND_BRACKET)) {
 				retreat();
 				instruction = parseFunctionCall();
-			} else if (is(TokenType.EQUAL)) {
+			} else if (curToken.isOP() || is(TokenType.EQUAL) || is(TokenType.MOD)) {
 				retreat();
-				instruction = parseVariableAssignment();
+				instruction = parseVariableInitialization();
 			} else
 				error = true;
-		} else
-			error = true;
+		} else {//Sammelsorium an diversen TokenTypes
+			switch (curToken.type()) {
+			case ADD -> instruction = parseIncrement(); //++ increment
+			case SUB -> instruction = parseDecrement(); //-- decrement
+			default -> error = true;
+			}
+		}
 
 		/*
 		*
@@ -169,7 +186,13 @@ public class Parser {
 	}
 
 	public void retreat() {
-		position--;
+		retreat(1);
+	}
+
+	public void retreat(int times) {
+		for (int i = 0; i < times; i++)
+			position--;
+
 		if (position > -1)
 			curToken = tokens[position];
 	}
@@ -328,12 +351,11 @@ public class Parser {
 		Node left = parseTerm();
 
 		BinaryOperationNode op = null;
-		//TODO idk if the while is needed anymore
+
 		while (curToken.isLineOP()) {
 			advance();
 			if (curToken.isLineOP()) { // increment /decrement
-				retreat();
-				retreat();
+				retreat(2);
 				break;
 			}
 			retreat();
@@ -396,16 +418,11 @@ public class Parser {
 		} else if (is(TokenType.ADD)) { // ++x
 			advance();
 			assume(TokenType.ADD, "second incrementor + missing");
+			retreat(2);
 
-			String varName = curToken.getValue();
-			VariableNode n = new VariableNode(varName);
+			AssignNode an = parseIncrement();
 
-			advance();
-
-			IncrementNode in = new IncrementNode(varName);
-			in.variable = n;
-
-			return in;
+			return an;
 
 		} else if (is(TokenType.IDENTIFIER)) {
 			String varName = curToken.getValue();
@@ -419,25 +436,20 @@ public class Parser {
 					retreat();
 					return n;
 				}
-				advance();
+				retreat(2);
 
-				LateIncrementNode in = new LateIncrementNode(varName);
-				in.variable = n;
-
-				return in;
+				AssignNode an = parseLateIncrement();
+				return an;
 			} else if (is(TokenType.SUB)) { // x--
 				advance();
 				if (!is(TokenType.SUB)) {
 					retreat();
 					return n;
 				}
+				retreat(2);
 
-				advance();
-
-				LateDecrementNode in = new LateDecrementNode(varName);
-				in.variable = n;
-
-				return in;
+				AssignNode an = parseLateDecrement();
+				return an;
 			}
 			return n;
 		} else if (is(TokenType.O_ROUND_BRACKET)) {
@@ -448,8 +460,7 @@ public class Parser {
 			assume(TokenType.C_ROUND_BRACKET, "Expression error. Bracket not properly closed");
 
 			return n;
-		} else
-			new PError("Expr error, couldnt build factor ");
+		}
 		return null;
 	}
 
@@ -494,7 +505,7 @@ public class Parser {
 	}
 
 	//TODO keyword ist spaeter zum unterscheiden der primitiven da
-	private InitNode parseVariable() {
+	private InitNode parseVariableDeclaration() {
 		String keyword = curToken.getValue();
 		assume(TokenType.KEYWORD, "INT", "[PARSER]: Unknown primitive type '" + keyword + "'");
 
@@ -518,40 +529,93 @@ public class Parser {
 		return n;
 	}
 
-	//TODO x++ und x-- sollen intern auch assignments sein, besserer errorcheck
-	private AssignNode parseVariableAssignment() {
-		//increment / decrement stuff
-		if (!is(TokenType.IDENTIFIER))
-			if (is(TokenType.ADD)) //++x
-				return parseIncrement();
-			else if (is(TokenType.SUB)) //--x
-				return parseDecrement();
-			else
-				new PError("Unknown shit, i myself dont even know what happend LMAO ");
-
-		String varName = curToken.getValue();
-		assume(TokenType.IDENTIFIER, "var name for assignment missing");
-
-		//late- increment / decrement stuff
-		if (is(TokenType.ADD)) { //x++
-			retreat();
-			return parseLateIncrement();
-		} else if (is(TokenType.SUB)) { //x--
-			retreat();
-			return parseLateDecrement();
-		}
-
-		//else build normal assignment with expr
-		if (is(TokenType.EQUAL)) // x = expr
+	private AssignNode parseVariableInitialization() {
+		//increment
+		if (is(TokenType.ADD)) {
 			advance();
 
-		Node expr = parseExpression();
+			assume(TokenType.ADD, "Incrementor + missing");
+			retreat(2);
 
-		EqualAssignNode an = new EqualAssignNode(varName);
-		an.expression = expr;
+			return parseIncrement();
+		}
+		//decrement
+		else if (is(TokenType.SUB)) {
+			advance();
+			assume(TokenType.SUB, "Decrementor - missing");
+			retreat(2);
 
-		Logger.log("Assigned value to variable '" + varName + "'");
-		return an;
+			return parseDecrement();
+		}
+
+		//variations of assignments
+		else if (is(TokenType.IDENTIFIER)) {
+			advance();
+
+			//late increment	x++
+			if (is(TokenType.ADD)) {
+				advance();
+				if (is(TokenType.ADD)) {
+					retreat(2);
+					return parseLateIncrement();
+				}
+				retreat();
+			}
+			//late decrement	x--
+			else if (is(TokenType.SUB)) {
+				advance();
+				if (is(TokenType.SUB)) {
+					retreat(2);
+					return parseLateDecrement();
+				}
+				retreat();
+			}
+			//* HAS TO HAPPEN AFTER INCR/DECR 
+			//. +=
+			if (is(TokenType.ADD)) {
+				retreat();
+				return parseAddAssignNode();
+			}
+			//. -=
+			else if (is(TokenType.SUB)) {
+				retreat();
+				return parseSubAssignNode();
+			}
+			//.	*=
+			else if (is(TokenType.MUL)) {
+				retreat();
+				return parseMulAssignNode();
+			}
+			//. /=
+			else if (is(TokenType.DIV)) {
+				retreat();
+				return parseDivAssignNode();
+			}
+			//. %=
+			else if (is(TokenType.MOD)) {
+				retreat();
+				return parseModAssignNode();
+			}
+			// x= EXPR
+			//TODO complete bs
+			retreat();
+			String varName = curToken.getValue();
+			assume(TokenType.IDENTIFIER, "var name for assignment missing");
+
+			if (is(TokenType.EQUAL))
+				advance();
+			else
+				retreat();
+
+			Node expr = parseExpression();
+
+			EqualAssignNode an = new EqualAssignNode(varName);
+			an.expression = expr;
+
+			Logger.log("Assigned value to variable '" + varName + "'");
+			return an;
+		}
+		return null; //TODO ka
 	}
 
 	//
@@ -592,7 +656,7 @@ public class Parser {
 		assume(TokenType.KEYWORD, "FOR", "Keyword FOR missing");
 		assume(TokenType.O_ROUND_BRACKET, "Missing open bracket for while-loop");
 
-		InitNode in = parseVariable();
+		InitNode in = parseVariableDeclaration();
 
 		assume(TokenType.COMMA, "Comma missing");
 
@@ -600,7 +664,7 @@ public class Parser {
 
 		assume(TokenType.COMMA, "Comma missing");
 
-		AssignNode an = parseVariableAssignment();
+		AssignNode an = parseVariableInitialization();
 
 		assume(TokenType.C_ROUND_BRACKET, "Missing closed bracket for while-loop");
 		assume(TokenType.COLON, "while-body-declarator missing");
@@ -635,10 +699,10 @@ public class Parser {
 		assume(TokenType.SUB, "Decrementor - missing");
 		assume(TokenType.SUB, "Decrementor - missing");
 
-		LateDecrementNode lin = new LateDecrementNode(varName);
-		lin.variable = new VariableNode(varName);
+		LateDecrementNode ldn = new LateDecrementNode(varName);
+		ldn.variable = new VariableNode(varName);
 
-		return lin;
+		return ldn;
 
 	}
 
@@ -649,10 +713,10 @@ public class Parser {
 		String varName = curToken.getValue();
 		assume(TokenType.IDENTIFIER, "increment-assignment var missing");
 
-		IncrementNode lin = new IncrementNode(varName);
-		lin.variable = new VariableNode(varName);
+		IncrementNode in = new IncrementNode(varName);
+		in.variable = new VariableNode(varName);
 
-		return lin;
+		return in;
 	}
 
 	private AssignNode parseDecrement() {
@@ -662,11 +726,86 @@ public class Parser {
 		String varName = curToken.getValue();
 		assume(TokenType.IDENTIFIER, "decrement-assignment var missing");
 
-		DecrementNode lin = new DecrementNode(varName);
-		lin.variable = new VariableNode(varName);
+		DecrementNode dn = new DecrementNode(varName);
+		dn.variable = new VariableNode(varName);
 
-		return lin;
+		return dn;
 
+	}
+
+	private AddAssignNode parseAddAssignNode() {
+		String varName = curToken.getValue();
+		assume(TokenType.IDENTIFIER, "+= var missing");
+
+		assume(TokenType.ADD, "AddAssign err");
+		assume(TokenType.EQUAL, "AddAssign err");
+
+		Node expr = parseExpression();
+
+		AddAssignNode man = new AddAssignNode(varName);
+		man.expression = expr;
+
+		return man;
+	}
+
+	private SubAssignNode parseSubAssignNode() {
+		String varName = curToken.getValue();
+		assume(TokenType.IDENTIFIER, "-= var missing");
+
+		assume(TokenType.SUB, "SubAssign err");
+		assume(TokenType.EQUAL, "SubAssign err");
+
+		Node expr = parseExpression();
+
+		SubAssignNode man = new SubAssignNode(varName);
+		man.expression = expr;
+
+		return man;
+	}
+
+	private MulAssignNode parseMulAssignNode() {
+		String varName = curToken.getValue();
+		assume(TokenType.IDENTIFIER, "*= var missing");
+
+		assume(TokenType.MUL, "MulAssign err");
+		assume(TokenType.EQUAL, "MulAssign err");
+
+		Node expr = parseExpression();
+
+		MulAssignNode man = new MulAssignNode(varName);
+		man.expression = expr;
+
+		return man;
+	}
+
+	private DivAssignNode parseDivAssignNode() {
+		String varName = curToken.getValue();
+		assume(TokenType.IDENTIFIER, "/= var missing");
+
+		assume(TokenType.DIV, "DivAssign err");
+		assume(TokenType.EQUAL, "DivAssign err");
+
+		Node expr = parseExpression();
+
+		DivAssignNode man = new DivAssignNode(varName);
+		man.expression = expr;
+
+		return man;
+	}
+
+	private ModAssignNode parseModAssignNode() {
+		String varName = curToken.getValue();
+		assume(TokenType.IDENTIFIER, "%= var missing");
+
+		assume(TokenType.MOD, "ModAssign err");
+		assume(TokenType.EQUAL, "ModAssign err");
+
+		Node expr = parseExpression();
+
+		ModAssignNode man = new ModAssignNode(varName);
+		man.expression = expr;
+
+		return man;
 	}
 
 	/**

@@ -1,9 +1,3 @@
-[2022/MAR/26	11:53:52]  Variable x initialisiert
-[2022/MAR/26	11:53:52]  Gleichung erstellt
-[2022/MAR/26	11:53:52]  found condition
-[2022/MAR/26	11:53:52]  Functioncall 'help'()
-[2022/MAR/26	11:53:52]  Gleichung erstellt
-[2022/MAR/26	11:53:52]  found condition
-[2022/MAR/26	11:53:52]  Functioncall 'print'()
-[2022/MAR/26	11:53:52]  [SYMBOLTABLE]: new scope
-[2022/MAR/26	11:53:52]  BuiltInFunktion print wird aufgerufen
+[2022/MAR/26	15:08:35]  Variable i initialisiert
+[2022/MAR/26	15:08:35]  Variable out deklariert
+[2022/MAR/26	15:08:35]  Assigned value to variable 'out'

@@ -1,0 +1,1886 @@
+{
+    "extension": "linecounter",
+    "version": "0.2.7",
+    "workspace": "c:\\Users\\danie\\Desktop\\SharpS",
+    "linecount": [
+        {
+            "version": "0.2.7",
+            "counttime": "2022-03-26 14:30:18",
+            "filesum": 274,
+            "codesum": 2917,
+            "commentsum": 489,
+            "blanksum": 859,
+            "statistics": {
+                ".gradle": {
+                    "code": 18,
+                    "comment": 12,
+                    "blank": 5
+                },
+                ".md": {
+                    "code": 6,
+                    "comment": 0,
+                    "blank": 1
+                },
+                ".bat": {
+                    "code": 44,
+                    "comment": 0,
+                    "blank": 10
+                },
+                ".properties": {
+                    "code": 7,
+                    "comment": 1,
+                    "blank": 0
+                },
+                ".java": {
+                    "code": 2376,
+                    "comment": 401,
+                    "blank": 713
+                },
+                "": {
+                    "code": 115,
+                    "comment": 71,
+                    "blank": 16
+                },
+                ".ß": {
+                    "code": 60,
+                    "comment": 0,
+                    "blank": 18
+                },
+                ".todo": {
+                    "code": 120,
+                    "comment": 4,
+                    "blank": 8
+                },
+                ".txt": {
+                    "code": 168,
+                    "comment": 0,
+                    "blank": 88
+                },
+                ".probe": {
+                    "code": 1,
+                    "comment": 0,
+                    "blank": 0
+                },
+                ".bin": {
+                    "code": 2,
+                    "comment": 0,
+                    "blank": 0
+                }
+            },
+            "filelist": [
+                {
+                    "blank": 1,
+                    "code": 5,
+                    "comment": 1,
+                    "filename": ".gitattributes"
+                },
+                {
+                    "blank": 1,
+                    "code": 8,
+                    "comment": 0,
+                    "filename": ".gitignore"
+                },
+                {
+                    "filename": ".gradle\\7.2\\dependencies-accessors\\dependencies-accessors.lock",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0,
+                    "filename": ".gradle\\7.2\\dependencies-accessors\\gc.properties"
+                },
+                {
+                    "filename": ".gradle\\7.2\\executionHistory\\executionHistory.lock",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": ".gradle\\7.2\\fileChanges\\last-build.bin"
+                },
+                {
+                    "filename": ".gradle\\7.2\\fileHashes\\fileHashes.lock",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0,
+                    "filename": ".gradle\\7.2\\gc.properties"
+                },
+                {
+                    "filename": ".gradle\\7.4\\checksums\\checksums.lock",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": ".gradle\\7.4\\dependencies-accessors\\dependencies-accessors.lock",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0,
+                    "filename": ".gradle\\7.4\\dependencies-accessors\\gc.properties"
+                },
+                {
+                    "filename": ".gradle\\7.4\\executionHistory\\executionHistory.bin",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": ".gradle\\7.4\\executionHistory\\executionHistory.lock",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": ".gradle\\7.4\\fileChanges\\last-build.bin"
+                },
+                {
+                    "filename": ".gradle\\7.4\\fileHashes\\fileHashes.bin",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": ".gradle\\7.4\\fileHashes\\fileHashes.lock",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": ".gradle\\7.4\\fileHashes\\resourceHashesCache.bin",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0,
+                    "filename": ".gradle\\7.4\\gc.properties"
+                },
+                {
+                    "filename": ".gradle\\buildOutputCleanup\\buildOutputCleanup.lock",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": ".gradle\\buildOutputCleanup\\cache.properties"
+                },
+                {
+                    "filename": ".gradle\\buildOutputCleanup\\outputFiles.bin",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": ".gradle\\checksums\\checksums.lock",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": ".gradle\\file-system.probe"
+                },
+                {
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0,
+                    "filename": ".gradle\\vcs-1\\gc.properties"
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\editor\\ColorSet.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\editor\\ColorTheme.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\editor\\Highlighter.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "bin\\main\\com\\danielweisshoff\\editor\\readme.md"
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\Goethe.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\interpreter\\builtin\\BuiltInFunction.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\interpreter\\builtin\\functions\\exitFunction.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\interpreter\\builtin\\functions\\helpFunction.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\interpreter\\builtin\\functions\\printFunction.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\interpreter\\heap\\StaticHeap.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\interpreter\\Interpreter.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\interpreter\\stack\\Stack.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\interpreter\\stack\\StackFrame.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0,
+                    "filename": "bin\\main\\com\\danielweisshoff\\lexer.txt"
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\lexer\\Keywords.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\lexer\\Lexer.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\lexer\\TestString.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\lexer\\Token.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\lexer\\TokenType.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "bin\\main\\com\\danielweisshoff\\log.txt"
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\logger\\Log.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\logger\\Logger.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\AST.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\ExpressionPrinter.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\Data.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\DataType.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\binaryoperations\\BinaryAddNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\binaryoperations\\BinaryDivNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\binaryoperations\\BinaryModNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\binaryoperations\\BinaryMulNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\binaryoperations\\BinaryOperationNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\binaryoperations\\BinarySubNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\BlockNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\CallNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\ClassNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\ConstructorNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\assigning\\AddAssignNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\assigning\\DivAssignNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\assigning\\EqualAssignNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\assigning\\MulAssignNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\assigning\\SubAssignNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\AssignNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\InitNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\NumberNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\shortcuts\\DecrementNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\shortcuts\\IncrementNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\shortcuts\\LateDecrementNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\shortcuts\\LateIncrementNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\VariableNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\ErrorNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\FunctionNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\IfNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\BitwiseAndNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\BitWiseOrNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\BooleanAndNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\BooleanOrNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\ConditionNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\EqualNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\LessEqualNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\LessNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\MoreEqualNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\MoreNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\NotEqualNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\loops\\DoWhileNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\loops\\ForNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\loops\\WhileNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\Node.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\RootNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\Parser.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\PError.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\symboltable\\Entry.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\symboltable\\FunctionEntry.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\symboltable\\SymbolTable.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\symboltable\\SymbolTableManager.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\symboltable\\Type.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\parser\\symboltable\\VariableEntry.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 6,
+                    "code": 20,
+                    "comment": 0,
+                    "filename": "bin\\main\\com\\danielweisshoff\\pastebin.ß"
+                },
+                {
+                    "blank": 3,
+                    "code": 10,
+                    "comment": 0,
+                    "filename": "bin\\main\\com\\danielweisshoff\\program.ß"
+                },
+                {
+                    "filename": "bin\\main\\com\\danielweisshoff\\Shell.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 4,
+                    "code": 60,
+                    "comment": 2,
+                    "filename": "bin\\main\\com\\danielweisshoff\\TODO.todo"
+                },
+                {
+                    "blank": 4,
+                    "code": 16,
+                    "comment": 4,
+                    "filename": "build.gradle"
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\editor\\ColorSet.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\editor\\ColorTheme.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\editor\\Highlighter$1.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\editor\\Highlighter.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\Goethe.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\interpreter\\builtin\\BuiltInFunction.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\interpreter\\builtin\\functions\\exitFunction.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\interpreter\\builtin\\functions\\helpFunction.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\interpreter\\builtin\\functions\\printFunction.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\interpreter\\heap\\StaticHeap.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\interpreter\\Interpreter.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\interpreter\\stack\\Stack.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\interpreter\\stack\\StackFrame.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\lexer\\Keywords.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\lexer\\Lexer.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\lexer\\TestString.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\lexer\\Token.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\lexer\\TokenType.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\logger\\Log.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\logger\\Logger.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\AST.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\ExpressionPrinter.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\Data.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\DataType.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\binaryoperations\\BinaryAddNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\binaryoperations\\BinaryDivNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\binaryoperations\\BinaryModNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\binaryoperations\\BinaryMulNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\binaryoperations\\BinaryOperationNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\binaryoperations\\BinarySubNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\BlockNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\CallNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\ClassNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\ConstructorNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\assigning\\AddAssignNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\assigning\\DivAssignNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\assigning\\EqualAssignNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\assigning\\MulAssignNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\assigning\\SubAssignNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\AssignNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\InitNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\NumberNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\shortcuts\\DecrementNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\shortcuts\\IncrementNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\shortcuts\\LateDecrementNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\shortcuts\\LateIncrementNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\VariableNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\ErrorNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\FunctionNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\IfNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\BitwiseAndNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\BitWiseOrNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\BooleanAndNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\BooleanOrNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\ConditionNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\EqualNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\LessEqualNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\LessNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\MoreEqualNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\MoreNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\NotEqualNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\loops\\DoWhileNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\loops\\ForNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\loops\\WhileNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\Node.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\nodesystem\\node\\RootNode.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\Parser$1.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\Parser.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\PError.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\symboltable\\Entry.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\symboltable\\FunctionEntry.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\symboltable\\SymbolTable.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\symboltable\\SymbolTableManager.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\symboltable\\Type.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\parser\\symboltable\\VariableEntry.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\classes\\java\\main\\com\\danielweisshoff\\Shell.class",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build\\tmp\\compileJava\\previous-compilation-data.bin",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "Documentation\\CompilerAblauf.odt",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "Documentation\\Notizen u Gedanken.docx",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "Documentation\\Sharp-S.odt",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 88,
+                    "code": 160,
+                    "comment": 0,
+                    "filename": "Documentation\\syntax.txt"
+                },
+                {
+                    "filename": "gradle\\wrapper\\gradle-wrapper.jar",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 0,
+                    "code": 5,
+                    "comment": 1,
+                    "filename": "gradle\\wrapper\\gradle-wrapper.properties"
+                },
+                {
+                    "blank": 14,
+                    "code": 102,
+                    "comment": 70,
+                    "filename": "gradlew"
+                },
+                {
+                    "blank": 10,
+                    "code": 44,
+                    "comment": 0,
+                    "filename": "gradlew.bat"
+                },
+                {
+                    "blank": 1,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "README.md"
+                },
+                {
+                    "blank": 1,
+                    "code": 2,
+                    "comment": 8,
+                    "filename": "settings.gradle"
+                },
+                {
+                    "blank": 5,
+                    "code": 15,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\editor\\ColorSet.java"
+                },
+                {
+                    "blank": 4,
+                    "code": 24,
+                    "comment": 2,
+                    "filename": "src\\com\\danielweisshoff\\editor\\ColorTheme.java"
+                },
+                {
+                    "blank": 10,
+                    "code": 87,
+                    "comment": 23,
+                    "filename": "src\\com\\danielweisshoff\\editor\\Highlighter.java"
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\editor\\readme.md"
+                },
+                {
+                    "blank": 10,
+                    "code": 47,
+                    "comment": 8,
+                    "filename": "src\\com\\danielweisshoff\\Goethe.java"
+                },
+                {
+                    "blank": 6,
+                    "code": 15,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\interpreter\\builtin\\BuiltInFunction.java"
+                },
+                {
+                    "blank": 5,
+                    "code": 10,
+                    "comment": 1,
+                    "filename": "src\\com\\danielweisshoff\\interpreter\\builtin\\functions\\exitFunction.java"
+                },
+                {
+                    "blank": 4,
+                    "code": 18,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\interpreter\\builtin\\functions\\helpFunction.java"
+                },
+                {
+                    "blank": 3,
+                    "code": 11,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\interpreter\\builtin\\functions\\printFunction.java"
+                },
+                {
+                    "blank": 8,
+                    "code": 0,
+                    "comment": 31,
+                    "filename": "src\\com\\danielweisshoff\\interpreter\\heap\\Heap.java"
+                },
+                {
+                    "blank": 5,
+                    "code": 0,
+                    "comment": 16,
+                    "filename": "src\\com\\danielweisshoff\\interpreter\\heap\\SharpSObject.java"
+                },
+                {
+                    "blank": 5,
+                    "code": 11,
+                    "comment": 6,
+                    "filename": "src\\com\\danielweisshoff\\interpreter\\heap\\StaticHeap.java"
+                },
+                {
+                    "blank": 77,
+                    "code": 277,
+                    "comment": 26,
+                    "filename": "src\\com\\danielweisshoff\\interpreter\\Interpreter.java"
+                },
+                {
+                    "blank": 8,
+                    "code": 31,
+                    "comment": 2,
+                    "filename": "src\\com\\danielweisshoff\\interpreter\\stack\\Stack.java"
+                },
+                {
+                    "blank": 6,
+                    "code": 12,
+                    "comment": 14,
+                    "filename": "src\\com\\danielweisshoff\\interpreter\\stack\\StackFrame.java"
+                },
+                {
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\lexer.txt"
+                },
+                {
+                    "blank": 2,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\lexer\\Keywords.java"
+                },
+                {
+                    "blank": 24,
+                    "code": 179,
+                    "comment": 13,
+                    "filename": "src\\com\\danielweisshoff\\lexer\\Lexer.java"
+                },
+                {
+                    "blank": 2,
+                    "code": 15,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\lexer\\TestString.java"
+                },
+                {
+                    "blank": 16,
+                    "code": 52,
+                    "comment": 2,
+                    "filename": "src\\com\\danielweisshoff\\lexer\\Token.java"
+                },
+                {
+                    "blank": 2,
+                    "code": 7,
+                    "comment": 3,
+                    "filename": "src\\com\\danielweisshoff\\lexer\\TokenType.java"
+                },
+                {
+                    "blank": 0,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\log.txt"
+                },
+                {
+                    "blank": 16,
+                    "code": 59,
+                    "comment": 3,
+                    "filename": "src\\com\\danielweisshoff\\logger\\Log.java"
+                },
+                {
+                    "blank": 9,
+                    "code": 22,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\logger\\Logger.java"
+                },
+                {
+                    "blank": 4,
+                    "code": 10,
+                    "comment": 5,
+                    "filename": "src\\com\\danielweisshoff\\parser\\AST.java"
+                },
+                {
+                    "blank": 11,
+                    "code": 43,
+                    "comment": 2,
+                    "filename": "src\\com\\danielweisshoff\\parser\\ExpressionPrinter.java"
+                },
+                {
+                    "blank": 15,
+                    "code": 52,
+                    "comment": 20,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\Data.java"
+                },
+                {
+                    "blank": 1,
+                    "code": 7,
+                    "comment": 24,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\DataType.java"
+                },
+                {
+                    "blank": 6,
+                    "code": 19,
+                    "comment": 3,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\binaryoperations\\BinaryAddNode.java"
+                },
+                {
+                    "blank": 6,
+                    "code": 19,
+                    "comment": 3,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\binaryoperations\\BinaryDivNode.java"
+                },
+                {
+                    "blank": 6,
+                    "code": 14,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\binaryoperations\\BinaryModNode.java"
+                },
+                {
+                    "blank": 6,
+                    "code": 19,
+                    "comment": 3,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\binaryoperations\\BinaryMulNode.java"
+                },
+                {
+                    "blank": 7,
+                    "code": 19,
+                    "comment": 3,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\binaryoperations\\BinaryOperationNode.java"
+                },
+                {
+                    "blank": 6,
+                    "code": 20,
+                    "comment": 3,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\binaryoperations\\BinarySubNode.java"
+                },
+                {
+                    "blank": 7,
+                    "code": 21,
+                    "comment": 3,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\BlockNode.java"
+                },
+                {
+                    "blank": 7,
+                    "code": 24,
+                    "comment": 3,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\CallNode.java"
+                },
+                {
+                    "blank": 8,
+                    "code": 25,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\ClassNode.java"
+                },
+                {
+                    "blank": 8,
+                    "code": 26,
+                    "comment": 4,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\ConstructorNode.java"
+                },
+                {
+                    "blank": 4,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\assigning\\AddAssignNode.java"
+                },
+                {
+                    "blank": 3,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\assigning\\DivAssignNode.java"
+                },
+                {
+                    "blank": 4,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\assigning\\EqualAssignNode.java"
+                },
+                {
+                    "blank": 4,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\assigning\\MulAssignNode.java"
+                },
+                {
+                    "blank": 4,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\assigning\\SubAssignNode.java"
+                },
+                {
+                    "blank": 6,
+                    "code": 20,
+                    "comment": 3,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\AssignNode.java"
+                },
+                {
+                    "blank": 6,
+                    "code": 25,
+                    "comment": 3,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\InitNode.java"
+                },
+                {
+                    "blank": 7,
+                    "code": 18,
+                    "comment": 10,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\NumberNode.java"
+                },
+                {
+                    "blank": 4,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\shortcuts\\DecrementNode.java"
+                },
+                {
+                    "blank": 3,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\shortcuts\\IncrementNode.java"
+                },
+                {
+                    "blank": 3,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\shortcuts\\LateDecrementNode.java"
+                },
+                {
+                    "blank": 3,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\shortcuts\\LateIncrementNode.java"
+                },
+                {
+                    "blank": 7,
+                    "code": 17,
+                    "comment": 6,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\data\\VariableNode.java"
+                },
+                {
+                    "blank": 5,
+                    "code": 14,
+                    "comment": 3,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\ErrorNode.java"
+                },
+                {
+                    "blank": 8,
+                    "code": 26,
+                    "comment": 5,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\FunctionNode.java"
+                },
+                {
+                    "blank": 7,
+                    "code": 20,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\IfNode.java"
+                },
+                {
+                    "blank": 2,
+                    "code": 3,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\BitwiseAndNode.java"
+                },
+                {
+                    "blank": 2,
+                    "code": 3,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\BitWiseOrNode.java"
+                },
+                {
+                    "blank": 5,
+                    "code": 13,
+                    "comment": 3,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\BooleanAndNode.java"
+                },
+                {
+                    "blank": 5,
+                    "code": 13,
+                    "comment": 3,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\BooleanOrNode.java"
+                },
+                {
+                    "blank": 4,
+                    "code": 10,
+                    "comment": 2,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\ConditionNode.java"
+                },
+                {
+                    "blank": 6,
+                    "code": 19,
+                    "comment": 4,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\EqualNode.java"
+                },
+                {
+                    "blank": 5,
+                    "code": 19,
+                    "comment": 4,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\LessEqualNode.java"
+                },
+                {
+                    "blank": 5,
+                    "code": 19,
+                    "comment": 4,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\LessNode.java"
+                },
+                {
+                    "blank": 5,
+                    "code": 19,
+                    "comment": 4,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\MoreEqualNode.java"
+                },
+                {
+                    "blank": 5,
+                    "code": 19,
+                    "comment": 4,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\MoreNode.java"
+                },
+                {
+                    "blank": 5,
+                    "code": 19,
+                    "comment": 4,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\logic\\NotEqualNode.java"
+                },
+                {
+                    "blank": 4,
+                    "code": 12,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\loops\\DoWhileNode.java"
+                },
+                {
+                    "blank": 5,
+                    "code": 15,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\loops\\ForNode.java"
+                },
+                {
+                    "blank": 5,
+                    "code": 11,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\loops\\WhileNode.java"
+                },
+                {
+                    "blank": 5,
+                    "code": 10,
+                    "comment": 9,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\Node.java"
+                },
+                {
+                    "blank": 8,
+                    "code": 16,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\parser\\nodesystem\\node\\RootNode.java"
+                },
+                {
+                    "blank": 159,
+                    "code": 536,
+                    "comment": 74,
+                    "filename": "src\\com\\danielweisshoff\\parser\\Parser.java"
+                },
+                {
+                    "blank": 3,
+                    "code": 9,
+                    "comment": 3,
+                    "filename": "src\\com\\danielweisshoff\\parser\\PError.java"
+                },
+                {
+                    "blank": 6,
+                    "code": 18,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\parser\\symboltable\\Entry.java"
+                },
+                {
+                    "blank": 6,
+                    "code": 17,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\parser\\symboltable\\FunctionEntry.java"
+                },
+                {
+                    "blank": 15,
+                    "code": 40,
+                    "comment": 10,
+                    "filename": "src\\com\\danielweisshoff\\parser\\symboltable\\SymbolTable.java"
+                },
+                {
+                    "blank": 22,
+                    "code": 60,
+                    "comment": 15,
+                    "filename": "src\\com\\danielweisshoff\\parser\\symboltable\\SymbolTableManager.java"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\parser\\symboltable\\Type.java"
+                },
+                {
+                    "blank": 7,
+                    "code": 17,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\parser\\symboltable\\VariableEntry.java"
+                },
+                {
+                    "blank": 6,
+                    "code": 20,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\pastebin.ß"
+                },
+                {
+                    "blank": 3,
+                    "code": 10,
+                    "comment": 0,
+                    "filename": "src\\com\\danielweisshoff\\program.ß"
+                },
+                {
+                    "blank": 15,
+                    "code": 38,
+                    "comment": 2,
+                    "filename": "src\\com\\danielweisshoff\\Shell.java"
+                },
+                {
+                    "blank": 4,
+                    "code": 60,
+                    "comment": 2,
+                    "filename": "src\\com\\danielweisshoff\\TODO.todo"
+                }
+            ]
+        }
+    ]
+}

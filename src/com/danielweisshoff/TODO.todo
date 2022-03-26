@@ -11,22 +11,25 @@ ins OOP übertragen werden
 [+]	- verkettung von conditions
 [+] - conditions klammern
 [+] - variablen
-	- += Operand 
-[+] - ++x, x++ Operand
-[+]  - --x, x-- Operand
+[+] - ++x, x++ Operand (Increment)
+[+] - --x, x-- Operand (Decrement)
+[+]	- += Operand
+[+]	- -= Operand
+[+]	- *= Operand
+[+]	- /= Operand
+[+]	- %= Operand
 [+]	- while
 [+] - do-while
 [+]	- for
-[-]	- in for-loop initialisierte var ist im falschen scope!!
-	- arrays
-	- foreach
-	- ?Preprocessor?
-	- Nutzerfunktionen
-	- Parameter
-	- Ein paar builIn Funktionen
- 	- Rueckgabewerte
+[-]	- *in for-loop initialisierte var ist im falschen scope!!*
+[]	- arrays
+[]	- foreach
+[]	- ?Preprocessor?
+[]	- Nutzerfunktionen
+[]	- Parameter
+[]	- Ein paar builIn Funktionen
+[] 	- Rueckgabewerte
 [+]	- Die *Build Klassen in den Parser einbauen
-
 
 TODO
  -	Strings als erste Klasse
@@ -59,5 +62,6 @@ TODO
  - ?skalar (a|a) ?
  - Überschreiben von Rechenoperationen für Objekte
  - Testen, ob bitwise &,| wirklich funktionieren
+[-] - ?MOD operator zu Token.isOP() hinzufuegen?
 int a = 2² + |test()| * (a|a)
 int a = pow(2,2) + abs(test()) * (a*a)

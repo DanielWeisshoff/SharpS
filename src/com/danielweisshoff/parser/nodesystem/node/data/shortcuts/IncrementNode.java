@@ -1,0 +1,10 @@
+package com.danielweisshoff.parser.nodesystem.node.data.shortcuts;
+
+import com.danielweisshoff.parser.nodesystem.node.data.AssignNode;
+
+public class IncrementNode extends AssignNode {
+
+	public IncrementNode(String name) {
+		super(name);
+	}
+}
