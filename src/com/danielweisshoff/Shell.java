@@ -47,8 +47,5 @@ public class Shell {
 			end = Instant.now();
 			System.out.println("Interpreter done in " + Duration.between(start, end).toMillis() + "ms");
 		}
-
-		//SymbolTableManager stm = interpreter.getSymbolTableManager();
-		//	stm.print();
 	}
 }

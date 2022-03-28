@@ -230,7 +230,6 @@ public class Interpreter {
 
 		Data<?> data = interpret(in.expression);
 		String value = "" + data.asDouble(); //TODO naja, weiss nich
-
 		//entry in symboltable
 		VariableEntry var = new VariableEntry(name, DataType.DOUBLE, value);
 		symbolTableManager.addVariableToScope(name, var);
@@ -294,6 +293,8 @@ public class Interpreter {
 
 		Data<?> data = interpret(an.expression);
 		String value = "" + data.asDouble(); //TODO naja, weiss nich
+
+		System.out.println(value);
 
 		//try to find and get the variable from the SymbolTable
 		VariableEntry ve = (VariableEntry) symbolTableManager.findVariableInScope(varName);

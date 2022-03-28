@@ -2,8 +2,6 @@ package com.danielweisshoff.parser;
 
 import java.util.Stack;
 
-import javax.crypto.Cipher;
-
 import com.danielweisshoff.interpreter.builtin.BuiltInFunction;
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
@@ -73,44 +71,21 @@ public class Parser {
 		//if tab count is reduced, scope out
 		scopeOutIfNeeded();
 
-		if (is(TokenType.KEYWORD)) {
-			String value = curToken.getValue();
-
-			switch (value) {
-			case "IF" -> instruction = parseIf();
-			case "ELSE" -> instruction = parseElse();
-			case "ELIF" -> instruction = parseElif();
-			//ALL PRIMITIVES
-			case "INT" -> instruction = parseVariableDeclaration();
-			case "WHILE" -> instruction = parseWhile();
-			case "FOR" -> instruction = parseFor();
-			case "DO" -> instruction = parseDoWhile();
-			default -> new PError("[PARSER] Action for keyword " + value + " not implemented");
-			}
-		}
-		//FUNCTION
-		else if (is(TokenType.IDENTIFIER)) {
-			advance();
-
-			if (is(TokenType.O_ROUND_BRACKET)) {
-				retreat();
-				instruction = parseFunctionCall();
-			} else if (curToken.isOP() || is(TokenType.EQUAL) || is(TokenType.MOD)) {
-				retreat();
-				instruction = parseVariableInitialization();
-			} else
-				error = true;
-		} else {//Sammelsorium an diversen TokenTypes
-			switch (curToken.type()) {
-			case ADD -> instruction = parseIncrement(); //++ increment
-			case SUB -> instruction = parseDecrement(); //-- decrement
-			default -> error = true;
-			}
+		String value = curToken.getValue();
+		switch (curToken.type()) {
+		case KW_IF -> instruction = parseIf();
+		case KW_ELSE -> instruction = parseElse();
+		case KW_ELIF -> instruction = parseElif();
+		case KW_INT -> instruction = parseVariableDeclaration();
+		case KW_WHILE -> instruction = parseWhile();
+		case KW_FOR -> instruction = parseFor();
+		case KW_DO -> instruction = parseDoWhile();
+		case IDENTIFIER -> identifierStuff();
+		case ADD -> instruction = parseIncrement(); //++ increment
+		case SUB -> instruction = parseDecrement(); //-- decrement
+		default -> new PError("[PARSER] Action for keyword " + value + " not implemented");
 		}
 
-		/*
-		*
-		*/
 		if (error)
 			printParseError();
 
@@ -126,6 +101,19 @@ public class Parser {
 		}
 	}
 
+	private void identifierStuff() {
+		advance();
+
+		if (is(TokenType.O_ROUND_BRACKET)) { //FNC
+			retreat();
+			instruction = parseFunctionCall();
+		} else if (curToken.isOP() || is(TokenType.EQUAL) || is(TokenType.MOD)) { //VAR
+			retreat();
+			instruction = parseVariableInitialization();
+		} else
+			error = true;
+	}
+
 	private void printParseError() {
 		String tokenList = "";
 		for (Token t : tokens)
@@ -133,9 +121,9 @@ public class Parser {
 		new PError("Parsing error. Unknown instruction:\n" + tokenList);
 	}
 
-	//searches for the latest IfNode (if/elseif) in the present scope
-	//and examines, if the statement already has an else block or not
-	private IfNode findIfWithoutElse(BlockNode n) {
+	//returns the latest IfNode in the present scope
+	//that doesnt have an else-block
+	private IfNode findIfWithoutElseBlock(BlockNode n) {
 		//get the latest IfNode from current scope
 		IfNode in = null;
 		for (int i = n.children.size() - 1; i >= 0; i--)
@@ -146,7 +134,7 @@ public class Parser {
 		if (in == null)
 			new PError("else statement doesnt have corresponding if");
 
-		return in.elseBlock == null ? in : findIfWithoutElse(in.elseBlock);
+		return in.elseBlock == null ? in : findIfWithoutElseBlock(in.elseBlock);
 	}
 
 	private void scopeOutIfNeeded() {
@@ -232,7 +220,7 @@ public class Parser {
 	 */
 
 	private IfNode parseIf() {
-		assume(TokenType.KEYWORD, "IF", "Keyword IF missing");
+		assume(TokenType.KW_IF, "Keyword IF missing");
 		assume(TokenType.O_ROUND_BRACKET, "Parameterlist not found");
 
 		ConditionNode condition = parsePredicate();
@@ -249,9 +237,9 @@ public class Parser {
 	}
 
 	private IfNode parseElif() {
-		assume(TokenType.KEYWORD, "ELIF", "Keyword ELIF missing");
+		assume(TokenType.KW_ELIF, "Keyword ELIF missing");
 
-		IfNode in = findIfWithoutElse(scopeNode.peek());
+		IfNode in = findIfWithoutElseBlock(scopeNode.peek());
 		in.elseBlock = new BlockNode();
 
 		assume(TokenType.O_ROUND_BRACKET, "Parameterlist not found");
@@ -275,8 +263,8 @@ public class Parser {
 	}
 
 	private BlockNode parseElse() {
-		assume(TokenType.KEYWORD, "ELSE", "Keyword ELSE missing");
-		IfNode in = findIfWithoutElse(scopeNode.peek());
+		assume(TokenType.KW_ELSE, "Keyword ELSE missing");
+		IfNode in = findIfWithoutElseBlock(scopeNode.peek());
 
 		assume(TokenType.COLON, "unknown syntax for else statement");
 
@@ -507,7 +495,7 @@ public class Parser {
 	//TODO keyword ist spaeter zum unterscheiden der primitiven da
 	private InitNode parseVariableDeclaration() {
 		String keyword = curToken.getValue();
-		assume(TokenType.KEYWORD, "INT", "[PARSER]: Unknown primitive type '" + keyword + "'");
+		assume(TokenType.KW_INT, "[PARSER]: Unknown primitive type '" + keyword + "'");
 
 		String varName = curToken.getValue();
 		assume(TokenType.IDENTIFIER, "Fehler beim Initialisieren einer Variable");
@@ -623,7 +611,7 @@ public class Parser {
 	//
 
 	private WhileNode parseWhile() {
-		assume(TokenType.KEYWORD, "WHILE", "Keyword WHILE missing");
+		assume(TokenType.KW_WHILE, "Keyword WHILE missing");
 		assume(TokenType.O_ROUND_BRACKET, "Missing open bracket for while-loop");
 
 		ConditionNode cn = parsePredicate();
@@ -641,7 +629,7 @@ public class Parser {
 	}
 
 	private DoWhileNode parseDoWhile() {
-		assume(TokenType.KEYWORD, "DO", "Keyword DO missing");
+		assume(TokenType.KW_DO, "Keyword DO missing");
 		WhileNode wn = parseWhile();
 
 		DoWhileNode dwn = new DoWhileNode();
@@ -653,7 +641,7 @@ public class Parser {
 
 	//TODO this needs a major overhaul someday when more variations will be added
 	private ForNode parseFor() {
-		assume(TokenType.KEYWORD, "FOR", "Keyword FOR missing");
+		assume(TokenType.KW_FOR, "Keyword FOR missing");
 		assume(TokenType.O_ROUND_BRACKET, "Missing open bracket for for-loop");
 
 		InitNode in = parseVariableDeclaration();

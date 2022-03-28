@@ -54,7 +54,7 @@ public class Highlighter {
 				case COMMA -> print(DOT + ",");
 				case O_ROUND_BRACKET -> print(PARENTHESES + "(");
 				case C_ROUND_BRACKET -> print(PARENTHESES + ")");
-				case KEYWORD -> print(KEYWORD + t.getValue() + " ");
+				//TODO case KEYWORD -> print(KEYWORD + t.getValue() + " ");
 				case IDENTIFIER -> print(IDENTIFIER + t.getValue() + " ");
 				case NUMBER, FLOAT -> print(NUMBER + t.getValue() + " ");
 				case STRING -> print(STRING + '"' + t.getValue() + '"');
@@ -63,9 +63,10 @@ public class Highlighter {
 				case TAB -> tabulate(Integer.parseInt(t.getValue()));
 				default -> print(t.getValue());
 				}
-				if (t.type() == TokenType.KEYWORD && t.getValue().equals("cls")) {
-					nextIsClass = true;
-				}
+				//TODO
+				// if (t.type() == TokenType.KEYWORD && t.getValue().equals("cls")) {
+				// 	nextIsClass = true;
+				// }
 			}
 		}
 		System.out.println("\n\n");

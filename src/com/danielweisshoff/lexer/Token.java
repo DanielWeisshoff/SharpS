@@ -37,7 +37,6 @@ public class Token {
 	}
 
 	public void setValue(String value) {
-		// evtl. Error checking einf�gen
 		this.value = value;
 	}
 
@@ -63,8 +62,6 @@ public class Token {
 
 	//TODO needs constant updates
 	public boolean isPrimitive() {
-		if (type == TokenType.KEYWORD)
-			return value.equals("INT");
-		return false;
+		return type == TokenType.KW_INT;
 	}
 }

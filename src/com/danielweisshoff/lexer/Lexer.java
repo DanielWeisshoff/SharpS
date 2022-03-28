@@ -36,7 +36,7 @@ public class Lexer {
 				tokens.add(new Token(tokenMap.get(currentChar), ""));
 				advance();
 			} else if (Character.isAlphabetic(currentChar)) {
-				tokens.add(buildIdentifierToken());
+				tokens.add(buildIdentifierOrKeywordToken());
 			} else if (Character.isDigit(currentChar)) {
 				tokens.add(buildNumberToken());
 			} else if (currentChar == ' ' || currentChar == '\t') {
@@ -83,7 +83,7 @@ public class Lexer {
 				token = new Token(tokenMap.get(currentChar), "");
 				advance();
 			} else if (Character.isAlphabetic(currentChar)) {
-				token = buildIdentifierToken();
+				token = buildIdentifierOrKeywordToken();
 			} else if (Character.isDigit(currentChar)) {
 				token = buildNumberToken();
 			} else {
@@ -108,7 +108,7 @@ public class Lexer {
 	//
 	// building stuff
 	//
-	private Token buildIdentifierToken() {
+	private Token buildIdentifierOrKeywordToken() {
 		int start = charIndex;
 		advance();
 		while (charIndex < text.length()) {
@@ -118,12 +118,20 @@ public class Lexer {
 				break;
 		}
 		String subString = text.substring(start, charIndex);
-		for (String s : Keywords.keywords)
-			if (subString.equals(s))
-				return new Token(TokenType.KEYWORD, subString.toUpperCase());
-		return new Token(TokenType.IDENTIFIER, subString);
+		return switch (subString) {
+		case "int" -> new Token(TokenType.KW_INT, null);
+		case "if" -> new Token(TokenType.KW_IF, null);
+		case "else" -> new Token(TokenType.KW_ELSE, null);
+		case "elif" -> new Token(TokenType.KW_ELIF, null);
+		case "fnc" -> new Token(TokenType.KW_FNC, null);
+		case "while" -> new Token(TokenType.KW_WHILE, null);
+		case "for" -> new Token(TokenType.KW_FOR, null);
+		case "do" -> new Token(TokenType.KW_DO, null);
+		default -> new Token(TokenType.IDENTIFIER, subString);
+		};
 	}
 
+	// "int", "if", "else", "elif", "fnc", "while", "for", "do" 
 	private Token buildTabToken() {
 		Token t = null;
 		int whitespaceCount = 0;
