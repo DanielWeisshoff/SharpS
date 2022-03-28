@@ -11,6 +11,7 @@ ins OOP übertragen werden
 [+]	- verkettung von conditions
 [+] - conditions klammern
 [+] - variablen
+[+]	- Die *Build Klassen in den Parser einbauen
 [+] - ++x, x++ Operand (Increment)
 [+] - --x, x-- Operand (Decrement)
 [+]	- += Operand
@@ -22,6 +23,7 @@ ins OOP übertragen werden
 [+] - do-while
 [+]	- for
 [+]	- *in for-loop initialisierte var ist im falschen scope!!*
+[]  - alle primitiven (siehe syntax.txt)
 []	- arrays -> ArrayNode
 []	- foreach
 []	- ?Preprocessor?
@@ -29,9 +31,7 @@ ins OOP übertragen werden
 []	- Parameter
 [] 	- Rueckgabewerte
 []	- Ein paar builIn Funktionen
-[+]	- Die *Build Klassen in den Parser einbauen
-[] - char
-[] - string als char[]
+[]  - string als char[]
 
 TODO
  -	Strings als erste Klasse

@@ -238,25 +238,6 @@ public class Interpreter {
 		return new Data<>(1, DataType.INT);
 	}
 
-	private Data<?> interpretEqualAssignNode() {
-		AssignNode an = (AssignNode) curInstruction;
-		String varName = an.getName();
-
-		Data<?> data = interpret(an.expression);
-		String value = "" + data.asDouble(); //TODO naja, weiss nich
-
-		//try to find and get the variable from the SymbolTable
-		VariableEntry ve = (VariableEntry) symbolTableManager.findVariableInScope(varName);
-		if (ve == null)
-			new PError("Parse Error: var '" + varName + "' not declared");
-
-		ve.value = value;
-
-		//TODO erstmals als print alternative
-		System.out.println(varName + ": " + value);
-		return new Data<>(1, DataType.INT);
-	}
-
 	private Data<?> interpretVariableNode() {
 		VariableNode vn = (VariableNode) curInstruction;
 		String varName = vn.getName();
@@ -303,6 +284,23 @@ public class Interpreter {
 			cond = interpret(fn.condition).asDouble();
 		}
 		symbolTableManager.endScope();
+
+		return new Data<>(1, DataType.INT);
+	}
+
+	private Data<?> interpretEqualAssignNode() {
+		AssignNode an = (AssignNode) curInstruction;
+		String varName = an.getName();
+
+		Data<?> data = interpret(an.expression);
+		String value = "" + data.asDouble(); //TODO naja, weiss nich
+
+		//try to find and get the variable from the SymbolTable
+		VariableEntry ve = (VariableEntry) symbolTableManager.findVariableInScope(varName);
+		if (ve == null)
+			new PError("Parse Error: var '" + varName + "' not declared");
+
+		ve.value = value;
 
 		return new Data<>(1, DataType.INT);
 	}
