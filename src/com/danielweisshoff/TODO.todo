@@ -24,7 +24,6 @@ ins OOP übertragen werden
 [+]	- for
 [+]	- *in for-loop initialisierte var ist im falschen scope!!*
 [+]	- *ALLE KEYWORDS IN EIGENE TOKENS*
-[]  - curToken.value.equals(value) -> curToken.compare(value)
 []  - alle primitiven (siehe syntax.txt)
 []	- arrays -> ArrayNode
 []	- foreach
@@ -34,7 +33,10 @@ ins OOP übertragen werden
 [] 	- Rueckgabewerte
 []	- Ein paar builIn Funktionen
 []  - string als char[]
-
+*CLEANUP / REFACTORING*
+[]  - curToken.value.equals(value) -> curToken.compare(value)
+[+]  - +=, -=, *=, /=  sollen zu normalen assignNode geparsed werden    (x+= 1 * 2 -> x = x + (1 * 2) )
+[]  - increment/decrement sind schlecht implementiert
 PRIMTIVE DATENTYPEN:
 	- Bei der Initialisierung/Deklarierung muss implizit geschaut werden, ob die rückgabewerte
 	  mit dem Primitiven übereinstimmen

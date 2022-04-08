@@ -2,9 +2,10 @@ package com.danielweisshoff.parser.nodesystem.node.data.shortcuts;
 
 import com.danielweisshoff.parser.nodesystem.node.data.AssignNode;
 
-public class LateDecrementNode extends AssignNode {
+public class PreDecrementNode extends AssignNode {
 
-	public LateDecrementNode(String name) {
+	public PreDecrementNode(String name) {
 		super(name);
+
 	}
 }

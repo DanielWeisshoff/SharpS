@@ -510,6 +510,7 @@ public class Parser {
 		return n;
 	}
 
+	@Deprecated
 	private AssignNode parseVariableInitialization() {
 		//increment
 		if (is(TokenType.ADD)) {
@@ -552,31 +553,11 @@ public class Parser {
 				retreat();
 			}
 			//* HAS TO HAPPEN AFTER INCR/DECR 
-			//. +=
-			if (is(TokenType.ADD)) {
+			if (curToken.isOP() || curToken.type() == TokenType.MOD) {
 				retreat();
-				return parseAddAssignNode();
+				return parseBinaryAssignNode();
 			}
-			//. -=
-			else if (is(TokenType.SUB)) {
-				retreat();
-				return parseSubAssignNode();
-			}
-			//.	*=
-			else if (is(TokenType.MUL)) {
-				retreat();
-				return parseMulAssignNode();
-			}
-			//. /=
-			else if (is(TokenType.DIV)) {
-				retreat();
-				return parseDivAssignNode();
-			}
-			//. %=
-			else if (is(TokenType.MOD)) {
-				retreat();
-				return parseModAssignNode();
-			}
+
 			// x= EXPR
 			//TODO complete bs
 			retreat();
@@ -667,7 +648,7 @@ public class Parser {
 		assume(TokenType.ADD, "Incrementor + missing");
 		assume(TokenType.ADD, "Incrementor + missing");
 
-		LateIncrementNode lin = new LateIncrementNode(varName);
+		PostIncrementNode lin = new PostIncrementNode(varName);
 		lin.variable = new VariableNode(varName);
 
 		return lin;
@@ -680,7 +661,7 @@ public class Parser {
 		assume(TokenType.SUB, "Decrementor - missing");
 		assume(TokenType.SUB, "Decrementor - missing");
 
-		LateDecrementNode ldn = new LateDecrementNode(varName);
+		PostDecrementNode ldn = new PostDecrementNode(varName);
 		ldn.variable = new VariableNode(varName);
 
 		return ldn;
@@ -694,7 +675,7 @@ public class Parser {
 		String varName = curToken.value;
 		assume(TokenType.IDENTIFIER, "increment-assignment var missing");
 
-		IncrementNode in = new IncrementNode(varName);
+		PreIncrementNode in = new PreIncrementNode(varName);
 		in.variable = new VariableNode(varName);
 
 		return in;
@@ -707,86 +688,42 @@ public class Parser {
 		String varName = curToken.value;
 		assume(TokenType.IDENTIFIER, "decrement-assignment var missing");
 
-		DecrementNode dn = new DecrementNode(varName);
+		PreDecrementNode dn = new PreDecrementNode(varName);
 		dn.variable = new VariableNode(varName);
 
 		return dn;
 
 	}
 
-	private AddAssignNode parseAddAssignNode() {
+	private AssignNode parseBinaryAssignNode() {
 		String varName = curToken.value;
-		assume(TokenType.IDENTIFIER, "+= var missing");
+		assume(TokenType.IDENTIFIER, "var missing");
 
-		assume(TokenType.ADD, "AddAssign err");
+		BinaryOperationNode bon = null;
+		switch (curToken.type()) {
+		case ADD -> bon = new BinaryAddNode();
+		case SUB -> bon = new BinarySubNode();
+		case MUL -> bon = new BinaryMulNode();
+		case DIV -> bon = new BinaryDivNode();
+		case MOD -> bon = new BinaryModNode();
+		default -> new PError("");
+		}
+		advance();
 		assume(TokenType.EQUAL, "AddAssign err");
 
 		Node expr = parseExpression();
 
-		AddAssignNode man = new AddAssignNode(varName);
-		man.expression = expr;
+		EqualAssignNode ean = new EqualAssignNode(varName);
 
-		return man;
-	}
+		VariableNode vn = new VariableNode(varName);
+		bon.left = vn;
+		bon.right = expr;
 
-	private SubAssignNode parseSubAssignNode() {
-		String varName = curToken.value;
-		assume(TokenType.IDENTIFIER, "-= var missing");
+		ean.expression = bon;
+		// AddAssignNode man = new AddAssignNode(varName);
+		// man.expression = expr;
 
-		assume(TokenType.SUB, "SubAssign err");
-		assume(TokenType.EQUAL, "SubAssign err");
-
-		Node expr = parseExpression();
-
-		SubAssignNode man = new SubAssignNode(varName);
-		man.expression = expr;
-
-		return man;
-	}
-
-	private MulAssignNode parseMulAssignNode() {
-		String varName = curToken.value;
-		assume(TokenType.IDENTIFIER, "*= var missing");
-
-		assume(TokenType.MUL, "MulAssign err");
-		assume(TokenType.EQUAL, "MulAssign err");
-
-		Node expr = parseExpression();
-
-		MulAssignNode man = new MulAssignNode(varName);
-		man.expression = expr;
-
-		return man;
-	}
-
-	private DivAssignNode parseDivAssignNode() {
-		String varName = curToken.value;
-		assume(TokenType.IDENTIFIER, "/= var missing");
-
-		assume(TokenType.DIV, "DivAssign err");
-		assume(TokenType.EQUAL, "DivAssign err");
-
-		Node expr = parseExpression();
-
-		DivAssignNode man = new DivAssignNode(varName);
-		man.expression = expr;
-
-		return man;
-	}
-
-	private ModAssignNode parseModAssignNode() {
-		String varName = curToken.value;
-		assume(TokenType.IDENTIFIER, "%= var missing");
-
-		assume(TokenType.MOD, "ModAssign err");
-		assume(TokenType.EQUAL, "ModAssign err");
-
-		Node expr = parseExpression();
-
-		ModAssignNode man = new ModAssignNode(varName);
-		man.expression = expr;
-
-		return man;
+		return ean;
 	}
 
 	/**

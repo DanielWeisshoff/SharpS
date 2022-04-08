@@ -11,10 +11,10 @@ import com.danielweisshoff.parser.nodesystem.node.*;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.*;
 import com.danielweisshoff.parser.nodesystem.node.data.*;
 import com.danielweisshoff.parser.nodesystem.node.data.assigning.*;
-import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.DecrementNode;
-import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.IncrementNode;
-import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.LateDecrementNode;
-import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.LateIncrementNode;
+import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.PreDecrementNode;
+import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.PreIncrementNode;
+import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.PostDecrementNode;
+import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.PostIncrementNode;
 import com.danielweisshoff.parser.nodesystem.node.logic.*;
 import com.danielweisshoff.parser.nodesystem.node.loops.*;
 import com.danielweisshoff.parser.symboltable.Entry;
@@ -71,23 +71,26 @@ public class Interpreter {
 		else if (n instanceof EqualAssignNode) {
 			data = interpretEqualAssignNode();
 			stepFinished = true;
-		} else if (n instanceof AddAssignNode)
-			data = interpretAddAssignNode();
-		else if (n instanceof SubAssignNode)
-			data = interpretSubAssignNode();
-		else if (n instanceof MulAssignNode)
-			data = interpretMulAssignNode();
-		else if (n instanceof DivAssignNode)
-			data = interpretDivAssignNode();
-		else if (n instanceof ModAssignNode)
-			data = interpretModAssignNode();
-		else if (n instanceof IncrementNode)
+		}
+		// else if (n instanceof AddAssignNode)
+		// 	data = interpretAddAssignNode();
+		// else if (n instanceof SubAssignNode)
+		// 	data = interpretSubAssignNode();
+		// else if (n instanceof MulAssignNode)
+		// 	data = interpretMulAssignNode();
+		// else if (n instanceof DivAssignNode)
+		// 	data = interpretDivAssignNode();
+		// else if (n instanceof ModAssignNode)
+		// 	data = interpretModAssignNode();
+
+		//INCREMENT / DECREMENT
+		else if (n instanceof PreIncrementNode)
 			data = interpretPreIncrementNode();
-		else if (n instanceof LateIncrementNode)
+		else if (n instanceof PostIncrementNode)
 			data = interpretPostIncrementNode();
-		else if (n instanceof DecrementNode)
+		else if (n instanceof PreDecrementNode)
 			data = interpretPreDecrementNode();
-		else if (n instanceof LateDecrementNode)
+		else if (n instanceof PostDecrementNode)
 			data = interpretPostDecrementNode();
 		//CONDITIONS
 		else if (n instanceof LessNode)
@@ -306,7 +309,7 @@ public class Interpreter {
 	}
 
 	private Data<?> interpretPreIncrementNode() {
-		IncrementNode in = (IncrementNode) curInstruction;
+		PreIncrementNode in = (PreIncrementNode) curInstruction;
 
 		String varName = in.getName();
 
@@ -322,7 +325,7 @@ public class Interpreter {
 	}
 
 	private Data<?> interpretPostIncrementNode() {
-		LateIncrementNode in = (LateIncrementNode) curInstruction;
+		PostIncrementNode in = (PostIncrementNode) curInstruction;
 
 		String varName = in.getName();
 
@@ -337,7 +340,7 @@ public class Interpreter {
 	}
 
 	private Data<?> interpretPreDecrementNode() {
-		DecrementNode in = (DecrementNode) curInstruction;
+		PreDecrementNode in = (PreDecrementNode) curInstruction;
 
 		String varName = in.getName();
 
@@ -353,7 +356,7 @@ public class Interpreter {
 	}
 
 	private Data<?> interpretPostDecrementNode() {
-		LateDecrementNode in = (LateDecrementNode) curInstruction;
+		PostDecrementNode in = (PostDecrementNode) curInstruction;
 
 		String varName = in.getName();
 
@@ -365,101 +368,6 @@ public class Interpreter {
 		var.value = "" + (value - 1);
 
 		return new Data<Double>(value, DataType.DOUBLE);
-	}
-
-	private Data<?> interpretAddAssignNode() {
-		AddAssignNode man = (AddAssignNode) curInstruction;
-
-		String varName = man.getName();
-
-		VariableEntry var = (VariableEntry) symbolTableManager.findVariableInScope(varName);
-		if (var == null)
-			new PError("Parse Error: var '" + varName + "' not declared");
-
-		Data<?> data = interpret(man.expression);
-		double increment = data.asDouble();
-
-		double value = Double.parseDouble(var.getValue());
-
-		var.value = "" + (value + increment);
-
-		return new Data<>(1, DataType.INT);
-	}
-
-	private Data<?> interpretSubAssignNode() {
-		SubAssignNode man = (SubAssignNode) curInstruction;
-
-		String varName = man.getName();
-
-		VariableEntry var = (VariableEntry) symbolTableManager.findVariableInScope(varName);
-		if (var == null)
-			new PError("Parse Error: var '" + varName + "' not declared");
-
-		Data<?> data = interpret(man.expression);
-		double increment = data.asDouble();
-
-		double value = Double.parseDouble(var.getValue());
-
-		var.value = "" + (value - increment);
-
-		return new Data<>(1, DataType.INT);
-	}
-
-	private Data<?> interpretMulAssignNode() {
-		MulAssignNode man = (MulAssignNode) curInstruction;
-
-		String varName = man.getName();
-
-		VariableEntry var = (VariableEntry) symbolTableManager.findVariableInScope(varName);
-		if (var == null)
-			new PError("Parse Error: var '" + varName + "' not declared");
-
-		Data<?> data = interpret(man.expression);
-		double increment = data.asDouble();
-
-		double value = Double.parseDouble(var.getValue());
-
-		var.value = "" + (value * increment);
-
-		return new Data<>(1, DataType.INT);
-	}
-
-	private Data<?> interpretDivAssignNode() {
-		DivAssignNode man = (DivAssignNode) curInstruction;
-
-		String varName = man.getName();
-
-		VariableEntry var = (VariableEntry) symbolTableManager.findVariableInScope(varName);
-		if (var == null)
-			new PError("Parse Error: var '" + varName + "' not declared");
-
-		Data<?> data = interpret(man.expression);
-		double increment = data.asDouble();
-
-		double value = Double.parseDouble(var.getValue());
-
-		var.value = "" + (value / increment);
-
-		return new Data<>(1, DataType.INT);
-	}
-
-	private Data<?> interpretModAssignNode() {
-		ModAssignNode man = (ModAssignNode) curInstruction;
-
-		String varName = man.getName();
-
-		VariableEntry var = (VariableEntry) symbolTableManager.findVariableInScope(varName);
-		if (var == null)
-			new PError("Parse Error: var '" + varName + "' not declared");
-
-		Data<?> data = interpret(man.expression);
-		double increment = data.asDouble();
-
-		double value = Double.parseDouble(var.getValue());
-
-		var.value = "" + (value % increment);
-
-		return new Data<>(1, DataType.INT);
 	}
 
 	public SymbolTableManager getSymbolTableManager() {

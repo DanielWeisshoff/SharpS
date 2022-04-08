@@ -1,1 +1,1 @@
-[2022/APR/8	10:44:14]  Variable i initialisiert
+[2022/APR/8	12:24:03]  Variable i deklariert

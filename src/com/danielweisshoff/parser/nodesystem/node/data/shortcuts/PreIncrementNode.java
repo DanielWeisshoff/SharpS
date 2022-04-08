@@ -2,9 +2,9 @@ package com.danielweisshoff.parser.nodesystem.node.data.shortcuts;
 
 import com.danielweisshoff.parser.nodesystem.node.data.AssignNode;
 
-public class IncrementNode extends AssignNode {
+public class PreIncrementNode extends AssignNode {
 
-	public IncrementNode(String name) {
+	public PreIncrementNode(String name) {
 		super(name);
 	}
 }
