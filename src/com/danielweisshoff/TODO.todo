@@ -34,9 +34,10 @@ ins OOP übertragen werden
 []	- Ein paar builIn Funktionen
 []  - string als char[]
 *CLEANUP / REFACTORING*
-[]  - curToken.value.equals(value) -> curToken.compare(value)
+[+]  - curToken.value.equals(value) -> curToken.compare(value)
 [+]  - +=, -=, *=, /=  sollen zu normalen assignNode geparsed werden    (x+= 1 * 2 -> x = x + (1 * 2) )
 []  - increment/decrement sind schlecht implementiert
+[+]  - Dateiendung in .#s aendern
 PRIMTIVE DATENTYPEN:
 	- Bei der Initialisierung/Deklarierung muss implizit geschaut werden, ob die rückgabewerte
 	  mit dem Primitiven übereinstimmen

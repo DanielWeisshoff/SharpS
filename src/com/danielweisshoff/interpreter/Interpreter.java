@@ -16,6 +16,8 @@ import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.PreIncrementNod
 import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.PostDecrementNode;
 import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.PostIncrementNode;
 import com.danielweisshoff.parser.nodesystem.node.logic.*;
+import com.danielweisshoff.parser.nodesystem.node.logic.bitwise.BitWiseOrNode;
+import com.danielweisshoff.parser.nodesystem.node.logic.bitwise.BitwiseAndNode;
 import com.danielweisshoff.parser.nodesystem.node.loops.*;
 import com.danielweisshoff.parser.symboltable.Entry;
 import com.danielweisshoff.parser.symboltable.SymbolTableManager;

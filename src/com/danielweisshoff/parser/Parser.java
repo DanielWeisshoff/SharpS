@@ -12,6 +12,8 @@ import com.danielweisshoff.parser.nodesystem.node.data.*;
 import com.danielweisshoff.parser.nodesystem.node.data.assigning.*;
 import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.*;
 import com.danielweisshoff.parser.nodesystem.node.logic.*;
+import com.danielweisshoff.parser.nodesystem.node.logic.bitwise.BitWiseOrNode;
+import com.danielweisshoff.parser.nodesystem.node.logic.bitwise.BitwiseAndNode;
 import com.danielweisshoff.parser.nodesystem.node.loops.*;
 
 /**
@@ -186,7 +188,7 @@ public class Parser {
 	}
 
 	public void assume(TokenType t, String value, String error) {
-		if (is(t) && curToken.value.equals(value))
+		if (is(t) && is(value))
 			advance();
 		else
 			new PError(error);
@@ -706,7 +708,7 @@ public class Parser {
 		case MUL -> bon = new BinaryMulNode();
 		case DIV -> bon = new BinaryDivNode();
 		case MOD -> bon = new BinaryModNode();
-		default -> new PError("");
+		default -> new PError("Unknown assignment syntax '" + curToken.type() + "='");
 		}
 		advance();
 		assume(TokenType.EQUAL, "AddAssign err");
@@ -734,7 +736,7 @@ public class Parser {
 	}
 
 	public boolean is(String value) {
-		return curToken.value.equals(value);
+		return is(value);
 	}
 
 	public BlockNode getAST() {

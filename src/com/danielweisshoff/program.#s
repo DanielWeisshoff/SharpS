@@ -1,2 +1,3 @@
-int i 
-i  =1337
+int out 
+for(int i = 0, i < 10 , i++):
+	out = i
