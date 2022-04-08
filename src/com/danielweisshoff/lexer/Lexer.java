@@ -6,10 +6,12 @@ import java.util.HashMap;
 public class Lexer {
 
 	public static String VERSION = "V 0.8.1";
+
 	private final HashMap<Character, TokenType> tokenMap = new HashMap<>();
+	private String text;
+
 	private int charIndex = -1;
 	private char currentChar;
-	private String text;
 	private boolean hasNext = true; //if the pointer is at the end or not
 
 	public Lexer(String text) {

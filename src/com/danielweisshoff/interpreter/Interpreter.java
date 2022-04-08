@@ -30,20 +30,20 @@ TODO: StepperMode -> Debug mode ?!?
 */
 public class Interpreter {
 
-	//Variables and Functions
-	SymbolTableManager symbolTableManager = new SymbolTableManager();
-
-	private Node curInstruction;
-
-	//when stepper is enabled, one line will be interpreted at a time on user input
 	public boolean stepper = false;
+	//Variables and Functions
+	private SymbolTableManager symbolTableManager = new SymbolTableManager();
+	private Node curInstruction;
+	//when stepper is enabled, one line will be interpreted at a time on user input
 	private boolean stepFinished = false;
+	private Scanner stepperScanner = new Scanner(System.in);
 
 	public Interpreter() {
 		symbolTableManager.deleteTableOnScopeEnd = true;
 	}
 
 	public Data<?> interpret(Node n) {
+
 		curInstruction = n;
 		Data<?> data = null;
 
@@ -82,13 +82,13 @@ public class Interpreter {
 		else if (n instanceof ModAssignNode)
 			data = interpretModAssignNode();
 		else if (n instanceof IncrementNode)
-			data = interpretIncrementNode();
+			data = interpretPreIncrementNode();
 		else if (n instanceof LateIncrementNode)
-			data = interpretLateIncrementNode();
+			data = interpretPostIncrementNode();
 		else if (n instanceof DecrementNode)
-			data = interpretDecrementNode();
+			data = interpretPreDecrementNode();
 		else if (n instanceof LateDecrementNode)
-			data = interpretLateDecrementNode();
+			data = interpretPostDecrementNode();
 		//CONDITIONS
 		else if (n instanceof LessNode)
 			data = interpretConditionNode("<");
@@ -129,8 +129,7 @@ public class Interpreter {
 		//Stepper Mode
 		if (stepper && stepFinished) {
 			System.out.println("*** PRESS ENTER TO CONTINUE ***");
-			Scanner sc = new Scanner(System.in);
-			sc.nextLine();
+			stepperScanner.nextLine();
 			stepFinished = false;
 		}
 
@@ -229,7 +228,7 @@ public class Interpreter {
 			new PError("var '" + name + "' is already declared");
 
 		Data<?> data = interpret(in.expression);
-		String value = "" + data.asDouble(); //TODO naja, weiss nich
+		String value = "" + data.asDouble();
 		//entry in symboltable
 		VariableEntry var = new VariableEntry(name, DataType.DOUBLE, value);
 		symbolTableManager.addVariableToScope(name, var);
@@ -268,12 +267,11 @@ public class Interpreter {
 		return new Data<>(1, DataType.INT);
 	}
 
-	//!	//TODO unused vars?!?
 	private Data<?> interpretForNode() {
 		ForNode fn = (ForNode) curInstruction;
 
-		symbolTableManager.newScope("if-initVar");
-		Data<?> data = interpret(fn.init);
+		symbolTableManager.newScope("for-initVar");
+		interpret(fn.init);
 
 		double cond = interpret(fn.condition).asDouble();
 
@@ -292,8 +290,9 @@ public class Interpreter {
 		String varName = an.getName();
 
 		Data<?> data = interpret(an.expression);
-		String value = "" + data.asDouble(); //TODO naja, weiss nich
+		String value = "" + data.asDouble();
 
+		//TODO just for output testing -> implement print()
 		System.out.println(value);
 
 		//try to find and get the variable from the SymbolTable
@@ -306,7 +305,7 @@ public class Interpreter {
 		return new Data<>(1, DataType.INT);
 	}
 
-	private Data<?> interpretIncrementNode() {
+	private Data<?> interpretPreIncrementNode() {
 		IncrementNode in = (IncrementNode) curInstruction;
 
 		String varName = in.getName();
@@ -322,7 +321,7 @@ public class Interpreter {
 		return new Data<Double>(value, DataType.DOUBLE);
 	}
 
-	private Data<?> interpretLateIncrementNode() {
+	private Data<?> interpretPostIncrementNode() {
 		LateIncrementNode in = (LateIncrementNode) curInstruction;
 
 		String varName = in.getName();
@@ -337,7 +336,7 @@ public class Interpreter {
 		return new Data<Double>(value, DataType.DOUBLE);
 	}
 
-	private Data<?> interpretDecrementNode() {
+	private Data<?> interpretPreDecrementNode() {
 		DecrementNode in = (DecrementNode) curInstruction;
 
 		String varName = in.getName();
@@ -349,6 +348,21 @@ public class Interpreter {
 		double value = Double.parseDouble(var.getValue());
 		var.value = "" + (value - 1);
 		value = Double.parseDouble(var.getValue());
+
+		return new Data<Double>(value, DataType.DOUBLE);
+	}
+
+	private Data<?> interpretPostDecrementNode() {
+		LateDecrementNode in = (LateDecrementNode) curInstruction;
+
+		String varName = in.getName();
+
+		VariableEntry var = (VariableEntry) symbolTableManager.findVariableInScope(varName);
+		if (var == null)
+			new PError("Parse Error: var '" + varName + "' not declared");
+
+		double value = Double.parseDouble(var.getValue());
+		var.value = "" + (value - 1);
 
 		return new Data<Double>(value, DataType.DOUBLE);
 	}
@@ -446,21 +460,6 @@ public class Interpreter {
 		var.value = "" + (value % increment);
 
 		return new Data<>(1, DataType.INT);
-	}
-
-	private Data<?> interpretLateDecrementNode() {
-		LateDecrementNode in = (LateDecrementNode) curInstruction;
-
-		String varName = in.getName();
-
-		VariableEntry var = (VariableEntry) symbolTableManager.findVariableInScope(varName);
-		if (var == null)
-			new PError("Parse Error: var '" + varName + "' not declared");
-
-		double value = Double.parseDouble(var.getValue());
-		var.value = "" + (value - 1);
-
-		return new Data<Double>(value, DataType.DOUBLE);
 	}
 
 	public SymbolTableManager getSymbolTableManager() {

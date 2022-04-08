@@ -24,6 +24,7 @@ ins OOP übertragen werden
 [+]	- for
 [+]	- *in for-loop initialisierte var ist im falschen scope!!*
 [+]	- *ALLE KEYWORDS IN EIGENE TOKENS*
+[]  - curToken.value.equals(value) -> curToken.compare(value)
 []  - alle primitiven (siehe syntax.txt)
 []	- arrays -> ArrayNode
 []	- foreach
@@ -33,6 +34,13 @@ ins OOP übertragen werden
 [] 	- Rueckgabewerte
 []	- Ein paar builIn Funktionen
 []  - string als char[]
+
+PRIMTIVE DATENTYPEN:
+	- Bei der Initialisierung/Deklarierung muss implizit geschaut werden, ob die rückgabewerte
+	  mit dem Primitiven übereinstimmen
+	  Beispiel: i = 0.5 	#falsch
+				i = 1 / 2 	#korrekt -> Ergebnis ist aber natuerlich abgeschnitten
+
 
 TODO
  -	Strings als erste Klasse

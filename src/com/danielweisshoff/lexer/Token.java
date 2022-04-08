@@ -2,10 +2,12 @@ package com.danielweisshoff.lexer;
 
 import java.util.ArrayList;
 
+import com.danielweisshoff.parser.PError;
+
 public class Token {
 
 	private final TokenType type;
-	private String value;
+	public String value;
 
 	public Token(TokenType type, String value) {
 		this.type = type;
@@ -32,24 +34,16 @@ public class Token {
 		return type;
 	}
 
-	public String getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
-	}
-
-	public boolean isOP() {
-		return type == TokenType.ADD || type == TokenType.SUB || type == TokenType.MUL || type == TokenType.DIV;
-	}
-
 	public boolean isLineOP() {
 		return type == TokenType.ADD || type == TokenType.SUB;
 	}
 
 	public boolean isDotOP() {
 		return type == TokenType.MUL || type == TokenType.DIV;
+	}
+
+	public boolean isOP() {
+		return isLineOP() || isDotOP();
 	}
 
 	public boolean isEOF() {
@@ -62,6 +56,16 @@ public class Token {
 
 	//TODO needs constant updates
 	public boolean isPrimitive() {
-		return type == TokenType.KW_INT;
+
+		return switch (type) {
+		case KW_INT -> true;
+		default -> unknownPrimitiveError();
+		};
+	}
+
+	//TODO just helper for now
+	private boolean unknownPrimitiveError() {
+		new PError("Unknown primitive '" + type + "'");
+		return false;
 	}
 }

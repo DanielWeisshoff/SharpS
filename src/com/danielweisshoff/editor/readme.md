@@ -1,2 +1,2 @@
-This is just an extension for outputting colorized code
-right now it's just for testing purposes
+This is an extension for outputting colorized code to the cmd
+right now it's not in use

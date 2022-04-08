@@ -1,7 +1,6 @@
 package com.danielweisshoff.editor;
 
 import com.danielweisshoff.lexer.Token;
-import com.danielweisshoff.lexer.TokenType;
 
 /*
  * TODO
@@ -33,14 +32,14 @@ public class Highlighter {
 
 	public static void Highlight(Token[] tokens) {
 		for (Token t : tokens) {
-			if (t.getValue().equals("print")) // Nur zum schnellen Testen xD
-				print(OPERATOR + t.getValue() + " ");
-			else if (t.getValue().equals("str")) // Nur zum schnellen Testen xD
-				print(CLASS + t.getValue() + " ");
-			else if (t.getValue().equals("test")) // Nur zum schnellen Testen xD
-				print(OPERATOR + t.getValue() + " ");
+			if (t.value.equals("print")) // Nur zum schnellen Testen xD
+				print(OPERATOR + t.value + " ");
+			else if (t.value.equals("str")) // Nur zum schnellen Testen xD
+				print(CLASS + t.value + " ");
+			else if (t.value.equals("test")) // Nur zum schnellen Testen xD
+				print(OPERATOR + t.value + " ");
 			else if (nextIsClass) {
-				print(CLASS + t.getValue() + " ");
+				print(CLASS + t.value + " ");
 				nextIsClass = false;
 			} else {
 				switch (t.type()) {
@@ -55,13 +54,13 @@ public class Highlighter {
 				case O_ROUND_BRACKET -> print(PARENTHESES + "(");
 				case C_ROUND_BRACKET -> print(PARENTHESES + ")");
 				//TODO case KEYWORD -> print(KEYWORD + t.getValue() + " ");
-				case IDENTIFIER -> print(IDENTIFIER + t.getValue() + " ");
-				case NUMBER, FLOAT -> print(NUMBER + t.getValue() + " ");
-				case STRING -> print(STRING + '"' + t.getValue() + '"');
+				case IDENTIFIER -> print(IDENTIFIER + t.value + " ");
+				case NUMBER, FLOAT -> print(NUMBER + t.value + " ");
+				case STRING -> print(STRING + '"' + t.value + '"');
 				case NEWLINE -> print("\n");
-				case COMMENT -> print(COMMENT + t.getValue());
-				case TAB -> tabulate(Integer.parseInt(t.getValue()));
-				default -> print(t.getValue());
+				case COMMENT -> print(COMMENT + t.value);
+				case TAB -> tabulate(Integer.parseInt(t.value));
+				default -> print(t.value);
 				}
 				//TODO
 				// if (t.type() == TokenType.KEYWORD && t.getValue().equals("cls")) {

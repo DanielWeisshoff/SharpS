@@ -4,12 +4,6 @@ import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.Node;
 
-/* TODO
- *  - Eventuell für Kommazahlen eine separate Node
- *  - Generell sollte es eine gute und adaptierbare Alternative geben,
- *    falls viele unterschiedliche Datentypen wie int,float,double,short etc... genutzt werden
- */
-
 /**
  * Stores a normal or floating-point number
  */
