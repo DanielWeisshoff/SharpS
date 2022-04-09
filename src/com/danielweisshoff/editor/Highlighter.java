@@ -53,9 +53,8 @@ public class Highlighter {
 				case COMMA -> print(DOT + ",");
 				case O_ROUND_BRACKET -> print(PARENTHESES + "(");
 				case C_ROUND_BRACKET -> print(PARENTHESES + ")");
-				//TODO case KEYWORD -> print(KEYWORD + t.getValue() + " ");
 				case IDENTIFIER -> print(IDENTIFIER + t.value + " ");
-				case NUMBER, FLOAT -> print(NUMBER + t.value + " ");
+				case INTEGER, FLOATING_POINT -> print(NUMBER + t.value + " ");
 				case STRING -> print(STRING + '"' + t.value + '"');
 				case NEWLINE -> print("\n");
 				case COMMENT -> print(COMMENT + t.value);

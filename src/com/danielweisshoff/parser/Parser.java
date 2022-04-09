@@ -10,6 +10,8 @@ import com.danielweisshoff.parser.nodesystem.node.*;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.*;
 import com.danielweisshoff.parser.nodesystem.node.data.*;
 import com.danielweisshoff.parser.nodesystem.node.data.assigning.*;
+import com.danielweisshoff.parser.nodesystem.node.data.primitives.DoubleNode;
+import com.danielweisshoff.parser.nodesystem.node.data.primitives.IntegerNode;
 import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.*;
 import com.danielweisshoff.parser.nodesystem.node.logic.*;
 import com.danielweisshoff.parser.nodesystem.node.logic.bitwise.BitWiseOrNode;
@@ -400,9 +402,16 @@ public class Parser {
 
 			return an;
 		}
-		//? Number
-		else if (is(TokenType.NUMBER)) {
-			Node n = new NumberNode(Integer.parseInt(curToken.value) * sign);
+		//TODO integers
+		//? INTEGER
+		else if (is(TokenType.INTEGER)) {
+			Node n = new IntegerNode(Integer.parseInt(curToken.value) * sign);
+			advance();
+			return n;
+		}
+		//?floating point numbers
+		else if (is(TokenType.FLOATING_POINT)) {
+			Node n = new DoubleNode(Double.parseDouble(curToken.value) * sign);
 			advance();
 			return n;
 		}
@@ -472,7 +481,7 @@ public class Parser {
 		String params = "";
 
 		while (!is(TokenType.C_ROUND_BRACKET)) {
-			if (is(TokenType.NUMBER) || is(TokenType.IDENTIFIER)) {
+			if (is(TokenType.INTEGER) || is(TokenType.IDENTIFIER)) {
 				params += curToken.value;
 				advance();
 				if (is(TokenType.COMMA)) {

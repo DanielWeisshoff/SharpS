@@ -165,8 +165,8 @@ public class Lexer {
 				break;
 		}
 		if (isFloat)
-			return new Token(TokenType.FLOAT, text.substring(start, charIndex));
-		return new Token(TokenType.NUMBER, text.substring(start, charIndex));
+			return new Token(TokenType.FLOATING_POINT, text.substring(start, charIndex));
+		return new Token(TokenType.INTEGER, text.substring(start, charIndex));
 	}
 
 	private Token buildComparisonToken(char c) {

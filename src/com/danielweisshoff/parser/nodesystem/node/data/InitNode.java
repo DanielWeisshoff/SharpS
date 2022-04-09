@@ -3,6 +3,7 @@ package com.danielweisshoff.parser.nodesystem.node.data;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.Node;
+import com.danielweisshoff.parser.nodesystem.node.data.primitives.IntegerNode;
 
 /**
  * Initializes a variable
@@ -20,7 +21,7 @@ public class InitNode extends Node {
 	public InitNode(String name) {
 		super(null, null);
 		this.name = name;
-		this.expression = new NumberNode(0);
+		this.expression = new IntegerNode(0);
 	}
 
 	@Override

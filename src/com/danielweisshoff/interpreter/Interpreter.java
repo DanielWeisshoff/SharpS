@@ -11,6 +11,8 @@ import com.danielweisshoff.parser.nodesystem.node.*;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.*;
 import com.danielweisshoff.parser.nodesystem.node.data.*;
 import com.danielweisshoff.parser.nodesystem.node.data.assigning.*;
+import com.danielweisshoff.parser.nodesystem.node.data.primitives.DoubleNode;
+import com.danielweisshoff.parser.nodesystem.node.data.primitives.IntegerNode;
 import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.PreDecrementNode;
 import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.PreIncrementNode;
 import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.PostDecrementNode;
@@ -67,8 +69,11 @@ public class Interpreter {
 			data = interpretBinaryOperationNode('/');
 		else if (n instanceof BinaryModNode)
 			data = interpretBinaryOperationNode('%');
-		else if (n instanceof NumberNode)
-			data = interpretNumberNode();
+		//PRIMITIVES
+		else if (n instanceof IntegerNode)
+			data = interpretPrimitiveNode();
+		else if (n instanceof DoubleNode)
+			data = interpretPrimitiveNode();
 		//VAR ASSIGNMENT
 		else if (n instanceof EqualAssignNode) {
 			data = interpretEqualAssignNode();
@@ -191,9 +196,9 @@ public class Interpreter {
 		};
 	}
 
-	private Data<?> interpretNumberNode() {
-		NumberNode nn = (NumberNode) curInstruction;
-		return nn.getData();
+	private Data<?> interpretPrimitiveNode() {
+		PrimitiveNode pn = (PrimitiveNode) curInstruction;
+		return pn.getData();
 	}
 
 	private Data<?> interpretConditionNode(String op) {

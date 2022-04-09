@@ -51,7 +51,7 @@ public class Token {
 	}
 
 	public boolean isNumeric() {
-		return type == TokenType.NUMBER || type == TokenType.FLOAT;
+		return type == TokenType.INTEGER || type == TokenType.FLOATING_POINT;
 	}
 
 	//TODO needs constant updates
