@@ -11,6 +11,8 @@ import com.danielweisshoff.parser.nodesystem.node.*;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.*;
 import com.danielweisshoff.parser.nodesystem.node.data.*;
 import com.danielweisshoff.parser.nodesystem.node.data.assigning.*;
+import com.danielweisshoff.parser.nodesystem.node.data.numbers.FloatingPointNumberNode;
+import com.danielweisshoff.parser.nodesystem.node.data.numbers.IntegerNumberNode;
 import com.danielweisshoff.parser.nodesystem.node.data.primitives.DoubleNode;
 import com.danielweisshoff.parser.nodesystem.node.data.primitives.IntegerNode;
 import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.PreDecrementNode;
@@ -69,7 +71,12 @@ public class Interpreter {
 			data = interpretBinaryOperationNode('/');
 		else if (n instanceof BinaryModNode)
 			data = interpretBinaryOperationNode('%');
-		//PRIMITIVES
+		//RAW NUMBERS (no type safety)
+		else if (n instanceof IntegerNumberNode)
+			data = interpretIntegerNumberNode();
+		else if (n instanceof FloatingPointNumberNode)
+			data = interpretFloatingPointNumberNode();
+		//PRIMITIVES (type safety)
 		else if (n instanceof IntegerNode)
 			data = interpretPrimitiveNode();
 		else if (n instanceof DoubleNode)
@@ -79,17 +86,6 @@ public class Interpreter {
 			data = interpretEqualAssignNode();
 			stepFinished = true;
 		}
-		// else if (n instanceof AddAssignNode)
-		// 	data = interpretAddAssignNode();
-		// else if (n instanceof SubAssignNode)
-		// 	data = interpretSubAssignNode();
-		// else if (n instanceof MulAssignNode)
-		// 	data = interpretMulAssignNode();
-		// else if (n instanceof DivAssignNode)
-		// 	data = interpretDivAssignNode();
-		// else if (n instanceof ModAssignNode)
-		// 	data = interpretModAssignNode();
-
 		//INCREMENT / DECREMENT
 		else if (n instanceof PreIncrementNode)
 			data = interpretPreIncrementNode();
@@ -228,6 +224,18 @@ public class Interpreter {
 			return new Data<>(0, DataType.BOOLEAN);
 	}
 
+	private Data<?> interpretFloatingPointNumberNode() {
+		FloatingPointNumberNode fpnn = (FloatingPointNumberNode) curInstruction;
+
+		return new Data<Double>(fpnn.value, DataType.DOUBLE);
+	}
+
+	private Data<?> interpretIntegerNumberNode() {
+		IntegerNumberNode inn = (IntegerNumberNode) curInstruction;
+
+		return new Data<Long>(inn.value, DataType.LONG);
+	}
+
 	private Data<?> interpretInitNode() {
 		InitNode in = (InitNode) curInstruction;
 
@@ -327,7 +335,6 @@ public class Interpreter {
 		double value = Double.parseDouble(var.getValue());
 		var.value = "" + (value + 1);
 		value = Double.parseDouble(var.getValue());
-
 		return new Data<Double>(value, DataType.DOUBLE);
 	}
 

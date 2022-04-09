@@ -24,7 +24,9 @@ ins OOP übertragen werden
 [+]	- for
 [+]	- *in for-loop initialisierte var ist im falschen scope!!*
 [+]	- *ALLE KEYWORDS IN EIGENE TOKENS*
-[]  - alle primitiven (siehe syntax.txt)
+[+] - statische variablentypen	
+[+] - automatic type-conversion
+[+] - alle primitiven zahlentypen
 []	- arrays -> ArrayNode
 []	- foreach
 []	- ?Preprocessor?
@@ -34,10 +36,10 @@ ins OOP übertragen werden
 []	- Ein paar builIn Funktionen
 []  - string als char[]
 *CLEANUP / REFACTORING*
-[+]  - curToken.value.equals(value) -> curToken.compare(value)
-[+]  - +=, -=, *=, /=  sollen zu normalen assignNode geparsed werden    (x+= 1 * 2 -> x = x + (1 * 2) )
-[]  - increment/decrement sind schlecht implementiert
-[+]  - Dateiendung in .#s aendern
+[+] - curToken.value.equals(value) -> curToken.compare(value)
+[+] - +=, -=, *=, /=  sollen zu normalen assignNode geparsed werden    (x+= 1 * 2 -> x = x + (1 * 2) )
+[]  - ++, -- operatoren sind schlecht implementiert
+[+] - Dateiendung in .#s aendern
 PRIMTIVE DATENTYPEN:
 	- Bei der Initialisierung/Deklarierung muss implizit geschaut werden, ob die rückgabewerte
 	  mit dem Primitiven übereinstimmen

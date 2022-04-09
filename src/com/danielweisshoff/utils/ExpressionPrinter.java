@@ -1,3 +1,4 @@
+package com.danielweisshoff.utils;
 // package com.danielweisshoff.parser;
 
 // import com.danielweisshoff.logger.Logger;

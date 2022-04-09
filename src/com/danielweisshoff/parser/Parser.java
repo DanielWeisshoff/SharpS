@@ -10,13 +10,14 @@ import com.danielweisshoff.parser.nodesystem.node.*;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.*;
 import com.danielweisshoff.parser.nodesystem.node.data.*;
 import com.danielweisshoff.parser.nodesystem.node.data.assigning.*;
-import com.danielweisshoff.parser.nodesystem.node.data.primitives.DoubleNode;
-import com.danielweisshoff.parser.nodesystem.node.data.primitives.IntegerNode;
+import com.danielweisshoff.parser.nodesystem.node.data.numbers.FloatingPointNumberNode;
+import com.danielweisshoff.parser.nodesystem.node.data.numbers.IntegerNumberNode;
 import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.*;
 import com.danielweisshoff.parser.nodesystem.node.logic.*;
 import com.danielweisshoff.parser.nodesystem.node.logic.bitwise.BitWiseOrNode;
 import com.danielweisshoff.parser.nodesystem.node.logic.bitwise.BitwiseAndNode;
 import com.danielweisshoff.parser.nodesystem.node.loops.*;
+import com.danielweisshoff.parser.semantic.ConversionChecker;
 
 /**
  * Converts tokens to a runnable AST
@@ -69,14 +70,21 @@ public class Parser {
 		case KW_IF -> instruction = parseIf();
 		case KW_ELSE -> instruction = parseElse();
 		case KW_ELIF -> instruction = parseElif();
+		//PRIMITIVES
+		case KW_BYTE -> instruction = parseVariableDeclaration();
+		case KW_SHORT -> instruction = parseVariableDeclaration();
 		case KW_INT -> instruction = parseVariableDeclaration();
+		case KW_LONG -> instruction = parseVariableDeclaration();
+		case KW_FLOAT -> instruction = parseVariableDeclaration();
+		case KW_DOUBLE -> instruction = parseVariableDeclaration();
+		//
 		case KW_WHILE -> instruction = parseWhile();
 		case KW_FOR -> instruction = parseFor();
 		case KW_DO -> instruction = parseDoWhile();
 		case IDENTIFIER -> identifierStuff();
 		case ADD -> instruction = parsePreIncrement(); //++ increment
 		case SUB -> instruction = parsePreDecrement(); //-- decrement
-		default -> new PError("[PARSER] Action for keyword " + curToken.value + " not implemented");
+		default -> new PError("[PARSER] Action for Token " + curToken.type() + " not implemented");
 		}
 
 		if (error)
@@ -160,7 +168,6 @@ public class Parser {
 		}
 	}
 
-	//TODO d zeilenweise geparsed wird, muss nicht mehr nach 
 	public void advance() {
 		position++;
 		if (position < tokens.length)
@@ -327,7 +334,6 @@ public class Parser {
 		};
 	}
 
-	//TODO das ist aids
 	private Node parseExpression() {
 		Node left = parseTerm();
 
@@ -405,13 +411,13 @@ public class Parser {
 		//TODO integers
 		//? INTEGER
 		else if (is(TokenType.INTEGER)) {
-			Node n = new IntegerNode(Integer.parseInt(curToken.value) * sign);
+			Node n = new IntegerNumberNode(Long.parseLong(curToken.value) * sign);
 			advance();
 			return n;
 		}
 		//?floating point numbers
 		else if (is(TokenType.FLOATING_POINT)) {
-			Node n = new DoubleNode(Double.parseDouble(curToken.value) * sign);
+			Node n = new FloatingPointNumberNode(Double.parseDouble(curToken.value) * sign);
 			advance();
 			return n;
 		}
@@ -496,10 +502,10 @@ public class Parser {
 		return params;
 	}
 
-	//TODO keyword ist spaeter zum unterscheiden der primitiven da
+	@Deprecated
 	private InitNode parseVariableDeclaration() {
-		String keyword = curToken.value;
-		assume(TokenType.KW_INT, "[PARSER]: Unknown primitive type '" + keyword + "'");
+		TokenType keyword = curToken.type();
+		advance();
 
 		String varName = curToken.value;
 		assume(TokenType.IDENTIFIER, "Fehler beim Initialisieren einer Variable");
@@ -507,11 +513,13 @@ public class Parser {
 		InitNode n;
 		if (is(TokenType.EQUAL)) {
 			//Variable wird initialisiert
-
 			advance();
 			Node expr = parseExpression();
 
 			Logger.log("Variable " + varName + " initialisiert");
+			//Check types
+			ConversionChecker.convert(keyword, expr);
+
 			n = new InitNode(varName, expr);
 		} else {
 			//Variable wird deklariert

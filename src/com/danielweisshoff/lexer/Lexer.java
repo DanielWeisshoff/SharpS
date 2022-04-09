@@ -121,7 +121,14 @@ public class Lexer {
 		}
 		String subString = text.substring(start, charIndex);
 		return switch (subString) {
+		//PRIMITIVES
+		case "bte" -> new Token(TokenType.KW_BYTE, null);
+		case "sht" -> new Token(TokenType.KW_SHORT, null);
 		case "int" -> new Token(TokenType.KW_INT, null);
+		case "lng" -> new Token(TokenType.KW_LONG, null);
+		case "flt" -> new Token(TokenType.KW_FLOAT, null);
+		case "dbl" -> new Token(TokenType.KW_DOUBLE, null);
+		//
 		case "if" -> new Token(TokenType.KW_IF, null);
 		case "else" -> new Token(TokenType.KW_ELSE, null);
 		case "elif" -> new Token(TokenType.KW_ELIF, null);
