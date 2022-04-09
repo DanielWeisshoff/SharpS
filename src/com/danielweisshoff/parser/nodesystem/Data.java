@@ -14,12 +14,16 @@ package com.danielweisshoff.parser.nodesystem;
  */
 public class Data<T extends Number> {
 
-	private final DataType dataType;
-	private final T data;
+	public final DataType dataType;
+	public T data;
 
 	public Data() {
 		dataType = DataType.VOID;
 		data = null;
+	}
+
+	public Data(DataType dataType) {
+		this.dataType = dataType;
 	}
 
 	public Data(T data, DataType dataType) {

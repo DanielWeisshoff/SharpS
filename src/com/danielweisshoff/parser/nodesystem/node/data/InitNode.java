@@ -10,17 +10,20 @@ import com.danielweisshoff.parser.nodesystem.node.data.primitives.IntegerNode;
  */
 public class InitNode extends Node {
 	private final String name;
+	public final DataType dataType;
 	public final Node expression;
 
-	public InitNode(String name, Node expression) {
+	public InitNode(String name, DataType dataType, Node expression) {
 		super(null, null);
 		this.name = name;
+		this.dataType = dataType;
 		this.expression = expression;
 	}
 
-	public InitNode(String name) {
+	public InitNode(String name, DataType dataType) {
 		super(null, null);
 		this.name = name;
+		this.dataType = dataType;
 		this.expression = new IntegerNode(0);
 	}
 

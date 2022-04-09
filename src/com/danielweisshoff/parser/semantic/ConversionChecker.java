@@ -20,7 +20,7 @@ import com.danielweisshoff.parser.nodesystem.node.data.primitives.*;
 public class ConversionChecker {
 
 	//lower values can be casted into higher or same precedence
-	private static HashMap<TokenType, Integer> precedences = new HashMap<>() {
+	public static HashMap<TokenType, Integer> precedences = new HashMap<>() {
 		{
 			put(TokenType.KW_BYTE, 0);
 			put(TokenType.KW_SHORT, 1);
@@ -28,6 +28,16 @@ public class ConversionChecker {
 			put(TokenType.KW_LONG, 3);
 			put(TokenType.KW_FLOAT, 4);
 			put(TokenType.KW_DOUBLE, 5);
+		}
+	};
+	public static HashMap<Integer, TokenType> primitives = new HashMap<>() {
+		{
+			put(0, TokenType.KW_BYTE);
+			put(1, TokenType.KW_SHORT);
+			put(2, TokenType.KW_INT);
+			put(3, TokenType.KW_LONG);
+			put(4, TokenType.KW_FLOAT);
+			put(5, TokenType.KW_DOUBLE);
 		}
 	};
 

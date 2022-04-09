@@ -23,7 +23,6 @@ import com.danielweisshoff.parser.nodesystem.node.logic.*;
 import com.danielweisshoff.parser.nodesystem.node.logic.bitwise.BitWiseOrNode;
 import com.danielweisshoff.parser.nodesystem.node.logic.bitwise.BitwiseAndNode;
 import com.danielweisshoff.parser.nodesystem.node.loops.*;
-import com.danielweisshoff.parser.symboltable.Entry;
 import com.danielweisshoff.parser.symboltable.SymbolTableManager;
 import com.danielweisshoff.parser.symboltable.VariableEntry;
 
@@ -241,14 +240,14 @@ public class Interpreter {
 
 		String name = in.getName();
 
-		Entry e = symbolTableManager.findVariableInScope(name);
+		VariableEntry e = symbolTableManager.findVariableInScope(name);
 		if (e != null)
 			new PError("var '" + name + "' is already declared");
 
 		Data<?> data = interpret(in.expression);
 		String value = "" + data.asDouble();
 		//entry in symboltable
-		VariableEntry var = new VariableEntry(name, DataType.DOUBLE, value);
+		VariableEntry var = new VariableEntry(name, in.dataType, value);
 		symbolTableManager.addVariableToScope(name, var);
 
 		return new Data<>(1, DataType.INT);
@@ -258,7 +257,7 @@ public class Interpreter {
 		VariableNode vn = (VariableNode) curInstruction;
 		String varName = vn.getName();
 
-		VariableEntry var = (VariableEntry) symbolTableManager.findVariableInScope(varName);
+		VariableEntry var = symbolTableManager.findVariableInScope(varName);
 		if (var == null)
 			new PError("Parse Error: var '" + varName + "' not declared");
 
@@ -308,17 +307,24 @@ public class Interpreter {
 		String varName = an.getName();
 
 		Data<?> data = interpret(an.expression);
-		String value = "" + data.asDouble();
-
-		//TODO just for output testing -> implement print()
-		System.out.println(value);
+		double value = data.asDouble();
 
 		//try to find and get the variable from the SymbolTable
-		VariableEntry ve = (VariableEntry) symbolTableManager.findVariableInScope(varName);
+		VariableEntry ve = symbolTableManager.findVariableInScope(varName);
 		if (ve == null)
 			new PError("Parse Error: var '" + varName + "' not declared");
 
-		ve.value = value;
+		//TODO im cryin
+		switch (ve.dataType) {
+		case BYTE -> ve.value = "" + (byte) value;
+		case SHORT -> ve.value = "" + (short) value;
+		case INT -> ve.value = "" + (int) value;
+		case LONG -> ve.value = "" + (long) value;
+		case FLOAT -> ve.value = "" + (float) value;
+		case DOUBLE -> ve.value = "" + value;
+		}
+		//TODO just for output testing -> implement print()
+		System.out.println(ve.value + ", " + ve.dataType);
 
 		return new Data<>(1, DataType.INT);
 	}
@@ -328,7 +334,7 @@ public class Interpreter {
 
 		String varName = in.getName();
 
-		VariableEntry var = (VariableEntry) symbolTableManager.findVariableInScope(varName);
+		VariableEntry var = symbolTableManager.findVariableInScope(varName);
 		if (var == null)
 			new PError("Parse Error: var '" + varName + "' not declared");
 
@@ -343,7 +349,7 @@ public class Interpreter {
 
 		String varName = in.getName();
 
-		VariableEntry var = (VariableEntry) symbolTableManager.findVariableInScope(varName);
+		VariableEntry var = symbolTableManager.findVariableInScope(varName);
 		if (var == null)
 			new PError("Parse Error: var '" + varName + "' not declared");
 
@@ -358,7 +364,7 @@ public class Interpreter {
 
 		String varName = in.getName();
 
-		VariableEntry var = (VariableEntry) symbolTableManager.findVariableInScope(varName);
+		VariableEntry var = symbolTableManager.findVariableInScope(varName);
 		if (var == null)
 			new PError("Parse Error: var '" + varName + "' not declared");
 
@@ -374,7 +380,7 @@ public class Interpreter {
 
 		String varName = in.getName();
 
-		VariableEntry var = (VariableEntry) symbolTableManager.findVariableInScope(varName);
+		VariableEntry var = symbolTableManager.findVariableInScope(varName);
 		if (var == null)
 			new PError("Parse Error: var '" + varName + "' not declared");
 

@@ -79,19 +79,19 @@ public class SymbolTableManager {
 	// 	}
 	// }
 
-	public Entry findVariableInScope(String name) {
+	public VariableEntry findVariableInScope(String name) {
 		return currentTable.findVariable(name);
 	}
 
-	public Entry findFunctionInScope(String name) {
+	public FunctionEntry findFunctionInScope(String name) {
 		return currentTable.findFunction(name);
 	}
 
-	public Entry findStaticVariable(String name) {
+	public VariableEntry findStaticVariable(String name) {
 		return root.findVariable(name);
 	}
 
-	public Entry findStaticFunction(String name) {
+	public FunctionEntry findStaticFunction(String name) {
 		return root.findFunction(name);
 	}
 }

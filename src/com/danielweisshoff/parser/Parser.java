@@ -6,6 +6,7 @@ import com.danielweisshoff.interpreter.builtin.BuiltInFunction;
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.logger.Logger;
+import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.*;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.*;
 import com.danielweisshoff.parser.nodesystem.node.data.*;
@@ -511,6 +512,18 @@ public class Parser {
 		assume(TokenType.IDENTIFIER, "Fehler beim Initialisieren einer Variable");
 
 		InitNode n;
+
+		DataType type = null;
+		switch (keyword) {
+		case KW_BYTE -> type = DataType.BYTE;
+		case KW_SHORT -> type = DataType.SHORT;
+		case KW_INT -> type = DataType.INT;
+		case KW_LONG -> type = DataType.LONG;
+		case KW_FLOAT -> type = DataType.FLOAT;
+		case KW_DOUBLE -> type = DataType.DOUBLE;
+		default -> new PError("parser: unknown primitive type " + keyword);
+		}
+
 		if (is(TokenType.EQUAL)) {
 			//Variable wird initialisiert
 			advance();
@@ -520,10 +533,10 @@ public class Parser {
 			//Check types
 			ConversionChecker.convert(keyword, expr);
 
-			n = new InitNode(varName, expr);
+			n = new InitNode(varName, type, expr);
 		} else {
 			//Variable wird deklariert
-			n = new InitNode(varName);
+			n = new InitNode(varName, type);
 			Logger.log("Variable " + varName + " deklariert");
 		}
 		return n;

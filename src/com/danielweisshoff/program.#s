@@ -1,7 +1,3 @@
-#signed primitives
-bte a = 127
-sht b = 10
-int c = 23478
-lng d = 22497854
-flt e = 3.14
-dbl f = 3.1415926535
+int a = 10
+a += 2.5
+#a ist nun 12

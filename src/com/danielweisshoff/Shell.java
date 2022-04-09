@@ -16,7 +16,6 @@ public class Shell {
 	public static boolean benchmark = true;
 
 	public static void main(String[] args) {
-
 		if (benchmark)
 			benchmark();
 		else

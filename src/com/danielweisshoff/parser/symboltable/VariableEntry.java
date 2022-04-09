@@ -4,7 +4,7 @@ import com.danielweisshoff.parser.nodesystem.DataType;
 
 public class VariableEntry extends Entry {
 
-	private final DataType dataType;
+	public final DataType dataType;
 	public String value;
 
 	public VariableEntry(String name, DataType dataType, String value) {
