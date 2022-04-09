@@ -2,7 +2,6 @@ package com.danielweisshoff.parser.symboltable;
 
 import java.util.HashMap;
 
-//TODO anstatt Liste  2 HashMaps für VAR/FUNC (sollte schneller sein)
 public class SymbolTable {
 
 	public SymbolTable parent;
