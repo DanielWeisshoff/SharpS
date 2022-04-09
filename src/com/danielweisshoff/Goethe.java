@@ -13,9 +13,9 @@ import java.util.Scanner;
  */
 public class Goethe {
 
-	private static final File lexerPath = new File("src/com/danielweisshoff/lexer.txt");
+	private static final File lexerPath = new File("src/com/danielweisshoff/lexer.log");
+	private static final File logPath = new File("src/com/danielweisshoff/log.log");
 	private static final File programPath = new File("src/com/danielweisshoff/program.#s"); //ß = \u00df
-	private static final File logPath = new File("src/com/danielweisshoff/log.txt");
 
 	public static String getText() {
 		StringBuilder program = new StringBuilder();
