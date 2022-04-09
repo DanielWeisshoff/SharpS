@@ -1,6 +1,5 @@
 package com.danielweisshoff.parser.nodesystem.node.loops;
 
-import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.BlockNode;
 import com.danielweisshoff.parser.nodesystem.node.Node;
 import com.danielweisshoff.parser.nodesystem.node.logic.ConditionNode;

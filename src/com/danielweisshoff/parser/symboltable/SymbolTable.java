@@ -1,6 +1,5 @@
 package com.danielweisshoff.parser.symboltable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 //TODO anstatt Liste  2 HashMaps für VAR/FUNC (sollte schneller sein)
