@@ -23,6 +23,7 @@ import com.danielweisshoff.parser.nodesystem.node.logic.*;
 import com.danielweisshoff.parser.nodesystem.node.logic.bitwise.BitWiseOrNode;
 import com.danielweisshoff.parser.nodesystem.node.logic.bitwise.BitwiseAndNode;
 import com.danielweisshoff.parser.nodesystem.node.loops.*;
+import com.danielweisshoff.parser.semantic.ConversionChecker;
 import com.danielweisshoff.parser.symboltable.SymbolTableManager;
 import com.danielweisshoff.parser.symboltable.VariableEntry;
 
@@ -45,6 +46,8 @@ public class Interpreter {
 
 	public Interpreter() {
 		symbolTableManager.deleteTableOnScopeEnd = true;
+		//TODO bad implementation
+		ConversionChecker.setSymbolTableManager(symbolTableManager);
 	}
 
 	public Data<?> interpret(Node n) {
@@ -240,14 +243,17 @@ public class Interpreter {
 
 		String name = in.getName();
 
+		//schauen, ob variable schon existiert
 		VariableEntry e = symbolTableManager.findVariableInScope(name);
 		if (e != null)
 			new PError("var '" + name + "' is already declared");
 
+		//checking semantics
+		ConversionChecker.convert(in.dataType, in.expression);
+
 		Data<?> data = interpret(in.expression);
-		String value = "" + data.asDouble();
 		//entry in symboltable
-		VariableEntry var = new VariableEntry(name, in.dataType, value);
+		VariableEntry var = new VariableEntry(name, in.dataType, data);
 		symbolTableManager.addVariableToScope(name, var);
 
 		return new Data<>(1, DataType.INT);
@@ -261,8 +267,7 @@ public class Interpreter {
 		if (var == null)
 			new PError("Parse Error: var '" + varName + "' not declared");
 
-		double value = Double.parseDouble(var.getValue());
-		return new Data<Double>(value, DataType.DOUBLE);
+		return var.getData();
 	}
 
 	private Data<?> interpretWhileNode() {
@@ -316,15 +321,15 @@ public class Interpreter {
 
 		//TODO im cryin
 		switch (ve.dataType) {
-		case BYTE -> ve.value = "" + (byte) value;
-		case SHORT -> ve.value = "" + (short) value;
-		case INT -> ve.value = "" + (int) value;
-		case LONG -> ve.value = "" + (long) value;
-		case FLOAT -> ve.value = "" + (float) value;
-		case DOUBLE -> ve.value = "" + value;
+		case BYTE -> ve.data = new Data<Byte>((byte) value, DataType.BYTE);
+		case SHORT -> ve.data = new Data<Short>((short) value, DataType.SHORT);
+		case INT -> ve.data = new Data<Integer>((int) value, DataType.INT);
+		case LONG -> ve.data = new Data<Long>((long) value, DataType.LONG);
+		case FLOAT -> ve.data = new Data<Float>((float) value, DataType.FLOAT);
+		case DOUBLE -> ve.data = new Data<Double>((double) value, DataType.DOUBLE);
 		}
 		//TODO just for output testing -> implement print()
-		System.out.println(ve.value + ", " + ve.dataType);
+		System.out.println(ve.data.data + ", " + ve.dataType);
 
 		return new Data<>(1, DataType.INT);
 	}
@@ -338,25 +343,10 @@ public class Interpreter {
 		if (var == null)
 			new PError("Parse Error: var '" + varName + "' not declared");
 
-		double value = Double.parseDouble(var.getValue());
-		var.value = "" + (value + 1);
-		value = Double.parseDouble(var.getValue());
-		return new Data<Double>(value, DataType.DOUBLE);
-	}
+		double value = var.getData().asDouble();
+		var.data = new Data<Double>(value + 1, var.dataType);
 
-	private Data<?> interpretPostIncrementNode() {
-		PostIncrementNode in = (PostIncrementNode) curInstruction;
-
-		String varName = in.getName();
-
-		VariableEntry var = symbolTableManager.findVariableInScope(varName);
-		if (var == null)
-			new PError("Parse Error: var '" + varName + "' not declared");
-
-		double value = Double.parseDouble(var.getValue());
-		var.value = "" + (value + 1);
-
-		return new Data<Double>(value, DataType.DOUBLE);
+		return var.data;
 	}
 
 	private Data<?> interpretPreDecrementNode() {
@@ -368,9 +358,23 @@ public class Interpreter {
 		if (var == null)
 			new PError("Parse Error: var '" + varName + "' not declared");
 
-		double value = Double.parseDouble(var.getValue());
-		var.value = "" + (value - 1);
-		value = Double.parseDouble(var.getValue());
+		double value = var.getData().asDouble();
+		var.data = new Data<Double>(value + -1, var.dataType);
+
+		return var.data;
+	}
+
+	private Data<?> interpretPostIncrementNode() {
+		PostIncrementNode in = (PostIncrementNode) curInstruction;
+
+		String varName = in.getName();
+
+		VariableEntry var = symbolTableManager.findVariableInScope(varName);
+		if (var == null)
+			new PError("Parse Error: var '" + varName + "' not declared");
+
+		double value = var.getData().asDouble();
+		var.data = new Data<Double>(value + 1, var.dataType);
 
 		return new Data<Double>(value, DataType.DOUBLE);
 	}
@@ -384,8 +388,8 @@ public class Interpreter {
 		if (var == null)
 			new PError("Parse Error: var '" + varName + "' not declared");
 
-		double value = Double.parseDouble(var.getValue());
-		var.value = "" + (value - 1);
+		double value = var.getData().asDouble();
+		var.data = new Data<Double>(value + 1, DataType.DOUBLE);
 
 		return new Data<Double>(value, DataType.DOUBLE);
 	}

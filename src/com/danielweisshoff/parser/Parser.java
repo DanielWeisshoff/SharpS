@@ -83,8 +83,8 @@ public class Parser {
 		case KW_FOR -> instruction = parseFor();
 		case KW_DO -> instruction = parseDoWhile();
 		case IDENTIFIER -> identifierStuff();
-		case ADD -> instruction = parsePreIncrement(); //++ increment
-		case SUB -> instruction = parsePreDecrement(); //-- decrement
+		case PLUS -> instruction = parsePreIncrement(); //++ increment
+		case MINUS -> instruction = parsePreDecrement(); //-- decrement
 		default -> new PError("[PARSER] Action for Token " + curToken.type() + " not implemented");
 		}
 
@@ -109,7 +109,7 @@ public class Parser {
 		if (is(TokenType.O_ROUND_BRACKET)) { //FNC
 			retreat();
 			instruction = parseFunctionCall();
-		} else if (curToken.isOP() || is(TokenType.EQUAL) || is(TokenType.MOD)) { //VAR
+		} else if (curToken.isOP() || is(TokenType.EQUAL) || is(TokenType.PERCENT)) { //VAR
 			retreat();
 			instruction = parseVariableInitialization();
 		} else
@@ -348,9 +348,9 @@ public class Parser {
 			}
 			retreat();
 
-			if (curToken.type() == TokenType.ADD)
+			if (curToken.type() == TokenType.PLUS)
 				op = new BinaryAddNode();
-			else if (curToken.type() == TokenType.SUB)
+			else if (curToken.type() == TokenType.MINUS)
 				op = new BinarySubNode();
 			advance();
 
@@ -367,11 +367,11 @@ public class Parser {
 		Node left = parseFactor();
 
 		BinaryOperationNode op = null;
-		while (curToken.isDotOP() || curToken.type() == TokenType.MOD) {
+		while (curToken.isDotOP() || curToken.type() == TokenType.PERCENT) {
 
-			if (is(TokenType.MUL))
+			if (is(TokenType.STAR))
 				op = new BinaryMulNode();
-			else if (is(TokenType.DIV))
+			else if (is(TokenType.SLASH))
 				op = new BinaryDivNode();
 			else
 				op = new BinaryModNode();
@@ -391,18 +391,18 @@ public class Parser {
 		int sign = 1;
 
 		//? Ternary / --x	
-		if (is(TokenType.SUB)) {
+		if (is(TokenType.MINUS)) {
 			advance();
-			if (is(TokenType.SUB)) {
+			if (is(TokenType.MINUS)) {
 				retreat();
 				return parsePreDecrement();
 			} else
 				sign = -1;
 		}
 		//? ++x 
-		else if (is(TokenType.ADD)) {
+		else if (is(TokenType.PLUS)) {
 			advance();
-			assume(TokenType.ADD, "second incrementor + missing");
+			assume(TokenType.PLUS, "second incrementor + missing");
 			retreat(2);
 
 			AssignNode an = parsePreIncrement();
@@ -429,9 +429,9 @@ public class Parser {
 
 			VariableNode n = new VariableNode(varName);
 
-			if (is(TokenType.ADD)) { // x++
+			if (is(TokenType.PLUS)) { // x++
 				advance();
-				if (!is(TokenType.ADD)) {
+				if (!is(TokenType.PLUS)) {
 					retreat();
 					return n;
 				}
@@ -439,9 +439,9 @@ public class Parser {
 
 				AssignNode an = parsePostIncrement();
 				return an;
-			} else if (is(TokenType.SUB)) { // x--
+			} else if (is(TokenType.MINUS)) { // x--
 				advance();
-				if (!is(TokenType.SUB)) {
+				if (!is(TokenType.MINUS)) {
 					retreat();
 					return n;
 				}
@@ -530,8 +530,6 @@ public class Parser {
 			Node expr = parseExpression();
 
 			Logger.log("Variable " + varName + " initialisiert");
-			//Check types
-			ConversionChecker.convert(keyword, expr);
 
 			n = new InitNode(varName, type, expr);
 		} else {
@@ -545,18 +543,18 @@ public class Parser {
 	@Deprecated
 	private AssignNode parseVariableInitialization() {
 		//increment
-		if (is(TokenType.ADD)) {
+		if (is(TokenType.PLUS)) {
 			advance();
 
-			assume(TokenType.ADD, "Incrementor + missing");
+			assume(TokenType.PLUS, "Incrementor + missing");
 			retreat(2);
 
 			return parsePreIncrement();
 		}
 		//decrement
-		else if (is(TokenType.SUB)) {
+		else if (is(TokenType.MINUS)) {
 			advance();
-			assume(TokenType.SUB, "Decrementor - missing");
+			assume(TokenType.MINUS, "Decrementor - missing");
 			retreat(2);
 
 			return parsePreDecrement();
@@ -567,25 +565,25 @@ public class Parser {
 			advance();
 
 			//late increment	x++
-			if (is(TokenType.ADD)) {
+			if (is(TokenType.PLUS)) {
 				advance();
-				if (is(TokenType.ADD)) {
+				if (is(TokenType.PLUS)) {
 					retreat(2);
 					return parsePostIncrement();
 				}
 				retreat();
 			}
 			//late decrement	x--
-			else if (is(TokenType.SUB)) {
+			else if (is(TokenType.MINUS)) {
 				advance();
-				if (is(TokenType.SUB)) {
+				if (is(TokenType.MINUS)) {
 					retreat(2);
 					return parsePostDecrement();
 				}
 				retreat();
 			}
 			//* HAS TO HAPPEN AFTER INCR/DECR 
-			if (curToken.isOP() || curToken.type() == TokenType.MOD) {
+			if (curToken.isOP() || curToken.type() == TokenType.PERCENT) {
 				retreat();
 				return parseBinaryAssignNode();
 			}
@@ -677,8 +675,8 @@ public class Parser {
 		String varName = curToken.value;
 		assume(TokenType.IDENTIFIER, "increment-assignment var missing");
 
-		assume(TokenType.ADD, "Incrementor + missing");
-		assume(TokenType.ADD, "Incrementor + missing");
+		assume(TokenType.PLUS, "Incrementor + missing");
+		assume(TokenType.PLUS, "Incrementor + missing");
 
 		PostIncrementNode lin = new PostIncrementNode(varName);
 		lin.variable = new VariableNode(varName);
@@ -690,8 +688,8 @@ public class Parser {
 		String varName = curToken.value;
 		assume(TokenType.IDENTIFIER, "decrement-assignment var missing");
 
-		assume(TokenType.SUB, "Decrementor - missing");
-		assume(TokenType.SUB, "Decrementor - missing");
+		assume(TokenType.MINUS, "Decrementor - missing");
+		assume(TokenType.MINUS, "Decrementor - missing");
 
 		PostDecrementNode ldn = new PostDecrementNode(varName);
 		ldn.variable = new VariableNode(varName);
@@ -701,8 +699,8 @@ public class Parser {
 	}
 
 	private AssignNode parsePreIncrement() {
-		assume(TokenType.ADD, "Incrementor + missing");
-		assume(TokenType.ADD, "Incrementor + missing");
+		assume(TokenType.PLUS, "Incrementor + missing");
+		assume(TokenType.PLUS, "Incrementor + missing");
 
 		String varName = curToken.value;
 		assume(TokenType.IDENTIFIER, "increment-assignment var missing");
@@ -714,8 +712,8 @@ public class Parser {
 	}
 
 	private AssignNode parsePreDecrement() {
-		assume(TokenType.SUB, "Decrementor - missing");
-		assume(TokenType.SUB, "Decrementor - missing");
+		assume(TokenType.MINUS, "Decrementor - missing");
+		assume(TokenType.MINUS, "Decrementor - missing");
 
 		String varName = curToken.value;
 		assume(TokenType.IDENTIFIER, "decrement-assignment var missing");
@@ -733,11 +731,11 @@ public class Parser {
 
 		BinaryOperationNode bon = null;
 		switch (curToken.type()) {
-		case ADD -> bon = new BinaryAddNode();
-		case SUB -> bon = new BinarySubNode();
-		case MUL -> bon = new BinaryMulNode();
-		case DIV -> bon = new BinaryDivNode();
-		case MOD -> bon = new BinaryModNode();
+		case PLUS -> bon = new BinaryAddNode();
+		case MINUS -> bon = new BinarySubNode();
+		case STAR -> bon = new BinaryMulNode();
+		case SLASH -> bon = new BinaryDivNode();
+		case PERCENT -> bon = new BinaryModNode();
 		default -> new PError("Unknown assignment syntax '" + curToken.type() + "='");
 		}
 		advance();

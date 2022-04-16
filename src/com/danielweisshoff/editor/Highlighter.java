@@ -43,10 +43,10 @@ public class Highlighter {
 				nextIsClass = false;
 			} else {
 				switch (t.type()) {
-				case ADD -> print(OPERATOR + " + ");
-				case SUB -> print(OPERATOR + " - ");
-				case MUL -> print(OPERATOR + " * ");
-				case DIV -> print(OPERATOR + " / ");
+				case PLUS -> print(OPERATOR + " + ");
+				case MINUS -> print(OPERATOR + " - ");
+				case STAR -> print(OPERATOR + " * ");
+				case SLASH -> print(OPERATOR + " / ");
 				case EQUAL -> print(OPERATOR + " = ");
 				case COLON -> print(OPERATOR + ": ");
 				case DOT -> print(DOT + ".");

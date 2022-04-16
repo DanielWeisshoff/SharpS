@@ -2,7 +2,7 @@ package com.danielweisshoff.lexer;
 
 public enum TokenType {
 	//arithmetic
-	ADD, SUB, MUL, DIV, MOD,
+	PLUS, MINUS, STAR, SLASH, PERCENT,
 	//boolean
 	COMPARISON, NOT, AND, OR, EQUAL,
 	//

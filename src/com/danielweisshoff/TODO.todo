@@ -26,7 +26,13 @@ ins OOP übertragen werden
 [+]	- *ALLE KEYWORDS IN EIGENE TOKENS*
 [+] - statische variablentypen	
 [+] - automatic type-conversion
+[+] - type-conversion with loss (int a = 1 / 2 -> a = 0)
 [+] - alle primitiven zahlentypen
+[+] - +=, -=, *=, /=  sollen zu normalen assignNode geparsed werden    (x+= 1 * 2 -> x = x + (1 * 2) )
+[+] - Dateiendung in .#s aendern
+[+] - curToken.value.equals(value) -> curToken.compare(value)
+[+] - manche TokenTypes umbenennen (ADD -> PLUS)
+[]  - Casting int()
 []	- arrays -> ArrayNode
 []	- foreach
 []	- ?Preprocessor?
@@ -36,16 +42,7 @@ ins OOP übertragen werden
 []	- Ein paar builIn Funktionen
 []  - string als char[]
 *CLEANUP / REFACTORING*
-[+] - curToken.value.equals(value) -> curToken.compare(value)
-[+] - +=, -=, *=, /=  sollen zu normalen assignNode geparsed werden    (x+= 1 * 2 -> x = x + (1 * 2) )
 []  - ++, -- operatoren sind schlecht implementiert
-[+] - Dateiendung in .#s aendern
-PRIMTIVE DATENTYPEN:
-	- Bei der Initialisierung/Deklarierung muss implizit geschaut werden, ob die rückgabewerte
-	  mit dem Primitiven übereinstimmen
-	  Beispiel: i = 0.5 	#falsch
-				i = 1 / 2 	#korrekt -> Ergebnis ist aber natuerlich abgeschnitten
-
 
 TODO
  -	Strings als erste Klasse
@@ -64,7 +61,6 @@ TODO
  - Enums
  - Interfaces
  - Vererbung
- - Casting
  - access modifier hinzufuegen
     * public +
     * private -
@@ -73,7 +69,6 @@ TODO
     * moegliche Zeichen:  � $ % & ? ~ _ . , : ; < > |
     Werden dann im Symboltable eingetragen. Wenn die get() Methode aufgerufen wird, m�ssen einfach nur neue
     Regelungen basierend auf dem AccessModifier der gesuchten Variable erkl�rt werden.
- - lexer.txt, log.txt zu .log aendern und in eigenem /log Ordner aufbewahren
  - ? Betragsstriche |a|?
  - ?skalar (a|a) ?
  - Überschreiben von Rechenoperationen für Objekte
@@ -81,3 +76,36 @@ TODO
 [-] - ?MOD operator zu Token.isOP() hinzufuegen?
 int a = 2² + |test()| * (a|a)
 int a = pow(2,2) + abs(test()) * (a*a)
+
+
+
+*!NEUE SYNTAX?*:
+
+MatLab hat sehr schöne Syntax zum erzeugen von arrays und generell iterativen Strukturen
+
+	for (int x = 0:arr.len-1:1):
+		#code
+
+	for (int x = 0, x <= 10, x++):
+		#code
+	
+	int x (0:10:1):
+		#code
+
+
+Momentaner Ablauf:
+
+Interpretieren:	
+1. Lexer
+2. Parser
+3. Interpreter -> ConversionChecking
+
+Compilen (noch nicht eingefuegt):
+1. Lexer
+2. Parser			  (Syntax)
+3. ConversionChecking (Semantic)
+4. AST Optimizer
+5. ByteCode Generator
+6. ByteCode Optimizer
+
+!!! 2 Optimizer sinnvoll?

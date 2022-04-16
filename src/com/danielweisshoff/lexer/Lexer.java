@@ -215,17 +215,17 @@ public class Lexer {
 	 * Hier können alle Einzeltokens eingetragen werden
 	 */
 	private void initializeSingleCharTokens() {
-		tokenMap.put('+', TokenType.ADD);
-		tokenMap.put('-', TokenType.SUB);
-		tokenMap.put('*', TokenType.MUL);
-		tokenMap.put('/', TokenType.DIV);
+		tokenMap.put('+', TokenType.PLUS);
+		tokenMap.put('-', TokenType.MINUS);
+		tokenMap.put('*', TokenType.STAR);
+		tokenMap.put('/', TokenType.SLASH);
 		tokenMap.put('(', TokenType.O_ROUND_BRACKET);
 		tokenMap.put(')', TokenType.C_ROUND_BRACKET);
 		tokenMap.put('\n', TokenType.NEWLINE);
 		tokenMap.put('.', TokenType.DOT);
 		tokenMap.put(',', TokenType.COMMA);
 		tokenMap.put(':', TokenType.COLON);
-		tokenMap.put('%', TokenType.MOD);
+		tokenMap.put('%', TokenType.PERCENT);
 		tokenMap.put('&', TokenType.AND);
 		tokenMap.put('|', TokenType.OR);
 	}

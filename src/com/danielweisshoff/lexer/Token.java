@@ -35,11 +35,11 @@ public class Token {
 	}
 
 	public boolean isLineOP() {
-		return type == TokenType.ADD || type == TokenType.SUB;
+		return type == TokenType.PLUS || type == TokenType.MINUS;
 	}
 
 	public boolean isDotOP() {
-		return type == TokenType.MUL || type == TokenType.DIV;
+		return type == TokenType.STAR || type == TokenType.SLASH;
 	}
 
 	public boolean isOP() {

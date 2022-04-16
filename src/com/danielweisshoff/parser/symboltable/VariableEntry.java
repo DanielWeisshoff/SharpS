@@ -1,24 +1,25 @@
 package com.danielweisshoff.parser.symboltable;
 
+import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 
 public class VariableEntry extends Entry {
 
 	public final DataType dataType;
-	public String value;
+	public Data<?> data;
 
-	public VariableEntry(String name, DataType dataType, String value) {
+	public VariableEntry(String name, DataType dataType, Data<?> data) {
 		super(name, Type.VARIABLE);
 		this.dataType = dataType;
-		this.value = value;
+		this.data = data;
 	}
 
 	public DataType getDataType() {
 		return dataType;
 	}
 
-	public String getValue() {
-		return value;
+	public Data<?> getData() {
+		return data;
 	}
 
 }
