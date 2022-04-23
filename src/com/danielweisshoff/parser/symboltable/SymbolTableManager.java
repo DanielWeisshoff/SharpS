@@ -9,18 +9,18 @@ import com.danielweisshoff.logger.Logger;
  */
 public class SymbolTableManager {
 
-	private SymbolTable root;
-	private SymbolTable currentTable;
 	public boolean deleteTableOnScopeEnd = false;
 
 	//for hashing
-	int idCounter = 0;
+	private int idCounter = 0;
 
+	private SymbolTable root;
+	private SymbolTable currentTable;
 	//collection of all SymbolTables
 	private ArrayList<SymbolTable> lookup = new ArrayList<>();
 
 	private void initRoot() {
-		root = new SymbolTable("STATIC_TABLE");
+		root = new SymbolTable("ROOT");
 		lookup.add(root);
 		currentTable = root;
 	}
@@ -31,11 +31,12 @@ public class SymbolTableManager {
 			return;
 		}
 
-		SymbolTable st = new SymbolTable(name + "_" + (idCounter++));
+		String tableName = name + "_" + (idCounter++);
+		SymbolTable st = new SymbolTable(tableName);
 		st.parent = currentTable;
 		currentTable = st;
 
-		Logger.log("[SYMBOLTABLE]: new scope");
+		Logger.log("[SYMBOLTABLE]: new scope '" + tableName + "'");
 		lookup.add(st);
 	}
 
@@ -43,9 +44,8 @@ public class SymbolTableManager {
 		SymbolTable temp = currentTable;
 		currentTable = currentTable.parent;
 
-		if (deleteTableOnScopeEnd) {
+		if (deleteTableOnScopeEnd)
 			lookup.remove(temp);
-		}
 	}
 
 	public void addVariableToScope(String name, VariableEntry entry) {
@@ -64,20 +64,9 @@ public class SymbolTableManager {
 		root.addFunction(name, entry);
 	}
 
-	public void toRoot() {
+	public void gotoRoot() {
 		currentTable = root;
 	}
-
-	// public void print() {
-	// 	System.out.println("=====SYMBOLTABLE=====");
-	// 	for (SymbolTable st : lookup) {
-	// 		Entry[] arr = st.getEntries();
-	// 		System.out.println(st.getName());
-	// 		for (Entry e : arr)
-	// 			System.out.println(e.getDescription());
-	// 		System.out.println();
-	// 	}
-	// }
 
 	public VariableEntry findVariableInScope(String name) {
 		return currentTable.findVariable(name);
@@ -94,4 +83,22 @@ public class SymbolTableManager {
 	public FunctionEntry findStaticFunction(String name) {
 		return root.findFunction(name);
 	}
+
+	public boolean variableExists(String name) {
+		return currentTable.findVariable(name) != null;
+	}
+
+	public boolean functionExists(String name) {
+		return currentTable.findFunction(name) != null;
+	}
+	// public void print() {
+	// 	System.out.println("=====SYMBOLTABLE=====");
+	// 	for (SymbolTable st : lookup) {
+	// 		Entry[] arr = st.getEntries();
+	// 		System.out.println(st.getName());
+	// 		for (Entry e : arr)
+	// 			System.out.println(e.getDescription());
+	// 		System.out.println();
+	// 	}
+	// }
 }

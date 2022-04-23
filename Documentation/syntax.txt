@@ -17,9 +17,8 @@ statement		:	EXPR COMPARISON EXPR
 ARITHMETIC
 TODO evtl. operatoren mit precedence system 
 
-EXPR			:	MOD (+|-) MOD
-MOD				:	TERM % TERM
-TERM			:	FACTOR (*|/) FACTOR
+EXPR			:	TERM (+|-) TERM
+TERM			:	FACTOR (*|/|%) FACTOR
 FACTOR			:	NUMBER|VARIABLE
 
 TODO

@@ -42,8 +42,9 @@ public class Token {
 		return type == TokenType.STAR || type == TokenType.SLASH;
 	}
 
+	//TODO i hope mod doesnt fuck smth up
 	public boolean isOP() {
-		return isLineOP() || isDotOP();
+		return isLineOP() || isDotOP() || type == TokenType.PERCENT;
 	}
 
 	public boolean isEOF() {

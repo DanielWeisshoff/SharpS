@@ -42,7 +42,7 @@ public class Shell {
 
 		//INTERPRETATION
 		Interpreter interpreter = new Interpreter();
-		interpreter.stepper = false;
+		interpreter.debug = false;
 
 		Node ast = parser.getAST();
 		interpreter.interpret(ast);
@@ -79,7 +79,7 @@ public class Shell {
 
 		//INTERPRETATION
 		Interpreter interpreter = new Interpreter();
-		interpreter.stepper = false;
+		interpreter.debug = false;
 		Node ast = parser.getAST();
 
 		//INTERPRETING

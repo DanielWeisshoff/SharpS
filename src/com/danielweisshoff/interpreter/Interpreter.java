@@ -12,44 +12,33 @@ import com.danielweisshoff.parser.nodesystem.node.binaryoperations.*;
 import com.danielweisshoff.parser.nodesystem.node.data.*;
 import com.danielweisshoff.parser.nodesystem.node.data.assigning.*;
 import com.danielweisshoff.parser.nodesystem.node.data.primitives.*;
-import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.PreDecrementNode;
-import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.PreIncrementNode;
-import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.PostDecrementNode;
-import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.PostIncrementNode;
+import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.*;
 import com.danielweisshoff.parser.nodesystem.node.logic.*;
-import com.danielweisshoff.parser.nodesystem.node.logic.bitwise.BitWiseOrNode;
-import com.danielweisshoff.parser.nodesystem.node.logic.bitwise.BitwiseAndNode;
+import com.danielweisshoff.parser.nodesystem.node.logic.bitwise.*;
 import com.danielweisshoff.parser.nodesystem.node.loops.*;
 import com.danielweisshoff.parser.semantic.ConversionChecker;
 import com.danielweisshoff.parser.symboltable.SymbolTableManager;
 import com.danielweisshoff.parser.symboltable.VariableEntry;
 
-/*
-* Data<>(1, DataType.INT); ist vorerst standard für "erfolgreiche Operation"
-TODO: StepperMode -> Debug mode ?!?
-*
-* Dieser Interpreter hat keine Runtime-Optimierung, deswegen sind selbst die trivialsten
-* Unterschiede zwischen Befehlen in eigene Methoden verpackt, um ein wenig flotter unterwegs zu sein
-*/
 public class Interpreter {
 
-	public boolean stepper = false;
+	public boolean debug = false;
 	//Variables and Functions
-	private SymbolTableManager symbolTableManager = new SymbolTableManager();
+	private SymbolTableManager symbolTable = new SymbolTableManager();
+	private ConversionChecker conversionChecker = new ConversionChecker(symbolTable);
 	private Node curInstruction;
 	//when stepper is enabled, one line will be interpreted at a time on user input
 	private boolean stepFinished = false;
 	private Scanner stepperScanner = new Scanner(System.in);
 
 	public Interpreter() {
-		symbolTableManager.deleteTableOnScopeEnd = true;
-		//TODO bad implementation
-		ConversionChecker.setSymbolTableManager(symbolTableManager);
+		symbolTable.deleteTableOnScopeEnd = true;
 	}
 
 	public Data<?> interpret(Node n) {
 
 		curInstruction = n;
+		//this is the return-value of the instruction
 		Data<?> data = null;
 
 		if (n instanceof BlockNode)
@@ -134,8 +123,8 @@ public class Interpreter {
 		else
 			new PError("[INTERPRETER]: visited unknown Node type " + n.getClass().getSimpleName());
 
-		//Stepper Mode
-		if (stepper && stepFinished) {
+		//Debug Mode
+		if (debug && stepFinished) {
 			System.out.println("*** PRESS ENTER TO CONTINUE ***");
 			stepperScanner.nextLine();
 			stepFinished = false;
@@ -146,12 +135,12 @@ public class Interpreter {
 
 	private Data<?> interpretBlockNode() {
 		BlockNode bn = (BlockNode) curInstruction;
-		symbolTableManager.newScope("blockscope");
+		symbolTable.newScope("blockscope");
 
 		for (Node n : bn.children)
 			interpret(n);
 
-		symbolTableManager.endScope();
+		symbolTable.endScope();
 		return new Data<>();
 	}
 
@@ -217,13 +206,14 @@ public class Interpreter {
 		case "||" -> cond = (left == 1 || right == 1) ? true : false;
 		case "&" -> cond = (left == 1 & right == 1) ? true : false;
 		case "|" -> cond = (left == 1 | right == 1) ? true : false;
-		default -> cond = false;
+		default -> {
+			cond = false;
+			new PError("Unknown condition '" + op + "'");
+		}
 		}
 
-		if (cond)
-			return new Data<>(1, DataType.BOOLEAN);
-		else
-			return new Data<>(0, DataType.BOOLEAN);
+		int stmt = cond ? 1 : 0;
+		return new Data<>(stmt, DataType.BOOLEAN);
 	}
 
 	private Data<?> interpretInitNode() {
@@ -232,17 +222,16 @@ public class Interpreter {
 		String name = in.getName();
 
 		//schauen, ob variable schon existiert
-		VariableEntry e = symbolTableManager.findVariableInScope(name);
-		if (e != null)
+		if (symbolTable.variableExists(name))
 			new PError("var '" + name + "' is already declared");
 
 		//checking semantics
-		ConversionChecker.convert(in.dataType, in.expression);
+		conversionChecker.convert(in.dataType, in.expression);
 
 		Data<?> data = interpret(in.expression);
 		//entry in symboltable
 		VariableEntry var = new VariableEntry(name, in.dataType, data);
-		symbolTableManager.addVariableToScope(name, var);
+		symbolTable.addVariableToScope(name, var);
 
 		return new Data<>(1, DataType.INT);
 	}
@@ -251,7 +240,7 @@ public class Interpreter {
 		VariableNode vn = (VariableNode) curInstruction;
 		String varName = vn.getName();
 
-		VariableEntry var = symbolTableManager.findVariableInScope(varName);
+		VariableEntry var = symbolTable.findVariableInScope(varName);
 		if (var == null)
 			new PError("Parse Error: var '" + varName + "' not declared");
 
@@ -280,7 +269,7 @@ public class Interpreter {
 	private Data<?> interpretForNode() {
 		ForNode fn = (ForNode) curInstruction;
 
-		symbolTableManager.newScope("for-initVar");
+		symbolTable.newScope("for-initVar");
 		interpret(fn.init);
 
 		double cond = interpret(fn.condition).asDouble();
@@ -290,7 +279,7 @@ public class Interpreter {
 			interpret(fn.assignment);
 			cond = interpret(fn.condition).asDouble();
 		}
-		symbolTableManager.endScope();
+		symbolTable.endScope();
 
 		return new Data<>(1, DataType.INT);
 	}
@@ -303,11 +292,10 @@ public class Interpreter {
 		double value = data.asDouble();
 
 		//try to find and get the variable from the SymbolTable
-		VariableEntry ve = symbolTableManager.findVariableInScope(varName);
+		VariableEntry ve = symbolTable.findVariableInScope(varName);
 		if (ve == null)
 			new PError("Parse Error: var '" + varName + "' not declared");
 
-		//TODO im cryin
 		switch (ve.dataType) {
 		case BYTE -> ve.data = new Data<Byte>((byte) value, DataType.BYTE);
 		case SHORT -> ve.data = new Data<Short>((short) value, DataType.SHORT);
@@ -315,6 +303,7 @@ public class Interpreter {
 		case LONG -> ve.data = new Data<Long>((long) value, DataType.LONG);
 		case FLOAT -> ve.data = new Data<Float>((float) value, DataType.FLOAT);
 		case DOUBLE -> ve.data = new Data<Double>((double) value, DataType.DOUBLE);
+		default -> new PError("unimplemented action for datatype " + ve.dataType);
 		}
 		//TODO just for output testing -> implement print()
 		System.out.println(ve.data.data + ", " + ve.dataType);
@@ -322,12 +311,13 @@ public class Interpreter {
 		return new Data<>(1, DataType.INT);
 	}
 
+	//TODO remove
 	private Data<?> interpretPreIncrementNode() {
 		PreIncrementNode in = (PreIncrementNode) curInstruction;
 
 		String varName = in.getName();
 
-		VariableEntry var = symbolTableManager.findVariableInScope(varName);
+		VariableEntry var = symbolTable.findVariableInScope(varName);
 		if (var == null)
 			new PError("Parse Error: var '" + varName + "' not declared");
 
@@ -337,12 +327,13 @@ public class Interpreter {
 		return var.data;
 	}
 
+	//TODO remove
 	private Data<?> interpretPreDecrementNode() {
 		PreDecrementNode in = (PreDecrementNode) curInstruction;
 
 		String varName = in.getName();
 
-		VariableEntry var = symbolTableManager.findVariableInScope(varName);
+		VariableEntry var = symbolTable.findVariableInScope(varName);
 		if (var == null)
 			new PError("Parse Error: var '" + varName + "' not declared");
 
@@ -352,12 +343,13 @@ public class Interpreter {
 		return var.data;
 	}
 
+	//TODO remove
 	private Data<?> interpretPostIncrementNode() {
 		PostIncrementNode in = (PostIncrementNode) curInstruction;
 
 		String varName = in.getName();
 
-		VariableEntry var = symbolTableManager.findVariableInScope(varName);
+		VariableEntry var = symbolTable.findVariableInScope(varName);
 		if (var == null)
 			new PError("Parse Error: var '" + varName + "' not declared");
 
@@ -367,12 +359,13 @@ public class Interpreter {
 		return new Data<Double>(value, DataType.DOUBLE);
 	}
 
+	//TODO remove
 	private Data<?> interpretPostDecrementNode() {
 		PostDecrementNode in = (PostDecrementNode) curInstruction;
 
 		String varName = in.getName();
 
-		VariableEntry var = symbolTableManager.findVariableInScope(varName);
+		VariableEntry var = symbolTable.findVariableInScope(varName);
 		if (var == null)
 			new PError("Parse Error: var '" + varName + "' not declared");
 
@@ -383,15 +376,13 @@ public class Interpreter {
 	}
 
 	public SymbolTableManager getSymbolTableManager() {
-		return symbolTableManager;
+		return symbolTable;
 	}
 
-	/**
-	 * This is a method that has to be called, while the interpeter is working
-	 */
 	//TODO currently not working bcs of hashmap impl.
-	public void printSymbolTable() {
-		//	symbolTableManager.print();
-	}
+	// public void printSymbolTable() {
+	//		if(debug)
+	//	symbolTable.print();
+	// }
 
 }

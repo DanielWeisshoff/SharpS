@@ -12,17 +12,11 @@ import com.danielweisshoff.parser.nodesystem.node.data.primitives.*;
 import com.danielweisshoff.parser.symboltable.SymbolTableManager;
 import com.danielweisshoff.parser.symboltable.VariableEntry;
 
-//Checks if the given expression can be casted to the primitive type
-//In the process replaces:
-//		-IntegerNumberNode
-// 		-FloatingPointNumberNode
-//with the fitting primitive-type Nodes
-
-//TODO wEiRd NaMe
+//checks if the given expression can be casted to the primitive type
 public class ConversionChecker {
 
 	//lower values can be casted into higher or same precedence
-	public static HashMap<DataType, Integer> precedences = new HashMap<>() {
+	private static HashMap<DataType, Integer> precedences = new HashMap<>() {
 		{
 			put(DataType.BYTE, 0);
 			put(DataType.SHORT, 1);
@@ -33,24 +27,24 @@ public class ConversionChecker {
 		}
 	};
 
-	private static String lastPrimitiveType;
-	private static int precedence;
-	private static SymbolTableManager symbolTableManager;
+	private int precedence;
+	private DataType lastType;
+	private SymbolTableManager symbolTableManager;
 
-	public static void setSymbolTableManager(SymbolTableManager symbolTableManager) {
-		ConversionChecker.symbolTableManager = symbolTableManager;
+	public ConversionChecker(SymbolTableManager symbolTableManager) {
+		this.symbolTableManager = symbolTableManager;
 	}
 
-	public static boolean convert(DataType dataType, Node expr) {
+	public boolean convert(DataType dataType, Node expr) {
 		precedence = precedences.get(dataType);
 
 		if (!check(expr))
-			new PError("CONVERSION ERROR: can't convert from " + lastPrimitiveType + " to " + dataType);
+			new PError("CONVERSION ERROR: can't convert from " + lastType + " to " + dataType);
 
 		return true;
 	}
 
-	private static boolean check(Node expr) {
+	private boolean check(Node expr) {
 		if (expr instanceof BinaryOperationNode)
 			return traverseOperation(expr);
 		else if (expr instanceof PrimitiveNode)
@@ -67,13 +61,16 @@ public class ConversionChecker {
 	// TYPE CHECKING
 	//
 
-	private static boolean traverseOperation(Node expr) {
+	private boolean traverseOperation(Node expr) {
 		boolean l = check(((BinaryOperationNode) expr).left);
 		boolean r = check(((BinaryOperationNode) expr).right);
 		return l && r;
 	}
 
-	private static boolean checkPrimitive(Node expr) {
+	private boolean checkPrimitive(Node expr) {
+		lastType = ((PrimitiveNode) expr).getData().dataType;
+
+		//integer 
 		if (expr instanceof ByteNode)
 			return precedence >= precedences.get(DataType.BYTE);
 		else if (expr instanceof ShortNode)
@@ -93,18 +90,17 @@ public class ConversionChecker {
 		}
 	}
 
-	private static boolean checkVariable(Node expr) {
+	private boolean checkVariable(Node expr) {
 		VariableNode vn = (VariableNode) expr;
 		VariableEntry ve = symbolTableManager.findVariableInScope(vn.getName());
 
-		lastPrimitiveType = "" + ve.dataType;
+		lastType = ve.dataType;
 		return precedence >= precedences.get(ve.dataType);
 	}
 
 	public static boolean isByte(String value) {
 		try {
 			Byte.parseByte(value);
-			lastPrimitiveType = "BYTE";
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -114,7 +110,6 @@ public class ConversionChecker {
 	public static boolean isShort(String value) {
 		try {
 			Short.parseShort(value);
-			lastPrimitiveType = "SHORT";
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -124,7 +119,6 @@ public class ConversionChecker {
 	public static boolean isInt(String value) {
 		try {
 			Integer.parseInt("" + value);
-			lastPrimitiveType = "INT";
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -134,7 +128,6 @@ public class ConversionChecker {
 	public static boolean isLong(String value) {
 		try {
 			Long.parseLong(value);
-			lastPrimitiveType = "LONG";
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -144,7 +137,6 @@ public class ConversionChecker {
 	public static boolean isFloat(String value) {
 		try {
 			Float.parseFloat(value);
-			lastPrimitiveType = "FLOAT";
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -154,7 +146,6 @@ public class ConversionChecker {
 	public static boolean isDouble(String value) {
 		try {
 			Double.parseDouble("" + value);
-			lastPrimitiveType = "DOUBLE";
 			return true;
 		} catch (Exception e) {
 			return false;

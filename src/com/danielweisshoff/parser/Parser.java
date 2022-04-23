@@ -11,12 +11,7 @@ import com.danielweisshoff.parser.nodesystem.node.*;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.*;
 import com.danielweisshoff.parser.nodesystem.node.data.*;
 import com.danielweisshoff.parser.nodesystem.node.data.assigning.*;
-import com.danielweisshoff.parser.nodesystem.node.data.primitives.ByteNode;
-import com.danielweisshoff.parser.nodesystem.node.data.primitives.DoubleNode;
-import com.danielweisshoff.parser.nodesystem.node.data.primitives.FloatNode;
-import com.danielweisshoff.parser.nodesystem.node.data.primitives.IntegerNode;
-import com.danielweisshoff.parser.nodesystem.node.data.primitives.LongNode;
-import com.danielweisshoff.parser.nodesystem.node.data.primitives.ShortNode;
+import com.danielweisshoff.parser.nodesystem.node.data.primitives.*;
 import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.*;
 import com.danielweisshoff.parser.nodesystem.node.logic.*;
 import com.danielweisshoff.parser.nodesystem.node.logic.bitwise.BitWiseOrNode;
@@ -24,6 +19,7 @@ import com.danielweisshoff.parser.nodesystem.node.logic.bitwise.BitwiseAndNode;
 import com.danielweisshoff.parser.nodesystem.node.loops.*;
 import com.danielweisshoff.parser.semantic.ConversionChecker;
 
+//TODO addInstruction schlecht gelöst
 /**
  * Converts tokens to a runnable AST
  */
@@ -32,10 +28,10 @@ public class Parser {
 	//?change to RootNode later?
 	private BlockNode root = new BlockNode();
 
-	private Token[] tokens;
-
-	public Token curToken;
+	private Token curToken;
 	private int position = -1;
+
+	private Token[] tokens;
 
 	private boolean error = false;
 	private Node instruction;
@@ -107,17 +103,62 @@ public class Parser {
 		}
 	}
 
-	private void identifierStuff() {
-		advance();
+	private void advance() {
+		position++;
+		if (position < tokens.length)
+			curToken = tokens[position];
+	}
 
-		if (is(TokenType.O_ROUND_BRACKET)) { //FNC
-			retreat();
-			instruction = parseFunctionCall();
-		} else if (curToken.isOP() || is(TokenType.EQUAL) || is(TokenType.PERCENT)) { //VAR
-			retreat();
-			instruction = parseVariableInitialization();
-		} else
-			error = true;
+	private void retreat() {
+		retreat(1);
+	}
+
+	private void retreat(int times) {
+		for (int i = 0; i < times; i++)
+			position--;
+
+		if (position > -1)
+			curToken = tokens[position];
+	}
+
+	/**
+	 * Check, if current token type equals r, if not print error
+	 */
+	private void assume(TokenType t, String error) {
+		if (is(t))
+			advance();
+		else
+			new PError(error);
+	}
+
+	private void assume(TokenType t, String value, String error) {
+		if (is(t) && is(value))
+			advance();
+		else
+			new PError(error);
+	}
+
+	private Token next() {
+		if (position < tokens.length - 1)
+			return tokens[position + 1];
+		return new Token(TokenType.EOF, "");
+	}
+
+	private boolean next(TokenType t) {
+		if (position < tokens.length - 1)
+			return tokens[position + 1].type() == t;
+		return false;
+	}
+
+	private void identifierStuff() {
+
+		// if (is(TokenType.O_ROUND_BRACKET)) { //FNC
+		// 	retreat();
+		// 	instruction = parseFunctionCall();
+		// }
+		// x = EXPR
+
+		instruction = parseVariableInitialization();
 	}
 
 	private void printParseError() {
@@ -171,53 +212,6 @@ public class Parser {
 			scopeNode.pop();
 			scopeDepth--;
 		}
-	}
-
-	public void advance() {
-		position++;
-		if (position < tokens.length)
-			curToken = tokens[position];
-	}
-
-	public void retreat() {
-		retreat(1);
-	}
-
-	public void retreat(int times) {
-		for (int i = 0; i < times; i++)
-			position--;
-
-		if (position > -1)
-			curToken = tokens[position];
-	}
-
-	/**
-	 * Check, if current token type equals r, if not print error
-	 */
-	public void assume(TokenType t, String error) {
-		if (is(t))
-			advance();
-		else
-			new PError(error);
-	}
-
-	public void assume(TokenType t, String value, String error) {
-		if (is(t) && is(value))
-			advance();
-		else
-			new PError(error);
-	}
-
-	public Token next() {
-		if (position < tokens.length - 1)
-			return tokens[position + 1];
-		return new Token(TokenType.EOF, "");
-	}
-
-	public boolean next(TokenType t) {
-		if (position < tokens.length - 1)
-			return tokens[position + 1].type() == t;
-		return false;
 	}
 
 	/*
@@ -358,10 +352,10 @@ public class Parser {
 				op = new BinaryAddNode();
 			else if (curToken.type() == TokenType.MINUS)
 				op = new BinarySubNode();
+
 			advance();
 
 			Node right = parseTerm();
-
 			op.left = left;
 			op.right = right;
 			left = op;
@@ -373,18 +367,18 @@ public class Parser {
 		Node left = parseFactor();
 
 		BinaryOperationNode op = null;
-		while (curToken.isDotOP() || curToken.type() == TokenType.PERCENT) {
+		while (curToken.isDotOP() || is(TokenType.PERCENT)) {
 
 			if (is(TokenType.STAR))
 				op = new BinaryMulNode();
 			else if (is(TokenType.SLASH))
 				op = new BinaryDivNode();
-			else
+			else if (is(TokenType.PERCENT))
 				op = new BinaryModNode();
+
 			advance();
 
 			Node right = parseFactor();
-
 			op.left = left;
 			op.right = right;
 			left = op;
@@ -398,22 +392,19 @@ public class Parser {
 
 		//? Ternary / --x	
 		if (is(TokenType.MINUS)) {
-			advance();
-			if (is(TokenType.MINUS)) {
-				retreat();
+			if (next(TokenType.MINUS))
 				return parsePreDecrement();
-			} else
+			else {
+				advance();
 				sign = '-';
+			}
 		}
 		//? ++x 
 		else if (is(TokenType.PLUS)) {
-			advance();
-			assume(TokenType.PLUS, "second incrementor + missing");
-			retreat(2);
-
-			AssignNode an = parsePreIncrement();
-
-			return an;
+			if (next(TokenType.PLUS))
+				return parsePreIncrement();
+			else
+				advance(); //unnecessary symbol, just skip  (+10 = 10)
 		}
 
 		//? integer number
@@ -433,30 +424,20 @@ public class Parser {
 			String varName = curToken.value;
 			advance();
 
-			VariableNode n = new VariableNode(varName);
+			//? x++
+			if (is(TokenType.PLUS) && next(TokenType.PLUS)) {
+				retreat();
+				return parsePostIncrement();
 
-			if (is(TokenType.PLUS)) { // x++
-				advance();
-				if (!is(TokenType.PLUS)) {
-					retreat();
-					return n;
-				}
-				retreat(2);
-
-				AssignNode an = parsePostIncrement();
-				return an;
-			} else if (is(TokenType.MINUS)) { // x--
-				advance();
-				if (!is(TokenType.MINUS)) {
-					retreat();
-					return n;
-				}
-				retreat(2);
-
-				AssignNode an = parsePostDecrement();
-				return an;
 			}
-			return n;
+			//? x--
+			else if (is(TokenType.MINUS) && next(TokenType.MINUS)) {
+				retreat();
+				return parsePostDecrement();
+			} else {
+				VariableNode n = new VariableNode(varName);
+				return n;
+			}
 		}
 		//? paranthesized expr 
 		else if (is(TokenType.O_ROUND_BRACKET)) {
@@ -470,7 +451,7 @@ public class Parser {
 		return null;
 	}
 
-	//A Node that is definetily an Integer but of unknown size
+	//converts an Integer Number into the best fitting primitive
 	private PrimitiveNode parseIntegerNumber(String value) {
 		//? byte
 		if (ConversionChecker.isByte(value))
@@ -490,6 +471,7 @@ public class Parser {
 		}
 	}
 
+	//converts a Floating-Point Number into the best fitting primitive
 	private PrimitiveNode parseFloatingPointNumber(String value) {
 		//? float
 		if (ConversionChecker.isFloat(value))
@@ -522,6 +504,7 @@ public class Parser {
 
 	/*
 	 *erstmals nur placeholder
+	 TODO add fnc return value as param
 	 */
 	private String parseParameters() {
 		String params = "";
@@ -542,13 +525,12 @@ public class Parser {
 		return params;
 	}
 
-	@Deprecated
 	private InitNode parseVariableDeclaration() {
 		TokenType keyword = curToken.type();
 		advance();
 
 		String varName = curToken.value;
-		assume(TokenType.IDENTIFIER, "Fehler beim Initialisieren einer Variable");
+		assume(TokenType.IDENTIFIER, "Fehler beim Deklarieren einer Variable");
 
 		InitNode n;
 
@@ -563,12 +545,12 @@ public class Parser {
 		default -> new PError("parser: unknown primitive type " + keyword);
 		}
 
+		//Variable wird zusätzlich initialisiert
 		if (is(TokenType.EQUAL)) {
-			//Variable wird initialisiert
 			advance();
 			Node expr = parseExpression();
 
-			Logger.log("Variable " + varName + " initialisiert");
+			Logger.log("Variable " + varName + " deklariert und initialisiert");
 
 			n = new InitNode(varName, type, expr);
 		} else {
@@ -579,64 +561,12 @@ public class Parser {
 		return n;
 	}
 
-	@Deprecated
 	private AssignNode parseVariableInitialization() {
-		//increment
-		if (is(TokenType.PLUS)) {
+		String varName = curToken.value;
+		assume(TokenType.IDENTIFIER, "var name for assignment missing");
+
+		if (is(TokenType.EQUAL)) {
 			advance();
-
-			assume(TokenType.PLUS, "Incrementor + missing");
-			retreat(2);
-
-			return parsePreIncrement();
-		}
-		//decrement
-		else if (is(TokenType.MINUS)) {
-			advance();
-			assume(TokenType.MINUS, "Decrementor - missing");
-			retreat(2);
-
-			return parsePreDecrement();
-		}
-
-		//variations of assignments
-		else if (is(TokenType.IDENTIFIER)) {
-			advance();
-
-			//late increment	x++
-			if (is(TokenType.PLUS)) {
-				advance();
-				if (is(TokenType.PLUS)) {
-					retreat(2);
-					return parsePostIncrement();
-				}
-				retreat();
-			}
-			//late decrement	x--
-			else if (is(TokenType.MINUS)) {
-				advance();
-				if (is(TokenType.MINUS)) {
-					retreat(2);
-					return parsePostDecrement();
-				}
-				retreat();
-			}
-			//* HAS TO HAPPEN AFTER INCR/DECR 
-			if (curToken.isOP() || curToken.type() == TokenType.PERCENT) {
-				retreat();
-				return parseBinaryAssignNode();
-			}
-
-			// x= EXPR
-			//TODO complete bs
-			retreat();
-			String varName = curToken.value;
-			assume(TokenType.IDENTIFIER, "var name for assignment missing");
-
-			if (is(TokenType.EQUAL))
-				advance();
-			else
-				retreat();
 
 			Node expr = parseExpression();
 			EqualAssignNode an = new EqualAssignNode(varName);
@@ -645,9 +575,21 @@ public class Parser {
 			Logger.log("Assigned value to variable '" + varName + "'");
 			return an;
 		}
-		return null; //TODO ka
+		// +=, -=, *=, ...
+		else if (curToken.isOP() && next().type() == TokenType.EQUAL) {
+			return parseBinaryAssignNode();
+		}
+		//x++
+		else if (is(TokenType.PLUS) && next(TokenType.PLUS))
+			return parsePostIncrement();
+		//x--
+		else if (is(TokenType.MINUS) && next(TokenType.MINUS))
+			return parsePostDecrement();
+		else {
+			error = true;
+			return null;
+		}
 	}
-
 	//
 	//LOOPS
 	//
@@ -688,16 +630,16 @@ public class Parser {
 
 		InitNode in = parseVariableDeclaration();
 
-		assume(TokenType.COMMA, "Comma missing");
+		assume(TokenType.COMMA, "comma missing");
 
 		ConditionNode cn = parsePredicate();
 
-		assume(TokenType.COMMA, "Comma missing");
+		assume(TokenType.COMMA, "comma missing");
 
 		AssignNode an = parseVariableInitialization();
 
 		assume(TokenType.C_ROUND_BRACKET, "Missing closed bracket for for-loop");
-		assume(TokenType.COLON, "if-body-declarator missing");
+		assume(TokenType.COLON, "for-body-declarator missing");
 
 		ForNode fn = new ForNode();
 		fn.init = in;
@@ -774,10 +716,10 @@ public class Parser {
 		case STAR -> bon = new BinaryMulNode();
 		case SLASH -> bon = new BinaryDivNode();
 		case PERCENT -> bon = new BinaryModNode();
-		default -> new PError("Unknown assignment syntax '" + curToken.type() + "='");
+		default -> new PError("Unknown operation syntax '" + curToken.type() + "='");
 		}
 		advance();
-		assume(TokenType.EQUAL, "AddAssign err");
+		assume(TokenType.EQUAL, "'=' missing");
 
 		Node expr = parseExpression();
 
@@ -788,8 +730,6 @@ public class Parser {
 		bon.right = expr;
 
 		ean.expression = bon;
-		// AddAssignNode man = new AddAssignNode(varName);
-		// man.expression = expr;
 
 		return ean;
 	}
