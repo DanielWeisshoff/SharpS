@@ -1,12 +1,13 @@
 package com.danielweisshoff;
 
-import com.danielweisshoff.lexer.Token;
-import com.danielweisshoff.logger.Log;
-
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Scanner;
+
+import com.danielweisshoff.lexer.Token;
+import com.danielweisshoff.logger.Log;
 
 /**
  * Responsible for all file writing and reading
@@ -20,9 +21,11 @@ public class Goethe {
 	public static String getText() {
 		StringBuilder program = new StringBuilder();
 		try {
-			Scanner scanner = new Scanner(programPath).useDelimiter("(\\b|\\B)");
-			while (scanner.hasNext())
-				program.append(scanner.next());
+			BufferedReader scanner = new BufferedReader(new FileReader(programPath));//.useDelimiter("(\\b|\\B)");
+
+			String line;
+			while ((line = scanner.readLine()) != null)
+				program.append(line + '\n');
 			scanner.close();
 		} catch (Exception e) {
 			System.out.println(e.getLocalizedMessage());
