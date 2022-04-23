@@ -26,12 +26,9 @@ public class Lexer {
 			currentChar = text.charAt(charIndex);
 	}
 
+	//test
 	public Token[] nextLine() {
 		ArrayList<Token> tokens = new ArrayList<>();
-
-		//skip empty lines
-		if (currentChar == '\n')
-			return nextLine();
 
 		while (charIndex < text.length() && currentChar != '\n') {
 			if (tokenMap.containsKey(currentChar)) {
