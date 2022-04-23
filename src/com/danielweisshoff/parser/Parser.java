@@ -565,8 +565,8 @@ public class Parser {
 
 		if (is(TokenType.EQUAL)) {
 			advance();
-
 			Node expr = parseExpression();
+
 			EqualAssignNode an = new EqualAssignNode(varName);
 			an.expression = expr;
 

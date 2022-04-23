@@ -8,6 +8,7 @@ import com.danielweisshoff.interpreter.Interpreter;
 import com.danielweisshoff.lexer.Lexer;
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
+import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.Parser;
 import com.danielweisshoff.parser.nodesystem.node.Node;
 
@@ -16,10 +17,13 @@ public class Shell {
 	public static boolean benchmark = true;
 
 	public static void main(String[] args) {
+		Logger.enabled = false;
 		if (benchmark)
 			benchmark();
 		else
 			run();
+
+		Logger.writeLogs();
 	}
 
 	public static void run() {

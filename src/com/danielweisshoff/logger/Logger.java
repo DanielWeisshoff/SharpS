@@ -1,21 +1,22 @@
 package com.danielweisshoff.logger;
 
-import com.danielweisshoff.Goethe;
-
 import java.util.ArrayList;
+
+import com.danielweisshoff.Goethe;
 
 public class Logger {
 
-	public static boolean writeLogs = true;
+	public static boolean enabled = true;
 
 	private static final ArrayList<Log> messages = new ArrayList<>();
 
-	public static void log(Object o) {
-		String msg = o.toString();
-		Log l = new Log(msg);
-		messages.add(l);
+	public static void log(String msg) {
+		if (enabled)
+			messages.add(new Log(msg));
+	}
 
-		if (writeLogs)
+	public static void writeLogs() {
+		for (Log l : messages)
 			Goethe.writeLog(l);
 	}
 

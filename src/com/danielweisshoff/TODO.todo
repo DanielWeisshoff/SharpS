@@ -32,7 +32,8 @@ ins OOP übertragen werden
 [+] - Dateiendung in .#s aendern
 [+] - curToken.value.equals(value) -> curToken.compare(value)
 [+] - manche TokenTypes umbenennen (ADD -> PLUS)
-[-] - instanceof durch NodeType(enum) ersetzen   	*140ms für parser*
+[+] - instanceof durch NodeType(enum) ersetzen   	*140ms für parser*
+[+] - MOD operator zu Token.isOP() hinzufuegen
 []  - Casting int()
 []	- arrays -> ArrayNode
 []	- foreach
@@ -75,11 +76,10 @@ TODO
  - ?skalar (a|a) ?
  - Überschreiben von Rechenoperationen für Objekte
  - Testen, ob bitwise &,| wirklich funktionieren
-[-] - ?MOD operator zu Token.isOP() hinzufuegen?
 int a = 2² + |test()| * (a|a)
 int a = pow(2,2) + abs(test()) * (a*a)
-
-
+ - schauen, warum Parser so langsam ist
+[-] - The datetime calculation on the Log class is fucking slow
 
 *!NEUE SYNTAX?*:
 
