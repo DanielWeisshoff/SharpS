@@ -10,7 +10,7 @@ public class IfNode extends Node {
 	public BlockNode condBlock, elseBlock;
 
 	public IfNode() {
-		super(new DataType[] {}, DataType.BOOLEAN);
+		super(new DataType[] {}, DataType.BOOLEAN, NodeType.IF_NODE);
 		condBlock = new BlockNode();
 	}
 

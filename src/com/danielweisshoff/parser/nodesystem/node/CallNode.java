@@ -12,7 +12,7 @@ public class CallNode extends Node {
 	private final String name;
 
 	public CallNode(String name) {
-		super(null, null);
+		super(null, null, NodeType.CALL_NODE);
 		this.name = name;
 	}
 

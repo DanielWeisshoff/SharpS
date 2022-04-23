@@ -13,7 +13,7 @@ public class BlockNode extends Node {
 	public ArrayList<Node> children;
 
 	public BlockNode() {
-		super(null, DataType.INT);
+		super(null, DataType.INT, NodeType.BLOCK_NODE);
 		children = new ArrayList<>();
 	}
 

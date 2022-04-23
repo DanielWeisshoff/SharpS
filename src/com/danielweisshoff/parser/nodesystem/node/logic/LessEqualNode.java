@@ -3,6 +3,7 @@ package com.danielweisshoff.parser.nodesystem.node.logic;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.Node;
+import com.danielweisshoff.parser.nodesystem.node.NodeType;
 
 /**
  * Compares the given Nodes
@@ -11,6 +12,8 @@ import com.danielweisshoff.parser.nodesystem.node.Node;
 public class LessEqualNode extends ConditionNode {
 
 	public LessEqualNode(Node left, Node right) {
+		super(NodeType.LESS_EQUAL_NODE);
+
 		this.left = left;
 		this.right = right;
 	}

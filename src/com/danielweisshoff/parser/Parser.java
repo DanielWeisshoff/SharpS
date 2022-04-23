@@ -11,8 +11,8 @@ import com.danielweisshoff.parser.nodesystem.node.*;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.*;
 import com.danielweisshoff.parser.nodesystem.node.data.*;
 import com.danielweisshoff.parser.nodesystem.node.data.assigning.*;
+import com.danielweisshoff.parser.nodesystem.node.data.assigning.shortcuts.*;
 import com.danielweisshoff.parser.nodesystem.node.data.primitives.*;
-import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.*;
 import com.danielweisshoff.parser.nodesystem.node.logic.*;
 import com.danielweisshoff.parser.nodesystem.node.logic.bitwise.BitWiseOrNode;
 import com.danielweisshoff.parser.nodesystem.node.logic.bitwise.BitwiseAndNode;
@@ -152,13 +152,11 @@ public class Parser {
 
 	private void identifierStuff() {
 
-		// if (is(TokenType.O_ROUND_BRACKET)) { //FNC
-		// 	retreat();
-		// 	instruction = parseFunctionCall();
-		// }
-		// x = EXPR
-
-		instruction = parseVariableInitialization();
+		if (next(TokenType.O_ROUND_BRACKET)) { //FNC
+			instruction = parseFunctionCall();
+		} else
+			// x = EXPR
+			instruction = parseVariableInitialization();
 	}
 
 	private void printParseError() {
@@ -174,7 +172,7 @@ public class Parser {
 		//get the latest IfNode from current scope
 		IfNode in = null;
 		for (int i = n.children.size() - 1; i >= 0; i--)
-			if (n.children.get(i) instanceof IfNode) {
+			if (n.children.get(i).nodeType == NodeType.IF_NODE) {
 				in = (IfNode) n.children.get(i);
 				break;
 			}

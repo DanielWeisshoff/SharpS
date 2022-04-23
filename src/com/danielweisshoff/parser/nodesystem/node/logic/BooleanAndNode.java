@@ -2,6 +2,7 @@ package com.danielweisshoff.parser.nodesystem.node.logic;
 
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
+import com.danielweisshoff.parser.nodesystem.node.NodeType;
 
 /**
  * Returns 1 if both the booleans are true
@@ -9,7 +10,7 @@ import com.danielweisshoff.parser.nodesystem.DataType;
 public class BooleanAndNode extends ConditionNode {
 
 	public BooleanAndNode() {
-
+		super(NodeType.BOOLEAN_AND_NODE);
 	}
 
 	@Override

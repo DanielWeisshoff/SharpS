@@ -2,6 +2,7 @@ package com.danielweisshoff.parser.nodesystem.node.binaryoperations;
 
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
+import com.danielweisshoff.parser.nodesystem.node.NodeType;
 
 /**
  * Divides two values and returns the result
@@ -9,7 +10,7 @@ import com.danielweisshoff.parser.nodesystem.DataType;
 public class BinaryDivNode extends BinaryOperationNode {
 
 	public BinaryDivNode() {
-		super(new DataType[] { DataType.DOUBLE, DataType.DOUBLE }, DataType.DOUBLE);
+		super(new DataType[] { DataType.DOUBLE, DataType.DOUBLE }, DataType.DOUBLE, NodeType.BINARY_DIV_NODE);
 	}
 
 	@Override

@@ -10,11 +10,8 @@ import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.*;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.*;
 import com.danielweisshoff.parser.nodesystem.node.data.*;
-import com.danielweisshoff.parser.nodesystem.node.data.assigning.*;
-import com.danielweisshoff.parser.nodesystem.node.data.primitives.*;
-import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.*;
+import com.danielweisshoff.parser.nodesystem.node.data.assigning.shortcuts.*;
 import com.danielweisshoff.parser.nodesystem.node.logic.*;
-import com.danielweisshoff.parser.nodesystem.node.logic.bitwise.*;
 import com.danielweisshoff.parser.nodesystem.node.loops.*;
 import com.danielweisshoff.parser.semantic.ConversionChecker;
 import com.danielweisshoff.parser.symboltable.SymbolTableManager;
@@ -41,87 +38,50 @@ public class Interpreter {
 		//this is the return-value of the instruction
 		Data<?> data = null;
 
-		if (n instanceof BlockNode)
-			data = interpretBlockNode();
-		else if (n instanceof CallNode) {
-			data = interpretCallNode();
-			stepFinished = true;
-		} else if (n instanceof IfNode)
-			data = interpretIfNode();
+		switch (n.nodeType) {
+		case BLOCK_NODE -> data = interpretBlockNode();
+		case CALL_NODE -> data = interpretCallNode();
+		case IF_NODE -> data = interpretIfNode();
 		//ARITHMETIC
-		else if (n instanceof BinaryAddNode)
-			data = interpretBinaryOperationNode('+');
-		else if (n instanceof BinarySubNode)
-			data = interpretBinaryOperationNode('-');
-		else if (n instanceof BinaryMulNode)
-			data = interpretBinaryOperationNode('*');
-		else if (n instanceof BinaryDivNode)
-			data = interpretBinaryOperationNode('/');
-		else if (n instanceof BinaryModNode)
-			data = interpretBinaryOperationNode('%');
+		case BINARY_ADD_NODE -> data = interpretBinaryOperationNode('+');
+		case BINARY_SUB_NODE -> data = interpretBinaryOperationNode('-');
+		case BINARY_MUL_NODE -> data = interpretBinaryOperationNode('*');
+		case BINARY_DIV_NODE -> data = interpretBinaryOperationNode('/');
+		case BINARY_MOD_NODE -> data = interpretBinaryOperationNode('%');
 		//PRIMITIVES (type safety)
-		else if (n instanceof ByteNode)
-			data = interpretPrimitiveNode();
-		else if (n instanceof ShortNode)
-			data = interpretPrimitiveNode();
-		else if (n instanceof IntegerNode)
-			data = interpretPrimitiveNode();
-		else if (n instanceof LongNode)
-			data = interpretPrimitiveNode();
-		else if (n instanceof FloatNode)
-			data = interpretPrimitiveNode();
-		else if (n instanceof DoubleNode)
-			data = interpretPrimitiveNode();
+		case BYTE_NODE -> data = interpretPrimitiveNode();
+		case SHORT_NODE -> data = interpretPrimitiveNode();
+		case INTEGER_NODE -> data = interpretPrimitiveNode();
+		case LONG_NODE -> data = interpretPrimitiveNode();
+		case FLOAT_NODE -> data = interpretPrimitiveNode();
+		case DOUBLE_NODE -> data = interpretPrimitiveNode();
 		//VAR ASSIGNMENT
-		else if (n instanceof EqualAssignNode) {
-			data = interpretEqualAssignNode();
-			stepFinished = true;
-		}
+		case EQUAL_ASSIGN_NODE -> data = interpretEqualAssignNode();
 		//INCREMENT / DECREMENT
-		else if (n instanceof PreIncrementNode)
-			data = interpretPreIncrementNode();
-		else if (n instanceof PostIncrementNode)
-			data = interpretPostIncrementNode();
-		else if (n instanceof PreDecrementNode)
-			data = interpretPreDecrementNode();
-		else if (n instanceof PostDecrementNode)
-			data = interpretPostDecrementNode();
+		case PRE_INCREMENT_NODE -> data = interpretPreIncrementNode();
+		case POST_INCREMENT_NODE -> data = interpretPostIncrementNode();
+		case PRE_DECREMENT_NODE -> data = interpretPreDecrementNode();
+		case POST_DECREMENT_NODE -> data = interpretPostDecrementNode();
 		//CONDITIONS
-		else if (n instanceof LessNode)
-			data = interpretConditionNode("<");
-		else if (n instanceof LessEqualNode)
-			data = interpretConditionNode("<=");
-		else if (n instanceof MoreNode)
-			data = interpretConditionNode(">");
-		else if (n instanceof MoreEqualNode)
-			data = interpretConditionNode(">=");
-		else if (n instanceof EqualNode)
-			data = interpretConditionNode("==");
-		else if (n instanceof NotEqualNode)
-			data = interpretConditionNode("!=");
-		else if (n instanceof BooleanAndNode)
-			data = interpretConditionNode("&&");
-		else if (n instanceof BooleanOrNode)
-			data = interpretConditionNode("||");
-		else if (n instanceof BitwiseAndNode)
-			data = interpretConditionNode("&");
-		else if (n instanceof BitWiseOrNode)
-			data = interpretConditionNode("|");
+		case LESS_NODE -> data = interpretConditionNode("<");
+		case LESS_EQUAL_NODE -> data = interpretConditionNode("<=");
+		case MORE_NODE -> data = interpretConditionNode(">");
+		case MORE_EQUAL_NODE -> data = interpretConditionNode(">=");
+		case EQUAL_NODE -> data = interpretConditionNode("==");
+		case NOT_EQUAL_NODE -> data = interpretConditionNode("!=");
+		case BOOLEAN_AND_NODE -> data = interpretConditionNode("&&");
+		case BOOLEAN_OR_NODE -> data = interpretConditionNode("||");
+		case BITWISE_AND_NODE -> data = interpretConditionNode("&");
+		case BITWISE_OR_NODE -> data = interpretConditionNode("|");
 		//VAR STUFF
-		else if (n instanceof InitNode) {
-			data = interpretInitNode();
-			stepFinished = true;
-		} else if (n instanceof VariableNode)
-			data = interpretVariableNode();
+		case INIT_NODE -> data = interpretInitNode();
+		case VARIABLE_NODE -> data = interpretVariableNode();
 		//LOOPS
-		else if (n instanceof WhileNode)
-			data = interpretWhileNode();
-		else if (n instanceof DoWhileNode)
-			data = interpretDoWhileNode();
-		else if (n instanceof ForNode)
-			data = interpretForNode();
-		else
-			new PError("[INTERPRETER]: visited unknown Node type " + n.getClass().getSimpleName());
+		case WHILE_NODE -> data = interpretWhileNode();
+		case DO_WHILE_NODE -> data = interpretDoWhileNode();
+		case FOR_NODE -> data = interpretForNode();
+		default -> new PError("[INTERPRETER]: visited unknown Node type " + n.getClass().getSimpleName());
+		}
 
 		//Debug Mode
 		if (debug && stepFinished) {

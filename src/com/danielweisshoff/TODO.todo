@@ -32,6 +32,7 @@ ins OOP übertragen werden
 [+] - Dateiendung in .#s aendern
 [+] - curToken.value.equals(value) -> curToken.compare(value)
 [+] - manche TokenTypes umbenennen (ADD -> PLUS)
+[-] - instanceof durch NodeType(enum) ersetzen   	*140ms für parser*
 []  - Casting int()
 []	- arrays -> ArrayNode
 []	- foreach

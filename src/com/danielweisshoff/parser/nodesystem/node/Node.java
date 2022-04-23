@@ -13,9 +13,12 @@ public class Node {
 	private final DataType[] inputType;
 	private final DataType outputType;*/
 
-	public Node(DataType[] inputType, DataType outputType) {
+	public NodeType nodeType;
+
+	public Node(DataType[] inputType, DataType outputType, NodeType nodeType) {
 		// this.inputType = inputType;
 		// this.outputType = outputType;
+		this.nodeType = nodeType;
 	}
 
 	public Data<?> execute() {
