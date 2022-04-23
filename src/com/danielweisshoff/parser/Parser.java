@@ -426,7 +426,6 @@ public class Parser {
 			if (is(TokenType.PLUS) && next(TokenType.PLUS)) {
 				retreat();
 				return parsePostIncrement();
-
 			}
 			//? x--
 			else if (is(TokenType.MINUS) && next(TokenType.MINUS)) {
@@ -575,15 +574,19 @@ public class Parser {
 		}
 		// +=, -=, *=, ...
 		else if (curToken.isOP() && next().type() == TokenType.EQUAL) {
+			retreat();
 			return parseBinaryAssignNode();
 		}
 		//x++
-		else if (is(TokenType.PLUS) && next(TokenType.PLUS))
+		else if (is(TokenType.PLUS) && next(TokenType.PLUS)) {
+			retreat();
 			return parsePostIncrement();
+		}
 		//x--
-		else if (is(TokenType.MINUS) && next(TokenType.MINUS))
+		else if (is(TokenType.MINUS) && next(TokenType.MINUS)) {
+			retreat();
 			return parsePostDecrement();
-		else {
+		} else {
 			error = true;
 			return null;
 		}
