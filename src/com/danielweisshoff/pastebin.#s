@@ -1,5 +1,3 @@
-
-
 #TODO x ist im falschen scope, gerade ist es im static scope
 for(int x = 0, x < 4, x = x+1):
 	for(int y = 0, y < 4 , y= y+1):

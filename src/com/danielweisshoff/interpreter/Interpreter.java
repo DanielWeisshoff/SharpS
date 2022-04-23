@@ -11,10 +11,7 @@ import com.danielweisshoff.parser.nodesystem.node.*;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.*;
 import com.danielweisshoff.parser.nodesystem.node.data.*;
 import com.danielweisshoff.parser.nodesystem.node.data.assigning.*;
-import com.danielweisshoff.parser.nodesystem.node.data.numbers.FloatingPointNumberNode;
-import com.danielweisshoff.parser.nodesystem.node.data.numbers.IntegerNumberNode;
-import com.danielweisshoff.parser.nodesystem.node.data.primitives.DoubleNode;
-import com.danielweisshoff.parser.nodesystem.node.data.primitives.IntegerNode;
+import com.danielweisshoff.parser.nodesystem.node.data.primitives.*;
 import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.PreDecrementNode;
 import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.PreIncrementNode;
 import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.PostDecrementNode;
@@ -73,13 +70,16 @@ public class Interpreter {
 			data = interpretBinaryOperationNode('/');
 		else if (n instanceof BinaryModNode)
 			data = interpretBinaryOperationNode('%');
-		//RAW NUMBERS (no type safety)
-		else if (n instanceof IntegerNumberNode)
-			data = interpretIntegerNumberNode();
-		else if (n instanceof FloatingPointNumberNode)
-			data = interpretFloatingPointNumberNode();
 		//PRIMITIVES (type safety)
+		else if (n instanceof ByteNode)
+			data = interpretPrimitiveNode();
+		else if (n instanceof ShortNode)
+			data = interpretPrimitiveNode();
 		else if (n instanceof IntegerNode)
+			data = interpretPrimitiveNode();
+		else if (n instanceof LongNode)
+			data = interpretPrimitiveNode();
+		else if (n instanceof FloatNode)
 			data = interpretPrimitiveNode();
 		else if (n instanceof DoubleNode)
 			data = interpretPrimitiveNode();
@@ -224,18 +224,6 @@ public class Interpreter {
 			return new Data<>(1, DataType.BOOLEAN);
 		else
 			return new Data<>(0, DataType.BOOLEAN);
-	}
-
-	private Data<?> interpretFloatingPointNumberNode() {
-		FloatingPointNumberNode fpnn = (FloatingPointNumberNode) curInstruction;
-
-		return new Data<Double>(fpnn.value, DataType.DOUBLE);
-	}
-
-	private Data<?> interpretIntegerNumberNode() {
-		IntegerNumberNode inn = (IntegerNumberNode) curInstruction;
-
-		return new Data<Long>(inn.value, DataType.LONG);
 	}
 
 	private Data<?> interpretInitNode() {

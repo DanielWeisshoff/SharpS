@@ -6,9 +6,8 @@ import com.danielweisshoff.parser.PError;
 import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.Node;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.BinaryOperationNode;
+import com.danielweisshoff.parser.nodesystem.node.data.PrimitiveNode;
 import com.danielweisshoff.parser.nodesystem.node.data.VariableNode;
-import com.danielweisshoff.parser.nodesystem.node.data.numbers.FloatingPointNumberNode;
-import com.danielweisshoff.parser.nodesystem.node.data.numbers.IntegerNumberNode;
 import com.danielweisshoff.parser.nodesystem.node.data.primitives.*;
 import com.danielweisshoff.parser.symboltable.SymbolTableManager;
 import com.danielweisshoff.parser.symboltable.VariableEntry;
@@ -54,10 +53,8 @@ public class ConversionChecker {
 	private static boolean check(Node expr) {
 		if (expr instanceof BinaryOperationNode)
 			return traverseOperation(expr);
-		else if (expr instanceof IntegerNumberNode)
-			return checkInteger(expr);
-		else if (expr instanceof FloatingPointNumberNode)
-			return checkFloatingPoint(expr);
+		else if (expr instanceof PrimitiveNode)
+			return checkPrimitive(expr);
 		else if (expr instanceof VariableNode)
 			return checkVariable(expr);
 		else {
@@ -76,44 +73,24 @@ public class ConversionChecker {
 		return l && r;
 	}
 
-	private static boolean checkInteger(Node expr) {
-		IntegerNumberNode inn = (IntegerNumberNode) expr;
-		long value = inn.value;
-		boolean canConvert = true;
-
-		if (isByte("" + value)) {
-			expr = new ByteNode((byte) value);
-			canConvert = precedence >= precedences.get(DataType.BYTE);
-		} else if (isShort("" + value)) {
-			expr = new ShortNode((short) value);
-			canConvert = precedence >= precedences.get(DataType.SHORT);
-		} else if (isInteger("" + value)) {
-			expr = new IntegerNode((int) value);
-			canConvert = precedence >= precedences.get(DataType.INT);
-		} else if (isLong("" + value)) {
-			expr = new LongNode((long) value);
-			canConvert = precedence >= precedences.get(DataType.LONG);
-		} else
-			new PError("Unimplemented Integer primitive type");
-
-		return canConvert;
-	}
-
-	private static boolean checkFloatingPoint(Node expr) {
-		FloatingPointNumberNode fpnn = (FloatingPointNumberNode) expr;
-		double value = fpnn.value;
-		boolean canConvert = true;
-
-		if (isFloat("" + value)) {
-			expr = new FloatNode((float) value);
-			canConvert = precedence >= precedences.get(DataType.FLOAT);
-		} else if (isDouble("" + value)) {
-			expr = new DoubleNode((double) value);
-			canConvert = precedence >= precedences.get(DataType.DOUBLE);
-		} else
-			new PError("Unimplemented Floating Point primitive type");
-
-		return canConvert;
+	private static boolean checkPrimitive(Node expr) {
+		if (expr instanceof ByteNode)
+			return precedence >= precedences.get(DataType.BYTE);
+		else if (expr instanceof ShortNode)
+			return precedence >= precedences.get(DataType.SHORT);
+		else if (expr instanceof IntegerNode)
+			return precedence >= precedences.get(DataType.INT);
+		else if (expr instanceof LongNode)
+			return precedence >= precedences.get(DataType.LONG);
+		//floating point
+		else if (expr instanceof FloatNode)
+			return precedence >= precedences.get(DataType.FLOAT);
+		else if (expr instanceof DoubleNode)
+			return precedence >= precedences.get(DataType.DOUBLE);
+		else {
+			new PError("conversion error");
+			return false;
+		}
 	}
 
 	private static boolean checkVariable(Node expr) {
@@ -124,7 +101,7 @@ public class ConversionChecker {
 		return precedence >= precedences.get(ve.dataType);
 	}
 
-	private static boolean isByte(String value) {
+	public static boolean isByte(String value) {
 		try {
 			Byte.parseByte(value);
 			lastPrimitiveType = "BYTE";
@@ -134,7 +111,7 @@ public class ConversionChecker {
 		}
 	}
 
-	private static boolean isShort(String value) {
+	public static boolean isShort(String value) {
 		try {
 			Short.parseShort(value);
 			lastPrimitiveType = "SHORT";
@@ -144,7 +121,7 @@ public class ConversionChecker {
 		}
 	}
 
-	private static boolean isInteger(String value) {
+	public static boolean isInt(String value) {
 		try {
 			Integer.parseInt("" + value);
 			lastPrimitiveType = "INT";
@@ -154,7 +131,7 @@ public class ConversionChecker {
 		}
 	}
 
-	private static boolean isLong(String value) {
+	public static boolean isLong(String value) {
 		try {
 			Long.parseLong(value);
 			lastPrimitiveType = "LONG";
@@ -164,7 +141,7 @@ public class ConversionChecker {
 		}
 	}
 
-	private static boolean isFloat(String value) {
+	public static boolean isFloat(String value) {
 		try {
 			Float.parseFloat(value);
 			lastPrimitiveType = "FLOAT";
@@ -174,7 +151,7 @@ public class ConversionChecker {
 		}
 	}
 
-	private static boolean isDouble(String value) {
+	public static boolean isDouble(String value) {
 		try {
 			Double.parseDouble("" + value);
 			lastPrimitiveType = "DOUBLE";

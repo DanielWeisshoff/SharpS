@@ -14,7 +14,7 @@ ins OOP übertragen werden
 [+]	- Die *Build Klassen in den Parser einbauen
 [+] - ++x, x++ Operand (Increment)
 [+] - --x, x-- Operand (Decrement)
-[+]	- += Operand
+[+]	- += operand
 [+]	- -= Operand
 [+]	- *= Operand
 [+]	- /= Operand
@@ -40,14 +40,15 @@ ins OOP übertragen werden
 []	- Parameter
 [] 	- Rueckgabewerte
 []	- Ein paar builIn Funktionen
+[]  - char
 []  - string als char[]
 *CLEANUP / REFACTORING*
 []  - ++, -- operatoren sind schlecht implementiert
 
 TODO
- -	Strings als erste Klasse
+ - Strings als erste Klasse
  - Formatierte Strings   f("Das {} ist {}",fahrzeug,farbe)
- -  Bitwise operationen einfuegen -> Lexer aktualisieren ( & | ^ ~ << >> )
+ - Bitwise operationen einfuegen -> Lexer aktualisieren ( & | ^ ~ << >> )
        * The & (bitwise AND) The result of AND is 1 if both of the two bits are 1.
        * The | (bitwise OR)  The result of OR is 1 if any of the two bits is 1.
        * The ^ (bitwise XOR) The result of XOR is 1 if the two bits are different.

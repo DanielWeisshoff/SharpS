@@ -11,8 +11,12 @@ import com.danielweisshoff.parser.nodesystem.node.*;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.*;
 import com.danielweisshoff.parser.nodesystem.node.data.*;
 import com.danielweisshoff.parser.nodesystem.node.data.assigning.*;
-import com.danielweisshoff.parser.nodesystem.node.data.numbers.FloatingPointNumberNode;
-import com.danielweisshoff.parser.nodesystem.node.data.numbers.IntegerNumberNode;
+import com.danielweisshoff.parser.nodesystem.node.data.primitives.ByteNode;
+import com.danielweisshoff.parser.nodesystem.node.data.primitives.DoubleNode;
+import com.danielweisshoff.parser.nodesystem.node.data.primitives.FloatNode;
+import com.danielweisshoff.parser.nodesystem.node.data.primitives.IntegerNode;
+import com.danielweisshoff.parser.nodesystem.node.data.primitives.LongNode;
+import com.danielweisshoff.parser.nodesystem.node.data.primitives.ShortNode;
 import com.danielweisshoff.parser.nodesystem.node.data.shortcuts.*;
 import com.danielweisshoff.parser.nodesystem.node.logic.*;
 import com.danielweisshoff.parser.nodesystem.node.logic.bitwise.BitWiseOrNode;
@@ -341,8 +345,10 @@ public class Parser {
 		BinaryOperationNode op = null;
 
 		while (curToken.isLineOP()) {
+			TokenType tt = curToken.type();// bcause +- and -+ arent a thing
+
 			advance();
-			if (curToken.isLineOP()) { // increment /decrement
+			if (curToken.type() == tt) { // increment /decrement
 				retreat(2);
 				break;
 			}
@@ -388,7 +394,7 @@ public class Parser {
 
 	//TODO spaghetti, incr,decr woanders parsen?
 	private Node parseFactor() {
-		int sign = 1;
+		char sign = '+';
 
 		//? Ternary / --x	
 		if (is(TokenType.MINUS)) {
@@ -397,7 +403,7 @@ public class Parser {
 				retreat();
 				return parsePreDecrement();
 			} else
-				sign = -1;
+				sign = '-';
 		}
 		//? ++x 
 		else if (is(TokenType.PLUS)) {
@@ -409,16 +415,16 @@ public class Parser {
 
 			return an;
 		}
-		//TODO integers
-		//? INTEGER
-		else if (is(TokenType.INTEGER)) {
-			Node n = new IntegerNumberNode(Long.parseLong(curToken.value) * sign);
+
+		//? integer number
+		if (is(TokenType.INTEGER)) {
+			Node n = parseIntegerNumber(sign + curToken.value);
 			advance();
 			return n;
 		}
 		//?floating point numbers
 		else if (is(TokenType.FLOATING_POINT)) {
-			Node n = new FloatingPointNumberNode(Double.parseDouble(curToken.value) * sign);
+			Node n = parseFloatingPointNumber(sign + curToken.value);
 			advance();
 			return n;
 		}
@@ -462,6 +468,39 @@ public class Parser {
 			return n;
 		}
 		return null;
+	}
+
+	//A Node that is definetily an Integer but of unknown size
+	private PrimitiveNode parseIntegerNumber(String value) {
+		//? byte
+		if (ConversionChecker.isByte(value))
+			return new ByteNode(Byte.parseByte(value));
+		//? short
+		else if (ConversionChecker.isShort(value))
+			return new ShortNode(Short.parseShort(value));
+		//? int
+		else if (ConversionChecker.isInt(value))
+			return new IntegerNode(Integer.parseInt(value));
+		//? long
+		else if (ConversionChecker.isLong(value))
+			return new LongNode(Long.parseLong(value));
+		else {
+			new PError(value + " is not an Integer?!");
+			return null;
+		}
+	}
+
+	private PrimitiveNode parseFloatingPointNumber(String value) {
+		//? float
+		if (ConversionChecker.isFloat(value))
+			return new FloatNode(Float.parseFloat(value));
+		//? double
+		else if (ConversionChecker.isDouble(value))
+			return new DoubleNode(Double.parseDouble(value));
+		else {
+			new PError(value + " is not a Floating Point Number?!");
+			return null;
+		}
 	}
 
 	private CallNode parseFunctionCall() {
@@ -600,7 +639,6 @@ public class Parser {
 				retreat();
 
 			Node expr = parseExpression();
-
 			EqualAssignNode an = new EqualAssignNode(varName);
 			an.expression = expr;
 
