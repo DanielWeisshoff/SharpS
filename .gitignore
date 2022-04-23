@@ -4,7 +4,7 @@
 .gradle
 .vscode
 .out
-
+.tags
 # Ignore Gradle build output directory
 build
 bin/
