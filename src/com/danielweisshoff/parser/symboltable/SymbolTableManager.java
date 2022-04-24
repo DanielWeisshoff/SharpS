@@ -48,6 +48,10 @@ public class SymbolTableManager {
 			lookup.remove(temp);
 	}
 
+	public void clearCurrentTable() {
+		currentTable.clear();
+	}
+
 	public void addVariableToScope(String name, VariableEntry entry) {
 		currentTable.addVariable(name, entry);
 	}

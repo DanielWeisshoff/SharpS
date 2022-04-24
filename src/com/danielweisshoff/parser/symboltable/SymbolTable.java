@@ -14,6 +14,11 @@ public class SymbolTable {
 		this.name = name;
 	}
 
+	public void clear() {
+		functionTable.clear();
+		variableTable.clear();
+	}
+
 	public void addFunction(String name, FunctionEntry entry) {
 		functionTable.put(name, entry);
 	}

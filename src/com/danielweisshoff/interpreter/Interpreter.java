@@ -28,6 +28,10 @@ public class Interpreter {
 	private boolean stepFinished = false;
 	private Scanner stepperScanner = new Scanner(System.in);
 
+	//used for loops, when on, the same scope is cleared and reused instead
+	//of creating new Scopes for each iteration of the loop
+	private boolean holdScope = false;
+
 	public Interpreter() {
 		symbolTable.deleteTableOnScopeEnd = true;
 	}
@@ -95,12 +99,14 @@ public class Interpreter {
 
 	private Data<?> interpretBlockNode() {
 		BlockNode bn = (BlockNode) curInstruction;
-		symbolTable.newScope("blockscope");
+		if (!holdScope)
+			symbolTable.newScope("blockscope");
 
 		for (Node n : bn.children)
 			interpret(n);
+		if (!holdScope)
+			symbolTable.endScope();
 
-		symbolTable.endScope();
 		return new Data<>();
 	}
 
@@ -183,7 +189,7 @@ public class Interpreter {
 
 		//schauen, ob variable schon existiert
 		if (symbolTable.variableExists(name))
-			new PError("var '" + name + "' is already declared");
+			new PError("var '" + name + "': " + in.dataType + " is already declared");
 
 		//checking semantics
 		conversionChecker.convert(in.dataType, in.expression);
@@ -210,8 +216,14 @@ public class Interpreter {
 	private Data<?> interpretWhileNode() {
 		WhileNode wn = (WhileNode) curInstruction;
 
-		while (interpret(wn.condition).asDouble() == 1)
+		holdScope = true;
+		symbolTable.newScope("while body");
+		while (interpret(wn.condition).asDouble() == 1) {
 			interpret(wn.whileBlock);
+			symbolTable.clearCurrentTable();
+		}
+		holdScope = false;
+		symbolTable.endScope();
 
 		return new Data<>(1, DataType.INT);
 	}
@@ -219,9 +231,18 @@ public class Interpreter {
 	private Data<?> interpretDoWhileNode() {
 		DoWhileNode dwn = (DoWhileNode) curInstruction;
 
+		holdScope = true;
+		symbolTable.newScope("do-while body");
+
 		interpret(dwn.whileBlock);
-		while (interpret(dwn.condition).asDouble() == 1)
+
+		while (interpret(dwn.condition).asDouble() == 1) {
+			symbolTable.clearCurrentTable();
 			interpret(dwn.whileBlock);
+		}
+
+		holdScope = false;
+		symbolTable.endScope();
 
 		return new Data<>(1, DataType.INT);
 	}
@@ -234,12 +255,17 @@ public class Interpreter {
 
 		double cond = interpret(fn.condition).asDouble();
 
+		holdScope = true;
+		symbolTable.newScope("for-body");
 		while (cond == 1) {
 			interpret(fn.block);
 			interpret(fn.assignment);
 			cond = interpret(fn.condition).asDouble();
+			symbolTable.clearCurrentTable();
 		}
-		symbolTable.endScope();
+		holdScope = false;
+		symbolTable.endScope(); //body scope
+		symbolTable.endScope(); //var scope
 
 		return new Data<>(1, DataType.INT);
 	}
@@ -266,7 +292,7 @@ public class Interpreter {
 		default -> new PError("unimplemented action for datatype " + ve.dataType);
 		}
 		//TODO just for output testing -> implement print()
-		System.out.println(ve.data.data + ", " + ve.dataType);
+		//System.out.println(ve.data.data + ", " + ve.dataType);
 
 		return new Data<>(1, DataType.INT);
 	}
