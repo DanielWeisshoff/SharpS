@@ -17,13 +17,18 @@ public class Shell {
 	public static boolean benchmark = true;
 
 	public static void main(String[] args) {
-		Logger.enabled = false;
+		Logger.enabled = true;
 		if (benchmark)
 			benchmark();
 		else
 			run();
 
+		start();
 		Logger.writeLogs();
+		stop("LOGGER");
+
+		System.out.println(benchmarks);
+		System.out.println("all done in " + benchmarkMS + " ms");
 	}
 
 	public static void run() {
@@ -90,9 +95,6 @@ public class Shell {
 		start();
 		interpreter.interpret(ast);
 		stop("INTERPRETER");
-
-		System.out.println(benchmarks);
-		System.out.println("all done in " + benchmarkMS + " ms");
 	}
 
 	private static Instant start, end;

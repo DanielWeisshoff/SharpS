@@ -16,8 +16,7 @@ public class Logger {
 	}
 
 	public static void writeLogs() {
-		for (Log l : messages)
-			Goethe.writeLog(l);
+		Goethe.writeLogs(messages);
 	}
 
 	public static void printAll() {

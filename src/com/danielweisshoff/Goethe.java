@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.logger.Log;
@@ -52,8 +54,14 @@ public class Goethe {
 		writeText(lexerPath, tokenStr.toString(), false);
 	}
 
-	public static void writeLog(Log l) {
-		writeText(logPath, l.getLogFormat(), true);
+	public static void writeLogs(ArrayList<Log> logs) {
+		try {
+			PrintWriter pw = new PrintWriter(logPath);
+			for (Log l : logs)
+				pw.println(l.getMessage());
+			pw.close();
+		} catch (Exception e) {
+		}
 	}
 
 	public static void clearLog() {
