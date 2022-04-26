@@ -1,6 +1,5 @@
 package com.danielweisshoff.parser.nodesystem.node;
 
-import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 
 /**
@@ -19,9 +18,5 @@ public class Node {
 		// this.inputType = inputType;
 		// this.outputType = outputType;
 		this.nodeType = nodeType;
-	}
-
-	public Data execute(int a, int b) {
-		return new Data(1, DataType.INT);
 	}
 }

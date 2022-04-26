@@ -1,7 +1,5 @@
 package com.danielweisshoff.parser.nodesystem;
 
-import java.security.Permissions;
-
 import com.danielweisshoff.parser.PError;
 
 /* TODO
