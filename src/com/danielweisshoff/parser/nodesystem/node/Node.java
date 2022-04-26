@@ -21,7 +21,7 @@ public class Node {
 		this.nodeType = nodeType;
 	}
 
-	public Data<?> execute() {
-		return new Data<>(1, DataType.INT);
+	public Data execute(int a, int b) {
+		return new Data(1, DataType.INT);
 	}
 }

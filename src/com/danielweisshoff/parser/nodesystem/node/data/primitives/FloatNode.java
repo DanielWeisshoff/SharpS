@@ -9,6 +9,6 @@ public class FloatNode extends PrimitiveNode {
 
 	public FloatNode(float value) {
 		super(NodeType.FLOAT_NODE);
-		data = new Data<Float>(value, DataType.FLOAT);
+		data = new Data(value, DataType.FLOAT);
 	}
 }

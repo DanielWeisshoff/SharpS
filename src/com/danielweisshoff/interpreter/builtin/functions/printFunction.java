@@ -7,8 +7,8 @@ import com.danielweisshoff.parser.nodesystem.DataType;
 public class printFunction extends BuiltInFunction {
 
 	@Override
-	public Data<?> call() {
+	public Data call() {
 		System.out.println(">>Print Funktion");
-		return new Data<>(1, DataType.INT);
+		return new Data(1, DataType.INT);
 	}
 }

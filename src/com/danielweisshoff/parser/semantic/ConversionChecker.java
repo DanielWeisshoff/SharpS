@@ -6,12 +6,14 @@ import com.danielweisshoff.parser.PError;
 import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.Node;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.BinaryOperationNode;
+import com.danielweisshoff.parser.nodesystem.node.data.PointerNode;
 import com.danielweisshoff.parser.nodesystem.node.data.PrimitiveNode;
 import com.danielweisshoff.parser.nodesystem.node.data.VariableNode;
 import com.danielweisshoff.parser.nodesystem.node.data.primitives.*;
 import com.danielweisshoff.parser.symboltable.SymbolTableManager;
 import com.danielweisshoff.parser.symboltable.VariableEntry;
 
+//TODO nachdem eine PointerNode gefunden wurde, darf nichts mehr kommen
 //checks if the given expression can be casted to the primitive type
 public class ConversionChecker {
 
@@ -30,12 +32,15 @@ public class ConversionChecker {
 	private int precedence;
 	private DataType lastType;
 	private SymbolTableManager symbolTableManager;
+	private DataType dataType;
 
 	public ConversionChecker(SymbolTableManager symbolTableManager) {
 		this.symbolTableManager = symbolTableManager;
 	}
 
 	public boolean convert(DataType dataType, Node expr) {
+		this.dataType = dataType;
+
 		precedence = precedences.get(dataType);
 
 		if (!check(expr))
@@ -47,6 +52,8 @@ public class ConversionChecker {
 	private boolean check(Node expr) {
 		if (expr instanceof BinaryOperationNode)
 			return traverseOperation(expr);
+		else if (expr instanceof PointerNode)
+			return checkPointer(expr);
 		else if (expr instanceof PrimitiveNode)
 			return checkPrimitive(expr);
 		else if (expr instanceof VariableNode)
@@ -65,6 +72,21 @@ public class ConversionChecker {
 		boolean l = check(((BinaryOperationNode) expr).left);
 		boolean r = check(((BinaryOperationNode) expr).right);
 		return l && r;
+	}
+
+	private boolean checkPointer(Node expr) {
+		PointerNode pn = (PointerNode) expr;
+
+		VariableEntry ve = symbolTableManager.findVariableInScope(pn.variable);
+		if (ve == null)
+			new PError("conv error: var '" + pn.variable + "' not declared");
+
+		if (ve.dataType == dataType)
+			return true;
+		else {
+			new PError("CONVERSION ERROR: can't point from " + lastType + " to " + dataType);
+			return false;
+		}
 	}
 
 	private boolean checkPrimitive(Node expr) {
@@ -93,6 +115,8 @@ public class ConversionChecker {
 	private boolean checkVariable(Node expr) {
 		VariableNode vn = (VariableNode) expr;
 		VariableEntry ve = symbolTableManager.findVariableInScope(vn.getName());
+		if (ve == null)
+			new PError("conv error: var '" + vn.getName() + "' not declared");
 
 		lastType = ve.dataType;
 		return precedence >= precedences.get(ve.dataType);

@@ -1,5 +1,6 @@
 package com.danielweisshoff.parser;
 
+import java.security.Permissions;
 import java.util.Stack;
 
 import com.danielweisshoff.interpreter.builtin.BuiltInFunction;
@@ -108,6 +109,10 @@ public class Parser {
 		if (position < tokens.length)
 			curToken = tokens[position];
 	}
+
+	// private boolean atEnd() {
+	// 	return position == tokens.length;
+	// }
 
 	private void retreat() {
 		retreat(1);
@@ -522,14 +527,12 @@ public class Parser {
 		return params;
 	}
 
-	private InitNode parseVariableDeclaration() {
+	private DeclareNode parseVariableDeclaration() {
 		TokenType keyword = curToken.type();
 		advance();
 
 		String varName = curToken.value;
 		assume(TokenType.IDENTIFIER, "Fehler beim Deklarieren einer Variable");
-
-		InitNode n;
 
 		DataType type = null;
 		switch (keyword) {
@@ -542,17 +545,24 @@ public class Parser {
 		default -> new PError("parser: unknown primitive type " + keyword);
 		}
 
+		DeclareNode n;
 		//Variable wird zusätzlich initialisiert
 		if (is(TokenType.EQUAL)) {
 			advance();
-			Node expr = parseExpression();
+
+			Node expr = null;
+			//check if is pointer
+			if (is(TokenType.AND))
+				expr = parsePointer();
+			else
+				expr = parseExpression();
 
 			Logger.log("Variable " + varName + " deklariert und initialisiert");
 
-			n = new InitNode(varName, type, expr);
+			n = new DeclareNode(varName, type, expr);
 		} else {
 			//Variable wird deklariert
-			n = new InitNode(varName, type);
+			n = new DeclareNode(varName, type);
 			Logger.log("Variable " + varName + " deklariert");
 		}
 		return n;
@@ -564,9 +574,15 @@ public class Parser {
 
 		if (is(TokenType.EQUAL)) {
 			advance();
-			Node expr = parseExpression();
 
-			EqualAssignNode an = new EqualAssignNode(varName);
+			Node expr;
+			//check if is pointer
+			if (is(TokenType.AND))
+				expr = parsePointer();
+			else
+				expr = parseExpression();
+
+			InitNode an = new InitNode(varName);
 			an.expression = expr;
 
 			Logger.log("Assigned value to variable '" + varName + "'");
@@ -590,6 +606,15 @@ public class Parser {
 			error = true;
 			return null;
 		}
+	}
+
+	private PointerNode parsePointer() {
+		assume(TokenType.AND, "pointer notation incorrect");
+
+		String varName = curToken.value;
+		advance();
+
+		return new PointerNode(varName);
 	}
 	//
 	//LOOPS
@@ -629,7 +654,7 @@ public class Parser {
 		assume(TokenType.KW_FOR, "Keyword FOR missing");
 		assume(TokenType.O_ROUND_BRACKET, "Missing open bracket for for-loop");
 
-		InitNode in = parseVariableDeclaration();
+		DeclareNode in = parseVariableDeclaration();
 
 		assume(TokenType.COMMA, "comma missing");
 
@@ -724,7 +749,7 @@ public class Parser {
 
 		Node expr = parseExpression();
 
-		EqualAssignNode ean = new EqualAssignNode(varName);
+		InitNode ean = new InitNode(varName);
 
 		VariableNode vn = new VariableNode(varName);
 		bon.left = vn;

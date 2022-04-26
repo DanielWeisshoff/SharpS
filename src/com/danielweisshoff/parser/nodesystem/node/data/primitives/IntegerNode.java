@@ -9,6 +9,6 @@ public class IntegerNode extends PrimitiveNode {
 
 	public IntegerNode(int value) {
 		super(NodeType.INTEGER_NODE);
-		data = new Data<Integer>(value, DataType.INT);
+		data = new Data(value, DataType.INT);
 	}
 }

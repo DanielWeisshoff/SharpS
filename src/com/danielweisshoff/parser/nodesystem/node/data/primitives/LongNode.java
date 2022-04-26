@@ -9,6 +9,6 @@ public class LongNode extends PrimitiveNode {
 
 	public LongNode(long value) {
 		super(NodeType.LONG_NODE);
-		data = new Data<Long>(value, DataType.LONG);
+		data = new Data(value, DataType.LONG);
 	}
 }

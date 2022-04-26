@@ -1,6 +1,5 @@
 package com.danielweisshoff.parser.nodesystem.node.data;
 
-import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.node.Node;
 import com.danielweisshoff.parser.nodesystem.node.NodeType;
 
@@ -22,10 +21,5 @@ public class VariableNode extends Node {
 
 	public String getName() {
 		return name;
-	}
-
-	@Override
-	public Data<?> execute() {
-		return new Data<>();
 	}
 }

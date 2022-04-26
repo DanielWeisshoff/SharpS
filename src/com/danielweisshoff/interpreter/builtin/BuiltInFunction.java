@@ -17,5 +17,5 @@ public abstract class BuiltInFunction {
 		builtInFunctions.put("exit", new exitFunction());
 	}
 
-	public abstract Data<?> call();
+	public abstract Data call();
 }

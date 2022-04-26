@@ -7,8 +7,8 @@ public class FunctionEntry extends Entry {
 	private final DataType[] params;
 	private final DataType returnType;
 
-	public FunctionEntry(String name, DataType[] params, DataType returnType) {
-		super(name, Type.FUNCTION);
+	public FunctionEntry(String name, long id, DataType[] params, DataType returnType) {
+		super(name, id, Type.FUNCTION);
 		this.params = params;
 		this.returnType = returnType;
 	}

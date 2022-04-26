@@ -1,6 +1,5 @@
 package com.danielweisshoff.parser.nodesystem.node.binaryoperations;
 
-import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.NodeType;
 
@@ -11,19 +10,5 @@ public class BinaryDivNode extends BinaryOperationNode {
 
 	public BinaryDivNode() {
 		super(new DataType[] { DataType.DOUBLE, DataType.DOUBLE }, DataType.DOUBLE, NodeType.BINARY_DIV_NODE);
-	}
-
-	@Override
-	public Data<Double> execute() {
-		if (result == null)
-			calculateResult();
-		return result;
-	}
-
-	protected void calculateResult() {
-		double leftResult = left.execute().asDouble();
-		double rightResult = right.execute().asDouble();
-
-		result = new Data<Double>(leftResult / rightResult, DataType.DOUBLE);
 	}
 }

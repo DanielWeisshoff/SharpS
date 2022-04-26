@@ -6,10 +6,10 @@ import com.danielweisshoff.parser.nodesystem.DataType;
 public class VariableEntry extends Entry {
 
 	public final DataType dataType;
-	public Data<?> data;
+	public Data data;
 
-	public VariableEntry(String name, DataType dataType, Data<?> data) {
-		super(name, Type.VARIABLE);
+	public VariableEntry(String name, long id, DataType dataType, Data data) {
+		super(name, id, Type.VARIABLE);
 		this.dataType = dataType;
 		this.data = data;
 	}
@@ -18,8 +18,7 @@ public class VariableEntry extends Entry {
 		return dataType;
 	}
 
-	public Data<?> getData() {
+	public Data getData() {
 		return data;
 	}
-
 }

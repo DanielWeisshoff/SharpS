@@ -12,19 +12,9 @@ public abstract class BinaryOperationNode extends Node {
 
 	public Node left;
 	public Node right;
-	protected Data<Double> result;
+	protected Data result;
 
 	public BinaryOperationNode(DataType[] inputType, DataType outputType, NodeType nodeType) {
 		super(inputType, outputType, nodeType);
 	}
-
-	@Override
-	public Data<Double> execute() {
-		if (result == null)
-			calculateResult();
-		return result;
-	}
-
-	protected abstract void calculateResult();
-
 }

@@ -4,9 +4,11 @@ public abstract class Entry {
 
 	private final String name;
 	private final Type type;
+	private final long id;
 
-	public Entry(String name, Type type) {
+	public Entry(String name, long id, Type type) {
 		this.name = name;
+		this.id = id;
 		this.type = type;
 	}
 
@@ -20,5 +22,9 @@ public abstract class Entry {
 
 	public String getDescription() {
 		return name + "\t" + type;
+	}
+
+	public long getID() {
+		return id;
 	}
 }

@@ -4,19 +4,38 @@ import java.util.Scanner;
 
 import com.danielweisshoff.interpreter.builtin.BuiltInFunction;
 import com.danielweisshoff.logger.Logger;
+import com.danielweisshoff.parser.IdRegistry;
 import com.danielweisshoff.parser.PError;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
-import com.danielweisshoff.parser.nodesystem.node.*;
-import com.danielweisshoff.parser.nodesystem.node.binaryoperations.*;
-import com.danielweisshoff.parser.nodesystem.node.data.*;
-import com.danielweisshoff.parser.nodesystem.node.data.assigning.shortcuts.*;
-import com.danielweisshoff.parser.nodesystem.node.logic.*;
-import com.danielweisshoff.parser.nodesystem.node.loops.*;
+import com.danielweisshoff.parser.nodesystem.node.BlockNode;
+import com.danielweisshoff.parser.nodesystem.node.CallNode;
+import com.danielweisshoff.parser.nodesystem.node.IfNode;
+import com.danielweisshoff.parser.nodesystem.node.Node;
+import com.danielweisshoff.parser.nodesystem.node.binaryoperations.BinaryOperationNode;
+import com.danielweisshoff.parser.nodesystem.node.data.DeclareNode;
+import com.danielweisshoff.parser.nodesystem.node.data.PointerNode;
+import com.danielweisshoff.parser.nodesystem.node.data.PrimitiveNode;
+import com.danielweisshoff.parser.nodesystem.node.data.VariableNode;
+import com.danielweisshoff.parser.nodesystem.node.data.assigning.InitNode;
+import com.danielweisshoff.parser.nodesystem.node.data.assigning.shortcuts.PostDecrementNode;
+import com.danielweisshoff.parser.nodesystem.node.data.assigning.shortcuts.PostIncrementNode;
+import com.danielweisshoff.parser.nodesystem.node.data.assigning.shortcuts.PreDecrementNode;
+import com.danielweisshoff.parser.nodesystem.node.data.assigning.shortcuts.PreIncrementNode;
+import com.danielweisshoff.parser.nodesystem.node.logic.ConditionNode;
+import com.danielweisshoff.parser.nodesystem.node.loops.DoWhileNode;
+import com.danielweisshoff.parser.nodesystem.node.loops.ForNode;
+import com.danielweisshoff.parser.nodesystem.node.loops.WhileNode;
 import com.danielweisshoff.parser.semantic.ConversionChecker;
 import com.danielweisshoff.parser.symboltable.SymbolTableManager;
 import com.danielweisshoff.parser.symboltable.VariableEntry;
 
+/*
+TODO
+gerade entries umgestellt auf id
+conversionchecker hat fehler?
+pointernode id und name werden komisch eingetragen
+*/
 public class Interpreter {
 
 	public boolean debug = false;
@@ -36,11 +55,11 @@ public class Interpreter {
 		symbolTable.deleteTableOnScopeEnd = true;
 	}
 
-	public Data<?> interpret(Node n) {
+	public Data interpret(Node n) {
 
 		curInstruction = n;
 		//this is the return-value of the instruction
-		Data<?> data = null;
+		Data data = null;
 
 		switch (n.nodeType) {
 		case BLOCK_NODE -> data = interpretBlockNode();
@@ -59,8 +78,7 @@ public class Interpreter {
 		case LONG_NODE -> data = interpretPrimitiveNode();
 		case FLOAT_NODE -> data = interpretPrimitiveNode();
 		case DOUBLE_NODE -> data = interpretPrimitiveNode();
-		//VAR ASSIGNMENT
-		case EQUAL_ASSIGN_NODE -> data = interpretEqualAssignNode();
+		case POINTER_NODE -> data = interpretPointerNode();
 		//INCREMENT / DECREMENT
 		case PRE_INCREMENT_NODE -> data = interpretPreIncrementNode();
 		case POST_INCREMENT_NODE -> data = interpretPostIncrementNode();
@@ -78,6 +96,7 @@ public class Interpreter {
 		case BITWISE_AND_NODE -> data = interpretConditionNode("&");
 		case BITWISE_OR_NODE -> data = interpretConditionNode("|");
 		//VAR STUFF
+		case DECLARE_NODE -> data = interpretDeclareNode();
 		case INIT_NODE -> data = interpretInitNode();
 		case VARIABLE_NODE -> data = interpretVariableNode();
 		//LOOPS
@@ -97,7 +116,7 @@ public class Interpreter {
 		return data;
 	}
 
-	private Data<?> interpretBlockNode() {
+	private Data interpretBlockNode() {
 		BlockNode bn = (BlockNode) curInstruction;
 		if (!holdScope)
 			symbolTable.newScope("blockscope");
@@ -107,10 +126,10 @@ public class Interpreter {
 		if (!holdScope)
 			symbolTable.endScope();
 
-		return new Data<>();
+		return new Data();
 	}
 
-	private Data<?> interpretCallNode() {
+	private Data interpretCallNode() {
 		CallNode cn = (CallNode) curInstruction;
 		String fName = cn.getName();
 
@@ -118,43 +137,56 @@ public class Interpreter {
 			Logger.log("BuiltInFunktion " + fName + " wird aufgerufen");
 			return BuiltInFunction.builtInFunctions.get(fName).call();
 		}
-		return new Data<>();
+		return new Data();
 	}
 
-	private Data<?> interpretIfNode() {
+	private Data interpretIfNode() {
 		IfNode in = (IfNode) curInstruction;
 
-		Data<?> cond = interpret(in.condition);
+		Data cond = interpret(in.condition);
 
 		if (cond.asInt() == 1)
 			interpret(in.condBlock);
 		else if (in.elseBlock != null)
 			interpret(in.elseBlock);
 
-		return new Data<>();
+		return new Data();
 	}
 
-	private Data<?> interpretBinaryOperationNode(char op) {
+	private Data interpretBinaryOperationNode(char op) {
 		BinaryOperationNode ban = (BinaryOperationNode) curInstruction;
 
 		double left = interpret(ban.left).asDouble();
 		double right = interpret(ban.right).asDouble();
 		return switch (op) {
-		case '+' -> new Data<Double>(left + right, DataType.DOUBLE);
-		case '-' -> new Data<Double>(left - right, DataType.DOUBLE);
-		case '*' -> new Data<Double>(left * right, DataType.DOUBLE);
-		case '/' -> new Data<Double>(left / right, DataType.DOUBLE);
-		case '%' -> new Data<Double>(left % right, DataType.DOUBLE);
-		default -> new Data<>();
+		case '+' -> new Data(left + right, DataType.DOUBLE);
+		case '-' -> new Data(left - right, DataType.DOUBLE);
+		case '*' -> new Data(left * right, DataType.DOUBLE);
+		case '/' -> new Data(left / right, DataType.DOUBLE);
+		case '%' -> new Data(left % right, DataType.DOUBLE);
+		default -> new Data();
 		};
 	}
 
-	private Data<?> interpretPrimitiveNode() {
+	private Data interpretPrimitiveNode() {
 		PrimitiveNode pn = (PrimitiveNode) curInstruction;
 		return pn.getData();
 	}
 
-	private Data<?> interpretConditionNode(String op) {
+	//gets the id of the variable the pointer points to
+	private Data interpretPointerNode() {
+		PointerNode pn = (PointerNode) curInstruction;
+
+		VariableEntry ve = symbolTable.findVariableInScope(pn.variable);
+		if (ve == null)
+			new PError("cant point to undeclared var '" + pn.variable + "'");
+
+		long id = ve.getID();
+
+		return new Data(id, DataType.POINTER);
+	}
+
+	private Data interpretConditionNode(String op) {
 		ConditionNode cn = (ConditionNode) curInstruction;
 
 		double left = interpret(cn.left).asDouble();
@@ -179,11 +211,11 @@ public class Interpreter {
 		}
 
 		int stmt = cond ? 1 : 0;
-		return new Data<>(stmt, DataType.BOOLEAN);
+		return new Data(stmt, DataType.BOOLEAN);
 	}
 
-	private Data<?> interpretInitNode() {
-		InitNode in = (InitNode) curInstruction;
+	private Data interpretDeclareNode() {
+		DeclareNode in = (DeclareNode) curInstruction;
 
 		String name = in.getName();
 
@@ -194,15 +226,67 @@ public class Interpreter {
 		//checking semantics
 		conversionChecker.convert(in.dataType, in.expression);
 
-		Data<?> data = interpret(in.expression);
-		//entry in symboltable
-		VariableEntry var = new VariableEntry(name, in.dataType, data);
-		symbolTable.addVariableToScope(name, var);
+		Data data = interpret(in.expression);
 
-		return new Data<>(1, DataType.INT);
+		//generate an id for the variable
+		long id = IdRegistry.newID();
+
+		//if the expression is a pointer
+		if (data.dataType == DataType.POINTER) {
+			VariableEntry ve = symbolTable.findVariableInScope((long) data.data);
+			//entry in symboltable
+			VariableEntry var = new VariableEntry(name, id, in.dataType, ve.data);
+			symbolTable.addVariableToScope(id, var);
+		} else {
+			//entry in symboltable
+			VariableEntry var = new VariableEntry(name, id, in.dataType, data);
+			symbolTable.addVariableToScope(id, var);
+		}
+
+		return new Data();
 	}
 
-	private Data<?> interpretVariableNode() {
+	private Data interpretInitNode() {
+		InitNode an = (InitNode) curInstruction;
+		String varName = an.getName();
+
+		Data data = interpret(an.expression);
+
+		if (data.dataType == DataType.POINTER) {
+			VariableEntry ve = symbolTable.findVariableInScope((long) data.data);
+			//entry in symboltable
+			VariableEntry ve2 = symbolTable.findVariableInScope(varName);
+			ve2.data = ve.data;
+			System.out.println("test brother");
+
+			return new Data();
+		} else {
+
+			double value = data.asDouble();
+
+			//try to find and get the variable from the SymbolTable
+			VariableEntry ve = symbolTable.findVariableInScope(varName);
+			if (ve == null)
+				new PError("Parse Error: var '" + varName + "' not declared");
+
+			//da referenzen geloescht werden
+			switch (ve.dataType) {
+			case BYTE -> ve.data.setValue((byte) value);
+			case SHORT -> ve.data.setValue((short) value);
+			case INT -> ve.data.setValue((int) value);
+			case LONG -> ve.data.setValue((long) value);
+			case FLOAT -> ve.data.setValue((float) value);
+			case DOUBLE -> ve.data.setValue((double) value);
+			default -> new PError("unimplemented action for datatype " + ve.dataType);
+			}
+			//TODO just for output testing -> implement print()
+			System.out.println(ve.data.data + ", " + ve.dataType);
+
+			return new Data();
+		}
+	}
+
+	private Data interpretVariableNode() {
 		VariableNode vn = (VariableNode) curInstruction;
 		String varName = vn.getName();
 
@@ -213,7 +297,7 @@ public class Interpreter {
 		return var.getData();
 	}
 
-	private Data<?> interpretWhileNode() {
+	private Data interpretWhileNode() {
 		WhileNode wn = (WhileNode) curInstruction;
 
 		holdScope = true;
@@ -225,10 +309,10 @@ public class Interpreter {
 		holdScope = false;
 		symbolTable.endScope();
 
-		return new Data<>(1, DataType.INT);
+		return new Data();
 	}
 
-	private Data<?> interpretDoWhileNode() {
+	private Data interpretDoWhileNode() {
 		DoWhileNode dwn = (DoWhileNode) curInstruction;
 
 		holdScope = true;
@@ -244,10 +328,10 @@ public class Interpreter {
 		holdScope = false;
 		symbolTable.endScope();
 
-		return new Data<>(1, DataType.INT);
+		return new Data();
 	}
 
-	private Data<?> interpretForNode() {
+	private Data interpretForNode() {
 		ForNode fn = (ForNode) curInstruction;
 
 		symbolTable.newScope("for-initVar");
@@ -267,38 +351,11 @@ public class Interpreter {
 		symbolTable.endScope(); //body scope
 		symbolTable.endScope(); //var scope
 
-		return new Data<>(1, DataType.INT);
-	}
-
-	private Data<?> interpretEqualAssignNode() {
-		AssignNode an = (AssignNode) curInstruction;
-		String varName = an.getName();
-
-		Data<?> data = interpret(an.expression);
-		double value = data.asDouble();
-
-		//try to find and get the variable from the SymbolTable
-		VariableEntry ve = symbolTable.findVariableInScope(varName);
-		if (ve == null)
-			new PError("Parse Error: var '" + varName + "' not declared");
-
-		switch (ve.dataType) {
-		case BYTE -> ve.data = new Data<Byte>((byte) value, DataType.BYTE);
-		case SHORT -> ve.data = new Data<Short>((short) value, DataType.SHORT);
-		case INT -> ve.data = new Data<Integer>((int) value, DataType.INT);
-		case LONG -> ve.data = new Data<Long>((long) value, DataType.LONG);
-		case FLOAT -> ve.data = new Data<Float>((float) value, DataType.FLOAT);
-		case DOUBLE -> ve.data = new Data<Double>((double) value, DataType.DOUBLE);
-		default -> new PError("unimplemented action for datatype " + ve.dataType);
-		}
-		//TODO just for output testing -> implement print()
-		//System.out.println(ve.data.data + ", " + ve.dataType);
-
-		return new Data<>(1, DataType.INT);
+		return new Data();
 	}
 
 	//TODO remove
-	private Data<?> interpretPreIncrementNode() {
+	private Data interpretPreIncrementNode() {
 		PreIncrementNode in = (PreIncrementNode) curInstruction;
 
 		String varName = in.getName();
@@ -308,13 +365,13 @@ public class Interpreter {
 			new PError("Parse Error: var '" + varName + "' not declared");
 
 		double value = var.getData().asDouble();
-		var.data = new Data<Double>(value + 1, var.dataType);
+		var.data.setValue(value + 1);
 
 		return var.data;
 	}
 
 	//TODO remove
-	private Data<?> interpretPreDecrementNode() {
+	private Data interpretPreDecrementNode() {
 		PreDecrementNode in = (PreDecrementNode) curInstruction;
 
 		String varName = in.getName();
@@ -324,13 +381,13 @@ public class Interpreter {
 			new PError("Parse Error: var '" + varName + "' not declared");
 
 		double value = var.getData().asDouble();
-		var.data = new Data<Double>(value + -1, var.dataType);
+		var.data.setValue(value - 1);
 
 		return var.data;
 	}
 
 	//TODO remove
-	private Data<?> interpretPostIncrementNode() {
+	private Data interpretPostIncrementNode() {
 		PostIncrementNode in = (PostIncrementNode) curInstruction;
 
 		String varName = in.getName();
@@ -340,13 +397,13 @@ public class Interpreter {
 			new PError("Parse Error: var '" + varName + "' not declared");
 
 		double value = var.getData().asDouble();
-		var.data = new Data<Double>(value + 1, var.dataType);
+		var.data.setValue(value + 1);
 
-		return new Data<Double>(value, DataType.DOUBLE);
+		return new Data(value, DataType.DOUBLE);
 	}
 
 	//TODO remove
-	private Data<?> interpretPostDecrementNode() {
+	private Data interpretPostDecrementNode() {
 		PostDecrementNode in = (PostDecrementNode) curInstruction;
 
 		String varName = in.getName();
@@ -356,9 +413,9 @@ public class Interpreter {
 			new PError("Parse Error: var '" + varName + "' not declared");
 
 		double value = var.getData().asDouble();
-		var.data = new Data<Double>(value + 1, DataType.DOUBLE);
+		var.data.setValue(value - 1);
 
-		return new Data<Double>(value, DataType.DOUBLE);
+		return new Data(value, DataType.DOUBLE);
 	}
 
 	public SymbolTableManager getSymbolTableManager() {

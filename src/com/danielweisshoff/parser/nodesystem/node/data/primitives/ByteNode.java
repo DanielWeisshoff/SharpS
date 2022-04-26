@@ -9,7 +9,7 @@ public class ByteNode extends PrimitiveNode {
 
 	public ByteNode(byte value) {
 		super(NodeType.BYTE_NODE);
-		data = new Data<Byte>(value, DataType.BYTE);
+		data = new Data(value, DataType.BYTE);
 	}
 
 }

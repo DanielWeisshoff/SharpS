@@ -7,8 +7,11 @@ public class SymbolTable {
 	public SymbolTable parent;
 	private String name;
 
-	private final HashMap<String, FunctionEntry> functionTable = new HashMap<>();
-	private final HashMap<String, VariableEntry> variableTable = new HashMap<>();
+	private final HashMap<Long, FunctionEntry> functionTable = new HashMap<>();
+	private final HashMap<Long, VariableEntry> variableTable = new HashMap<>();
+	//TODO idk man
+	private final HashMap<String, FunctionEntry> functionStrTable = new HashMap<>();
+	private final HashMap<String, VariableEntry> variableStrTable = new HashMap<>();
 
 	public SymbolTable(String name) {
 		this.name = name;
@@ -17,21 +20,26 @@ public class SymbolTable {
 	public void clear() {
 		functionTable.clear();
 		variableTable.clear();
+
+		functionStrTable.clear();
+		variableStrTable.clear();
 	}
 
-	public void addFunction(String name, FunctionEntry entry) {
-		functionTable.put(name, entry);
+	public void addFunction(FunctionEntry entry) {
+		functionTable.put(entry.getID(), entry);
+		functionStrTable.put(entry.getName(), entry);
 	}
 
-	public void addVariable(String name, VariableEntry entry) {
-		variableTable.put(name, entry);
+	public void addVariable(VariableEntry entry) {
+		variableTable.put(entry.getID(), entry);
+		variableStrTable.put(entry.getName(), entry);
 	}
 
 	/*
 	 *Sucht in sich und allen seinen �bergeordneten SymbolTables nach dem Eintrag und gibt diesen zur�ck
 	 */
 	public FunctionEntry findFunction(String name) {
-		FunctionEntry fe = functionTable.get(name);
+		FunctionEntry fe = functionStrTable.get(name);
 		if (fe != null)
 			return fe;
 
@@ -42,12 +50,23 @@ public class SymbolTable {
 	}
 
 	public VariableEntry findVariable(String name) {
-		VariableEntry fe = variableTable.get(name);
+		VariableEntry fe = variableStrTable.get(name);
 		if (fe != null)
 			return fe;
 
 		else if (parent != null)
 			return parent.findVariable(name);
+
+		return null;
+	}
+
+	public VariableEntry findVariable(long id) {
+		VariableEntry fe = variableTable.get(id);
+		if (fe != null)
+			return fe;
+
+		else if (parent != null)
+			return parent.findVariable(id);
 
 		return null;
 	}

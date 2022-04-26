@@ -6,13 +6,13 @@ import com.danielweisshoff.parser.nodesystem.node.NodeType;
 
 public class PrimitiveNode extends Node {
 
-	public Data<?> data;
+	public Data data;
 
 	public PrimitiveNode(NodeType nodeType) {
 		super(null, null, nodeType);
 	}
 
-	public Data<?> getData() {
+	public Data getData() {
 		return data;
 	}
 }

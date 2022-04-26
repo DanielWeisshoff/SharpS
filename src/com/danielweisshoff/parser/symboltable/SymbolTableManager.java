@@ -52,20 +52,20 @@ public class SymbolTableManager {
 		currentTable.clear();
 	}
 
-	public void addVariableToScope(String name, VariableEntry entry) {
-		currentTable.addVariable(name, entry);
+	public void addVariableToScope(long id, VariableEntry entry) {
+		currentTable.addVariable(entry);
 	}
 
-	public void addFunctionToScope(String name, FunctionEntry entry) {
-		currentTable.addFunction(name, entry);
+	public void addFunctionToScope(long id, FunctionEntry entry) {
+		currentTable.addFunction(entry);
 	}
 
-	public void addVariableToStatic(String name, VariableEntry entry) {
-		root.addVariable(name, entry);
+	public void addVariableToStatic(long id, VariableEntry entry) {
+		root.addVariable(entry);
 	}
 
-	public void addFunctionToStatic(String name, FunctionEntry entry) {
-		root.addFunction(name, entry);
+	public void addFunctionToStatic(long id, FunctionEntry entry) {
+		root.addFunction(entry);
 	}
 
 	public void gotoRoot() {
@@ -74,6 +74,10 @@ public class SymbolTableManager {
 
 	public VariableEntry findVariableInScope(String name) {
 		return currentTable.findVariable(name);
+	}
+
+	public VariableEntry findVariableInScope(long id) {
+		return currentTable.findVariable(id);
 	}
 
 	public FunctionEntry findFunctionInScope(String name) {

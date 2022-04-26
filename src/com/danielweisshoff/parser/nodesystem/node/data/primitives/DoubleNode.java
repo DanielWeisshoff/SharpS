@@ -9,6 +9,6 @@ public class DoubleNode extends PrimitiveNode {
 
 	public DoubleNode(double value) {
 		super(NodeType.DOUBLE_NODE);
-		data = new Data<Double>(value, DataType.DOUBLE);
+		data = new Data(value, DataType.DOUBLE);
 	}
 }
