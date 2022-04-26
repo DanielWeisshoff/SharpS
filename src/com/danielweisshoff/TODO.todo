@@ -34,6 +34,8 @@ ins OOP übertragen werden
 [+] - manche TokenTypes umbenennen (ADD -> PLUS)
 [+] - instanceof durch NodeType(enum) ersetzen   	*140ms für parser*
 [+] - MOD operator zu Token.isOP() hinzufuegen
+[+] - schleifen erzeugen i Scopes im SymbolTable (stattdessen SymbolTable des scopes clearen un reusen)
+[+] - schauen, warum Parser so langsam ist
 [+] - ?EqualAssignNode redundant, einfach AssignNode benutzen?
 [+] - Pointer 
 []  - ++, -- operatoren sind schlecht implementiert
@@ -60,6 +62,7 @@ TODO
 [] - ~ (bitwise NOT) all bits are swapped
 [] - << (left shift) takes two numbers, left shifts the bits of the first operand, the second operand decides the number of places to shift.
 [] - >> (right shift) takes two numbers, right shifts the bits of the first operand, the second operand decides the number of places to shift.
+- Testen, ob bitwise &,| wirklich funktionieren
 
 - Das erzeugen von Objekten soll moeglich sein
  - Objekte sollen als Parameter/R�ckgabewert m�glich sein -> evtl. Data �berarbeiten ?
@@ -77,14 +80,10 @@ TODO
     Werden dann im Symboltable eingetragen. Wenn die get() Methode aufgerufen wird, m�ssen einfach nur neue
     Regelungen basierend auf dem AccessModifier der gesuchten Variable erkl�rt werden.
  - ? Betragsstriche |a|?
- - ?skalar (a|a) ?
  - Überschreiben von Rechenoperationen für Objekte
- - Testen, ob bitwise &,| wirklich funktionieren
 int a = 2² + |test()| * (a|a)
 int a = pow(2,2) + abs(test()) * (a*a)
- - schauen, warum Parser so langsam ist
 [-] - The datetime calculation on the Log class is fucking slow
-[] - schleifen erzeugen i Scopes im SymbolTable (stattdessen SymbolTable des scopes clearen un reusen)
 *!NEUE SYNTAX?*:
 
 MatLab hat sehr schöne Syntax zum erzeugen von arrays und generell iterativen Strukturen
