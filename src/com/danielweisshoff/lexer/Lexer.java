@@ -208,5 +208,7 @@ public class Lexer {
 		tokenMap.put('&', TokenType.AND);
 		tokenMap.put('|', TokenType.OR);
 		tokenMap.put('\0', TokenType.EOF);
+		tokenMap.put('[', TokenType.O_BLOCK_BRACKET);
+		tokenMap.put(']', TokenType.C_BLOCK_BRACKET);
 	}
 }

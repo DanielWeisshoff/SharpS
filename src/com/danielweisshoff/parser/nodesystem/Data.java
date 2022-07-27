@@ -12,6 +12,7 @@ package com.danielweisshoff.parser.nodesystem;
  *
  */
 //TODO? to many ctors? Could bring alot of bugs later
+//TODO ctors without datatype, so the existing type will be used instead (should be standard)
 public class Data {
 
 	public final DataType dataType;

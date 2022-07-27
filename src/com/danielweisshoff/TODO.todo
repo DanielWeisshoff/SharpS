@@ -46,7 +46,7 @@ ins OOP übertragen werden
 [+] - Pointer 
 [+] - ++x, x++ Operand (Increment)
 [+] - --x, x-- Operand (Decrement)
-[-] - Errorchecking verbessern  
+[/] - Errorchecking verbessern  
 [-] - arrays -> ArrayNode
 [-] - foreach
 [-] - ?Preprocessor?

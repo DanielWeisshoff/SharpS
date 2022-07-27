@@ -3,7 +3,6 @@ package com.danielweisshoff.interpreter;
 import java.util.HashMap;
 
 import com.danielweisshoff.parser.PError.*;
-import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.Node;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.BinaryOperationNode;

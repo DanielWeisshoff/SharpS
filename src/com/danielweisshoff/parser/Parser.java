@@ -89,9 +89,14 @@ public class Parser {
 			// VAR_INITIALIZATION
 			else if (next(2, TokenType.EQUAL))
 				instruction = parseVarInitialization();
-			// VAR_DECLARATION
-			else
-				instruction = parseVarDeclaration();
+			else {
+				// ARRAY_INITIALIZATION
+				if (next(2, TokenType.O_BLOCK_BRACKET))
+					instruction = parseArrayInitialization();
+				// VAR_DECLARATION
+				else
+					instruction = parseVarDeclaration();
+			}
 		}
 		// LOOPS
 		case KW_FOR -> instruction = parseFor();
@@ -109,6 +114,9 @@ public class Parser {
 				instruction = parsePostDecrement(true);
 			else if (next(TokenType.PLUS))
 				instruction = parsePostIncrement(true);
+			else if (next(TokenType.O_BLOCK_BRACKET)) {
+
+			}
 		}
 		//
 		case PLUS -> instruction = parsePreIncrement(true);
@@ -924,6 +932,36 @@ public class Parser {
 		assume(TokenType.IDENTIFIER, "adress name missing");
 
 		return name;
+	}
+
+	private ArrInitNode parseArrayInitialization() {
+		TokenType keyword = curToken.type();
+		advance();
+
+		String name = curToken.value;
+		advance();
+
+		assume(TokenType.O_BLOCK_BRACKET, "missing [ for index");
+
+		NumberNode nn = parseExpression();
+
+		assume(TokenType.C_BLOCK_BRACKET, "missing ] for index");
+
+		//TODO in Helferklasse auslagern
+		DataType dataType = null;
+		switch (keyword) {
+		case KW_BYTE -> dataType = DataType.BYTE;
+		case KW_SHORT -> dataType = DataType.SHORT;
+		case KW_INT -> dataType = DataType.INT;
+		case KW_LONG -> dataType = DataType.LONG;
+		case KW_FLOAT -> dataType = DataType.FLOAT;
+		case KW_DOUBLE -> dataType = DataType.DOUBLE;
+		default -> new Error("Unknown primitive type " + keyword);
+		}
+		ArrInitNode an = new ArrInitNode(dataType, nn);
+
+		addInstruction(an);
+		return an;
 	}
 
 	public BlockNode getAST() {
