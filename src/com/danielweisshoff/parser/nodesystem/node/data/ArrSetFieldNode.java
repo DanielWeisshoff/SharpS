@@ -1,11 +1,10 @@
-package com.danielweisshoff.parser.nodesystem.node.data.assigning;
+package com.danielweisshoff.parser.nodesystem.node.data;
 
 import com.danielweisshoff.interpreter.Interpreter;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.node.Node;
 import com.danielweisshoff.parser.nodesystem.node.NodeType;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.NumberNode;
-import com.danielweisshoff.parser.symboltable.VariableEntry;
 
 public class ArrSetFieldNode extends Node {
 
@@ -23,8 +22,13 @@ public class ArrSetFieldNode extends Node {
 
 	@Override
 	public Data run() {
-		VariableEntry ve = Interpreter.symbolTable.findVariable(name);
-		ve.data.setValue(value.run().asDouble());
+		ArrayNode an = (ArrayNode) Interpreter.stm.findVariable(name).node;
+
+		int i = index.run().asInt();
+		an.fields[i] = value.run();
+
+		if (Interpreter.debug)
+			System.out.println(an.fields[i].asDouble() + ", " + name + "[" + i + "]");
 
 		return new Data();
 	}

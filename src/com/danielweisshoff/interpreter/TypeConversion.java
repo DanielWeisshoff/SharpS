@@ -6,6 +6,10 @@ import com.danielweisshoff.parser.PError.*;
 import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.Node;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.BinaryOperationNode;
+import com.danielweisshoff.parser.nodesystem.node.binaryoperations.NumberNode;
+import com.danielweisshoff.parser.nodesystem.node.data.ArrGetFieldNode;
+import com.danielweisshoff.parser.nodesystem.node.data.ArrSetFieldNode;
+import com.danielweisshoff.parser.nodesystem.node.data.ArrayNode;
 import com.danielweisshoff.parser.nodesystem.node.data.PointerNode;
 import com.danielweisshoff.parser.nodesystem.node.data.VariableNode;
 import com.danielweisshoff.parser.nodesystem.node.data.assigning.AssignNode;
@@ -44,7 +48,7 @@ public class TypeConversion {
 		this.symbolTableManager = symbolTableManager;
 	}
 
-	public boolean convert(DataType dataType, Node expr) {
+	public boolean convert(DataType dataType, NumberNode expr) {
 		this.dataType = dataType;
 
 		precedence = precedences.get(dataType);
@@ -55,7 +59,7 @@ public class TypeConversion {
 		return true;
 	}
 
-	private boolean check(Node expr) {
+	private boolean check(NumberNode expr) {
 		if (expr instanceof BinaryOperationNode)
 			return traverseOperation(expr);
 		else if (expr instanceof PointerNode)
@@ -64,6 +68,8 @@ public class TypeConversion {
 			return checkPrimitive(expr);
 		else if (expr instanceof VariableNode)
 			return checkVariable(expr);
+		else if (expr instanceof ArrGetFieldNode)
+			return checkArray(expr);
 		else if (expr instanceof PreIncrementNode || expr instanceof PostIncrementNode
 				|| expr instanceof PreDecrementNode || expr instanceof PostDecrementNode)
 			return checkCrement(expr);
@@ -77,20 +83,20 @@ public class TypeConversion {
 	// TYPE CHECKING
 	//
 
-	private boolean traverseOperation(Node expr) {
+	private boolean traverseOperation(NumberNode expr) {
 		boolean l = check(((BinaryOperationNode) expr).left);
 		boolean r = check(((BinaryOperationNode) expr).right);
 		return l && r;
 	}
 
-	private boolean checkPointer(Node expr) {
+	private boolean checkPointer(NumberNode expr) {
 		PointerNode pn = (PointerNode) expr;
 
-		VariableEntry ve = symbolTableManager.findVariable(pn.getName());
+		VariableEntry ve = symbolTableManager.findVariable(pn.name);
 		if (ve == null)
-			new UnimplementedError("conv error: var '" + pn.getName() + "' not declared");
+			new UnimplementedError("conv error: var '" + pn.name + "' not declared");
 
-		if (ve.dataType == dataType)
+		if (pn.dataType == dataType)
 			return true;
 		else {
 			new UnimplementedError("CONVERSION ERROR: can't point from " + lastType + " to " + dataType);
@@ -98,7 +104,7 @@ public class TypeConversion {
 		}
 	}
 
-	private boolean checkPrimitive(Node expr) {
+	private boolean checkPrimitive(NumberNode expr) {
 		lastType = ((PrimitiveNode) expr).getData().dataType;
 
 		//integer 
@@ -121,19 +127,24 @@ public class TypeConversion {
 		}
 	}
 
-	private boolean checkVariable(Node expr) {
+	private boolean checkVariable(NumberNode expr) {
 		VariableNode vn = (VariableNode) expr;
 		VariableEntry ve = symbolTableManager.findVariable(vn.getName());
 		if (ve == null)
 			new UnimplementedError("conv error: var '" + vn.getName() + "' not declared");
 
-		lastType = ve.dataType;
-		return precedence >= precedences.get(ve.dataType);
+		lastType = vn.getDataType();
+		return precedence >= precedences.get(vn.getDataType());
 	}
 
-	private boolean checkCrement(Node expr) {
+	private boolean checkCrement(NumberNode expr) {
 		AssignNode an = (AssignNode) expr;
 
 		return precedence >= precedences.get(an.variable.getDataType());
+	}
+
+	private boolean checkArray(NumberNode expr) {
+		ArrGetFieldNode agfn = (ArrGetFieldNode) expr;
+		return precedence >= precedences.get(agfn.run().dataType);
 	}
 }

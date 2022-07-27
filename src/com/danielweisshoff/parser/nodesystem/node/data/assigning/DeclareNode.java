@@ -6,6 +6,7 @@ import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.Node;
 import com.danielweisshoff.parser.nodesystem.node.NodeType;
+import com.danielweisshoff.parser.nodesystem.node.data.VariableNode;
 import com.danielweisshoff.parser.symboltable.VariableEntry;
 
 /**
@@ -33,8 +34,11 @@ public class DeclareNode extends Node {
 		long id = IdRegistry.newID();
 
 		//entry in symboltable
-		VariableEntry entry = new VariableEntry(name, id, dataType, new Data());
-		Interpreter.symbolTable.addVariable(id, entry);
+		VariableNode vn = new VariableNode(name, dataType);
+		vn.data = new Data();
+
+		VariableEntry entry = new VariableEntry(name, id, vn);
+		Interpreter.stm.addVariable(id, entry);
 
 		return new Data();
 	}

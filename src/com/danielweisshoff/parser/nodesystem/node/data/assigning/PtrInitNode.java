@@ -5,8 +5,10 @@ import com.danielweisshoff.parser.IdRegistry;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.NodeType;
+import com.danielweisshoff.parser.nodesystem.node.data.PointerNode;
 import com.danielweisshoff.parser.symboltable.VariableEntry;
 
+//TODO NumberNode.data is unused!!!
 public class PtrInitNode extends AssignNode {
 
 	private final String name;
@@ -27,14 +29,15 @@ public class PtrInitNode extends AssignNode {
 
 		//generate an id for the variable
 		long id = IdRegistry.newID();
-		VariableEntry ve = Interpreter.symbolTable.findVariable(adress);
-		Data data = ve.getData();
 
-		VariableEntry entry = new VariableEntry(name, id, dataType, data);
-		Interpreter.symbolTable.addVariable(id, entry);
+		PointerNode pn = new PointerNode(name, adress, dataType);
+		VariableEntry entry = new VariableEntry(name, id, pn);
+		Interpreter.stm.addVariable(id, entry);
 
-		if (Interpreter.debug)
+		if (Interpreter.debug) {
+			Data data = Interpreter.stm.findVariable(adress).node.run();
 			System.out.println(data.data + ", " + dataType);
+		}
 
 		return new Data();
 	}

@@ -42,15 +42,15 @@ public class Interpreter {
 
 	public static boolean debug = true;
 	//Variables and Functions
-	public static SymbolTableManager symbolTable = new SymbolTableManager();
-	public static TypeConversion conversionChecker = new TypeConversion(symbolTable);
+	public static SymbolTableManager stm = new SymbolTableManager();
+	public static TypeConversion conversionChecker = new TypeConversion(stm);
 	private Node curInstruction;
 	//when stepper is enabled, one line will be interpreted at a time on user input
 	private boolean stepFinished = false;
 	private Scanner stepperScanner = new Scanner(System.in);
 
 	public Interpreter() {
-		symbolTable.deleteTableOnScopeEnd = true;
+		stm.deleteTableOnScopeEnd = true;
 	}
 
 	public Data interpret(Node n) {

@@ -36,7 +36,7 @@ PTR_DEFINITION ->
 				| PTR = ADRESS 
 				| PTR += EXPR
 				| PTR -= EXPR 
-PTR_INITIALIZATION -> PTR_DECLARATION = ADRESS
+PTR_INITIALIZATION ->  PRIMITIVE PTR = ADRESS
 PTR -> * ID
 ADRESS -> & ID
 
@@ -80,6 +80,7 @@ FACTOR ->
 		| ID - -
 		| ID + +
 		| ID
+		| ID [ EXPR ]
 
 INTEGER -> bte|sht|int|long
 FLOATING_POINT -> flt|dbl

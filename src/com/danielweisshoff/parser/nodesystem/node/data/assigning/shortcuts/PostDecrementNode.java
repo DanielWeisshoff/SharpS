@@ -17,12 +17,12 @@ public class PostDecrementNode extends AssignNode {
 	@Override
 	public Data run() {
 
-		VariableEntry var = Interpreter.symbolTable.findVariable(name);
+		VariableEntry var = Interpreter.stm.findVariable(name);
 		if (var == null)
 			new UnimplementedError("Interpreter Error: var '" + name + "' not declared");
 
-		double value = var.getData().asDouble();
-		var.data.setValue(value - 1);
+		double value = var.node.data.asDouble();
+		var.node.data.setValue(value - 1);
 
 		return new Data(value, DataType.DOUBLE);
 	}

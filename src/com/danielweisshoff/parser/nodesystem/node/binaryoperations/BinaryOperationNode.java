@@ -2,7 +2,6 @@ package com.danielweisshoff.parser.nodesystem.node.binaryoperations;
 
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
-import com.danielweisshoff.parser.nodesystem.node.Node;
 import com.danielweisshoff.parser.nodesystem.node.NodeType;
 
 /**
@@ -10,8 +9,8 @@ import com.danielweisshoff.parser.nodesystem.node.NodeType;
  */
 public abstract class BinaryOperationNode extends NumberNode {
 
-	public Node left;
-	public Node right;
+	public NumberNode left;
+	public NumberNode right;
 	protected Data result;
 
 	public BinaryOperationNode(DataType[] inputType, DataType outputType, NodeType nodeType) {

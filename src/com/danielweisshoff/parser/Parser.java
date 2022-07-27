@@ -7,6 +7,7 @@ import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.PError.*;
+import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.*;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.*;
@@ -89,14 +90,13 @@ public class Parser {
 			// VAR_INITIALIZATION
 			else if (next(2, TokenType.EQUAL))
 				instruction = parseVarInitialization();
-			else {
-				// ARRAY_INITIALIZATION
-				if (next(2, TokenType.O_BLOCK_BRACKET))
-					instruction = parseArrayInitialization();
-				// VAR_DECLARATION
-				else
-					instruction = parseVarDeclaration();
+			// ARRAY_INITIALIZATION
+			else if (next(2, TokenType.O_BLOCK_BRACKET)) {
+				instruction = parseArrayInitialization();
 			}
+			// VAR_DECLARATION
+			else
+				instruction = parseVarDeclaration();
 		}
 		// LOOPS
 		case KW_FOR -> instruction = parseFor();
@@ -115,6 +115,10 @@ public class Parser {
 			else if (next(TokenType.PLUS))
 				instruction = parsePostIncrement(true);
 			else if (next(TokenType.O_BLOCK_BRACKET)) {
+				if (next(4, TokenType.EQUAL))
+					instruction = parseArraySetField();
+				else
+					instruction = parseArrayGetField();
 
 			}
 		}
@@ -280,6 +284,7 @@ public class Parser {
 		stm.print();
 	}
 
+	//TODO in Helferklasse auslagern
 	private DataType getPrimitiveType(TokenType keyword) {
 		DataType type = null;
 		switch (keyword) {
@@ -485,7 +490,7 @@ public class Parser {
 			case IDENTIFIER:
 				String varName = curToken.value;
 				advance();
-				n = new VariableNode(varName);
+				n = stm.findVariable(varName).node;
 				break;
 			// - - ID
 			case MINUS:
@@ -495,6 +500,7 @@ public class Parser {
 			default:
 				new UnimplementedError("error parsing factor with -", curToken);
 			}
+			break;
 		case PLUS:
 			// + + ID	
 			n = parsePreIncrement(false);
@@ -513,11 +519,14 @@ public class Parser {
 			// ID + +
 			else if (next(TokenType.PLUS) && next(2, TokenType.PLUS))
 				n = parsePostIncrement(false);
-			// ID
-			else {
+			// ID [ EXPR ]
+			else if (next(TokenType.O_BLOCK_BRACKET)) {
+				n = parseArrayGetField();
+				// ID
+			} else {
 				String varName = curToken.value;
 				advance();
-				n = new VariableNode(varName);
+				n = stm.findVariable(varName).node;
 			}
 			break;
 		default:
@@ -612,7 +621,10 @@ public class Parser {
 
 		//Variable eintragen
 		long id = IdRegistry.newID();
-		VariableEntry ve = new VariableEntry(name, id, type, null);
+		VariableNode vn = new VariableNode(name, type);
+		vn.data = new Data();
+
+		VariableEntry ve = new VariableEntry(name, id, vn);
 		stm.addVariable(id, ve);
 
 		addInstruction(dn);
@@ -711,7 +723,9 @@ public class Parser {
 
 		assume(TokenType.EQUAL, "init '=' missing");
 
-		Node expr = parseExpression();
+		NumberNode expr = parseExpression();
+		stm.findVariable(dn.getName()).node = expr;
+
 		VarInitNode in = new VarInitNode(dn.getName(), dn.dataType, expr);
 
 		addInstruction(in);
@@ -726,7 +740,7 @@ public class Parser {
 		//DataType type = getPrimitiveType(keyword);
 
 		advance();
-		String name = parsePointer().getName();
+		String name = parsePointer().name;
 
 		//schauen, ob variable schon existiert
 		if (stm.lookupVariable(name))
@@ -734,7 +748,8 @@ public class Parser {
 
 		//Variable eintragen
 		long id = IdRegistry.newID();
-		VariableEntry ve = new VariableEntry(name, id, DataType.POINTER, null);
+		PointerNode pn = new PointerNode(name, "nullptr", getPrimitiveType(keyword));
+		VariableEntry ve = new VariableEntry(name, id, pn);
 		stm.addVariable(id, ve);
 
 		DeclareNode dn = new DeclareNode(name, DataType.POINTER);
@@ -771,16 +786,31 @@ public class Parser {
 	}
 
 	private PtrInitNode parsePtrInitialization() {
-		DeclareNode pn = parsePtrDeclaration();
+		// PRIMITIVE PTR = ADRESS
+
+		TokenType keyword = curToken.type();
+		//TODO getting the primitive type of the pointer
+		//DataType type = getPrimitiveType(keyword);
+
+		advance();
+		String name = parsePointer().name;
+
+		//schauen, ob variable schon existiert
+		if (stm.lookupVariable(name))
+			new UnimplementedError("var '" + name + "': " + DataType.POINTER + " is already declared", curToken);
 
 		assume(TokenType.EQUAL, "= sign missing for ptr init");
 
 		String adress = parseAdress();
 		VariableEntry var = stm.findVariable(adress);
-		PtrInitNode pin = new PtrInitNode(pn.getName(), pn.dataType, adress);
+		//Variable eintragen
+		long id = IdRegistry.newID();
+		PtrInitNode pn = new PtrInitNode(name, getPrimitiveType(keyword), adress);
+		VariableEntry ve = new VariableEntry(name, id, pn);
 
-		addInstruction(pin);
-		return pin;
+		stm.addVariable(id, ve);
+		addInstruction(pn);
+		return pn;
 	}
 
 	//
@@ -788,6 +818,7 @@ public class Parser {
 	//
 
 	private WhileNode parseWhile() {
+		// while ( BOOL ) : BLOCK
 		assume(TokenType.KW_WHILE, "Keyword WHILE missing");
 		assume(TokenType.O_ROUND_BRACKET, "Missing open bracket for while-loop");
 
@@ -805,6 +836,7 @@ public class Parser {
 	}
 
 	private DoWhileNode parseDoWhile() {
+		// do while ( BOOL ) : BLOCK
 		assume(TokenType.KW_DO, "Keyword DO missing");
 		assume(TokenType.KW_WHILE, "Keyword WHILE missing");
 		assume(TokenType.O_ROUND_BRACKET, "Missing open bracket for while-loop");
@@ -822,8 +854,8 @@ public class Parser {
 		return dwn;
 	}
 
-	//TODO this needs a major overhaul someday when more variations will be added
 	private ForNode parseFor() {
+		// for ( INITIALIZATION , BOOL , DEFINITION ) : BLOCK
 		ForNode fn = new ForNode();
 		addInstruction(fn);
 
@@ -857,6 +889,7 @@ public class Parser {
 	}
 
 	private AssignNode parsePostIncrement(boolean isStandalone) {
+		// ID + +
 		String varName = curToken.value;
 		assume(TokenType.IDENTIFIER, "post-increment-assignment var missing");
 
@@ -864,7 +897,6 @@ public class Parser {
 		assume(TokenType.PLUS, "Incrementor + missing");
 
 		PostIncrementNode lin = new PostIncrementNode(varName);
-		lin.variable = new VariableNode(varName);
 
 		if (isStandalone)
 			addInstruction(lin);
@@ -872,6 +904,7 @@ public class Parser {
 	}
 
 	private AssignNode parsePostDecrement(boolean isStandalone) {
+		// ID - -
 		String varName = curToken.value;
 		assume(TokenType.IDENTIFIER, "post-decrement-assignment var missing");
 
@@ -880,7 +913,6 @@ public class Parser {
 
 		System.out.println("currently at: " + curToken.type());
 		PostDecrementNode ldn = new PostDecrementNode(varName);
-		ldn.variable = new VariableNode(varName);
 
 		if (isStandalone)
 			addInstruction(ldn);
@@ -888,14 +920,14 @@ public class Parser {
 	}
 
 	private AssignNode parsePreIncrement(boolean isStandalone) {
-		assume(TokenType.PLUS, "Incrementor + missing");
-		assume(TokenType.PLUS, "Incrementor + missing");
+		// + + ID
+		assume(TokenType.PLUS, "Expected + for incrementing");
+		assume(TokenType.PLUS, "Expected + for incrementing");
 
 		String varName = curToken.value;
 		assume(TokenType.IDENTIFIER, "pre-increment-assignment var missing");
 
 		PreIncrementNode in = new PreIncrementNode(varName);
-		in.variable = new VariableNode(varName);
 
 		if (isStandalone)
 			addInstruction(in);
@@ -903,14 +935,14 @@ public class Parser {
 	}
 
 	private AssignNode parsePreDecrement(boolean isStandalone) {
-		assume(TokenType.MINUS, "Decrementor - missing");
-		assume(TokenType.MINUS, "Decrementor - missing");
+		// - - ID
+		assume(TokenType.MINUS, "Expected - for decrementing");
+		assume(TokenType.MINUS, "Expected - for decrementing");
 
 		String varName = curToken.value;
 		assume(TokenType.IDENTIFIER, "pre-decrement-assignment var missing");
 
 		PreDecrementNode dn = new PreDecrementNode(varName);
-		dn.variable = new VariableNode(varName);
 
 		if (isStandalone)
 			addInstruction(dn);
@@ -923,10 +955,11 @@ public class Parser {
 		String name = curToken.value;
 		assume(TokenType.IDENTIFIER, "pointer name missing");
 
-		return new PointerNode(name);
+		return new PointerNode(name, null, null);
 	}
 
 	private String parseAdress() {
+		// & ID
 		assume(TokenType.AND, "adress & missing");
 		String name = curToken.value;
 		assume(TokenType.IDENTIFIER, "adress name missing");
@@ -935,6 +968,7 @@ public class Parser {
 	}
 
 	private ArrInitNode parseArrayInitialization() {
+		// KW ID [ EXPR ]
 		TokenType keyword = curToken.type();
 		advance();
 
@@ -942,26 +976,45 @@ public class Parser {
 		advance();
 
 		assume(TokenType.O_BLOCK_BRACKET, "missing [ for index");
-
-		NumberNode nn = parseExpression();
-
+		NumberNode size = parseExpression();
 		assume(TokenType.C_BLOCK_BRACKET, "missing ] for index");
 
-		//TODO in Helferklasse auslagern
-		DataType dataType = null;
-		switch (keyword) {
-		case KW_BYTE -> dataType = DataType.BYTE;
-		case KW_SHORT -> dataType = DataType.SHORT;
-		case KW_INT -> dataType = DataType.INT;
-		case KW_LONG -> dataType = DataType.LONG;
-		case KW_FLOAT -> dataType = DataType.FLOAT;
-		case KW_DOUBLE -> dataType = DataType.DOUBLE;
-		default -> new Error("Unknown primitive type " + keyword);
-		}
-		ArrInitNode an = new ArrInitNode(dataType, nn);
-
+		DataType dataType = getPrimitiveType(keyword);
+		ArrInitNode an = new ArrInitNode(name, dataType, size);
 		addInstruction(an);
+
 		return an;
+	}
+
+	private Node parseArraySetField() {
+		// ID [ EXPR ] = EXPR
+		String name = curToken.value;
+		advance();
+
+		assume(TokenType.O_BLOCK_BRACKET, "[ missing");
+		NumberNode index = parseExpression();
+		assume(TokenType.C_BLOCK_BRACKET, "] missing");
+
+		assume(TokenType.EQUAL, "= missing");
+		NumberNode value = parseExpression();
+
+		ArrSetFieldNode asfn = new ArrSetFieldNode(name, index, value);
+		addInstruction(asfn);
+
+		return null;
+	}
+
+	private NumberNode parseArrayGetField() {
+		// ID [ EXPR ]
+		String name = curToken.value;
+		advance();
+
+		assume(TokenType.O_BLOCK_BRACKET, "[ missing");
+		NumberNode index = parseExpression();
+		assume(TokenType.C_BLOCK_BRACKET, "] missing");
+
+		ArrGetFieldNode agfn = new ArrGetFieldNode(name, index);
+		return agfn;
 	}
 
 	public BlockNode getAST() {
