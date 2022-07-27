@@ -28,11 +28,32 @@ public class Goethe {
 			String line;
 			while ((line = scanner.readLine()) != null)
 				program.append(line + '\n');
+			program.append("\0");
+
 			scanner.close();
 		} catch (Exception e) {
 			System.out.println(e.getLocalizedMessage());
 		}
 		return program.toString();
+	}
+
+	public static String getLine(int lineNumber) {
+		String line = "";
+		try {
+			BufferedReader scanner = new BufferedReader(new FileReader(programPath));//.useDelimiter("(\\b|\\B)");
+
+			int curLine = 0;
+			while ((line = scanner.readLine()) != null) {
+				curLine++;
+				if (curLine == lineNumber)
+					break;
+			}
+
+			scanner.close();
+		} catch (Exception e) {
+			System.out.println(e.getLocalizedMessage());
+		}
+		return line;
 	}
 
 	public static void writeText(File file, String text, boolean append) {

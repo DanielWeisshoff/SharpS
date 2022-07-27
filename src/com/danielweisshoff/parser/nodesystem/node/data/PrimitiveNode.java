@@ -15,4 +15,9 @@ public class PrimitiveNode extends Node {
 	public Data getData() {
 		return data;
 	}
+
+	@Override
+	public Data run() {
+		return data;
+	}
 }

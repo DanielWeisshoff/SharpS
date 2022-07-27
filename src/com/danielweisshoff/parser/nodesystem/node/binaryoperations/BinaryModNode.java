@@ -10,4 +10,10 @@ public class BinaryModNode extends BinaryOperationNode {
 		super(new DataType[] { DataType.DOUBLE, DataType.DOUBLE }, DataType.DOUBLE, NodeType.BINARY_MOD_NODE);
 
 	}
+
+	@Override
+	public Data run() {
+		double val = left.run().asDouble() % right.run().asDouble();
+		return new Data(val, DataType.DOUBLE);
+	}
 }

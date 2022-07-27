@@ -1,5 +1,7 @@
 package com.danielweisshoff.parser.nodesystem.node.logic;
 
+import com.danielweisshoff.parser.nodesystem.Data;
+import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.Node;
 import com.danielweisshoff.parser.nodesystem.node.NodeType;
 
@@ -16,4 +18,13 @@ public class LessEqualNode extends ConditionNode {
 		this.right = right;
 	}
 
+	@Override
+	public Data run() {
+		boolean val = left.run().asDouble() <= right.run().asDouble();
+
+		if (val)
+			return new Data(1, DataType.BOOLEAN);
+		else
+			return new Data(0, DataType.BOOLEAN);
+	}
 }

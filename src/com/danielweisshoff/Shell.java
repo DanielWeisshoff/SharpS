@@ -15,6 +15,7 @@ import com.danielweisshoff.parser.nodesystem.node.Node;
 public class Shell {
 
 	public static boolean benchmark = true;
+	public static boolean debug = true;
 
 	public static void main(String[] args) {
 		Logger.enabled = true;
@@ -22,10 +23,6 @@ public class Shell {
 			benchmark();
 		else
 			run();
-
-		start();
-		Logger.writeLogs();
-		stop("LOGGER");
 
 		System.out.println(benchmarks);
 		System.out.println("all done in " + benchmarkMS + " ms");
@@ -46,12 +43,12 @@ public class Shell {
 			if (line.length == 0 || (line.length == 1 && line[0].type() == TokenType.TAB))
 				continue;
 
-			parser.parseLine(line);
+			parser.parseInstruction(line);
 		}
 
 		//INTERPRETATION
 		Interpreter interpreter = new Interpreter();
-		interpreter.debug = false;
+		Interpreter.debug = debug;
 
 		Node ast = parser.getAST();
 		interpreter.interpret(ast);
@@ -76,19 +73,26 @@ public class Shell {
 				continue;
 			tokens.add(line);
 		}
+		for (Token[] t : tokens) {
+			for (Token to : t)
+				System.out.println(to.getDescription());
+			System.out.println();
+		}
 		stop("LEXER");
 		System.out.println(benchmarks);
 
 		//PARSING
 		start();
 		for (Token[] t : tokens) {
-			parser.parseLine(t);
+			parser.parseInstruction(t);
 		}
 		stop("PARSER");
 
+		parser.printSymbolTable();
+
 		//INTERPRETATION
 		Interpreter interpreter = new Interpreter();
-		interpreter.debug = false;
+		Interpreter.debug = debug;
 		Node ast = parser.getAST();
 
 		//INTERPRETING
@@ -97,6 +101,7 @@ public class Shell {
 		stop("INTERPRETER");
 	}
 
+	//
 	private static Instant start, end;
 	private static String benchmarks = "";
 	private static long benchmarkMS;

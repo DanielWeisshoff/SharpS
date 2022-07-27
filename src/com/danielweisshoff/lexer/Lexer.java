@@ -3,16 +3,23 @@ package com.danielweisshoff.lexer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+//TODO? implement RegRex bcause its faster
 public class Lexer {
 
 	public static String VERSION = "V 0.8.1";
 
 	private final HashMap<Character, TokenType> tokenMap = new HashMap<>();
 	private String text;
-
 	private int charIndex = -1;
 	private char currentChar;
 	private boolean hasNext = true; //if the pointer is at the end or not
+
+	//
+	private int line = 0;
+	//the column pos of the current char
+	private int curColumn = -1;
+	//the position at which the current token starts
+	private int tokenStart = -1;
 
 	public Lexer(String text) {
 		this.text = text;
@@ -21,18 +28,23 @@ public class Lexer {
 	}
 
 	private void advance() {
+		curColumn++;
 		charIndex++;
+
 		if (charIndex < text.length())
 			currentChar = text.charAt(charIndex);
 	}
 
-	//test
 	public Token[] nextLine() {
+		line++;
+		curColumn = 0;
+		tokenStart = 0;
+
 		ArrayList<Token> tokens = new ArrayList<>();
 
 		while (charIndex < text.length() && currentChar != '\n') {
 			if (tokenMap.containsKey(currentChar)) {
-				tokens.add(new Token(tokenMap.get(currentChar), ""));
+				tokens.add(new Token(tokenMap.get(currentChar), "", line, tokenStart, curColumn));
 				advance();
 			} else if (Character.isAlphabetic(currentChar)) {
 				tokens.add(buildIdentifierOrKeywordToken());
@@ -53,6 +65,7 @@ public class Lexer {
 				default -> advance();
 				}
 			}
+			tokenStart = curColumn;
 		}
 
 		//Newline skippen
@@ -62,42 +75,7 @@ public class Lexer {
 		if (charIndex >= text.length())
 			hasNext = false;
 
-		//tokens.add(new Token(TokenType.EOF, ""));
 		return Token.toArray(tokens);
-	}
-
-	//In this case, the text is just a single line
-	public Token[] tokenizeText() {
-		return null;
-	}
-
-	//TODO outdated, needs checks from nextLine
-	public Token nextToken() {
-		if (charIndex >= text.length())
-			return new Token(TokenType.EOF, "");
-
-		Token token = null;
-		while (token == null && charIndex < text.length()) {
-			if (tokenMap.containsKey(currentChar)) {
-				token = new Token(tokenMap.get(currentChar), "");
-				advance();
-			} else if (Character.isAlphabetic(currentChar)) {
-				token = buildIdentifierOrKeywordToken();
-			} else if (Character.isDigit(currentChar)) {
-				token = buildNumberToken();
-			} else {
-				switch (currentChar) {
-				case '"' -> token = (buildStringToken());
-				case '#' -> skipComment();
-				case '=' -> token = buildComparisonToken('=');
-				case '<' -> token = buildComparisonToken('<');
-				case '>' -> token = buildComparisonToken('>');
-				case '!' -> token = buildComparisonToken('!');
-				default -> advance();
-				}
-			}
-		}
-		return token;
 	}
 
 	public boolean hasNextLine() {
@@ -119,21 +97,24 @@ public class Lexer {
 		String subString = text.substring(start, charIndex);
 		return switch (subString) {
 		//PRIMITIVES
-		case "bte" -> new Token(TokenType.KW_BYTE, null);
-		case "sht" -> new Token(TokenType.KW_SHORT, null);
-		case "int" -> new Token(TokenType.KW_INT, null);
-		case "lng" -> new Token(TokenType.KW_LONG, null);
-		case "flt" -> new Token(TokenType.KW_FLOAT, null);
-		case "dbl" -> new Token(TokenType.KW_DOUBLE, null);
+		case "bte" -> new Token(TokenType.KW_BYTE, null, line, tokenStart, curColumn - 1);
+		case "sht" -> new Token(TokenType.KW_SHORT, null, line, tokenStart, curColumn - 1);
+		case "int" -> new Token(TokenType.KW_INT, null, line, tokenStart, curColumn - 1);
+		case "lng" -> new Token(TokenType.KW_LONG, null, line, tokenStart, curColumn - 1);
+		case "flt" -> new Token(TokenType.KW_FLOAT, null, line, tokenStart, curColumn - 1);
+		case "dbl" -> new Token(TokenType.KW_DOUBLE, null, line, tokenStart, curColumn - 1);
+		//BOOLEAN
+		case "true" -> new Token(TokenType.KW_TRUE, null, line, tokenStart, curColumn - 1);
+		case "false" -> new Token(TokenType.KW_FALSE, null, line, tokenStart, curColumn - 1);
 		//
-		case "if" -> new Token(TokenType.KW_IF, null);
-		case "else" -> new Token(TokenType.KW_ELSE, null);
-		case "elif" -> new Token(TokenType.KW_ELIF, null);
-		case "fnc" -> new Token(TokenType.KW_FNC, null);
-		case "while" -> new Token(TokenType.KW_WHILE, null);
-		case "for" -> new Token(TokenType.KW_FOR, null);
-		case "do" -> new Token(TokenType.KW_DO, null);
-		default -> new Token(TokenType.IDENTIFIER, subString);
+		case "if" -> new Token(TokenType.KW_IF, null, line, tokenStart, curColumn - 1);
+		case "else" -> new Token(TokenType.KW_ELSE, null, line, tokenStart, curColumn - 1);
+		case "elif" -> new Token(TokenType.KW_ELIF, null, line, tokenStart, curColumn - 1);
+		case "fnc" -> new Token(TokenType.KW_FNC, null, line, tokenStart, curColumn - 1);
+		case "while" -> new Token(TokenType.KW_WHILE, null, line, tokenStart, curColumn - 1);
+		case "for" -> new Token(TokenType.KW_FOR, null, line, tokenStart, curColumn - 1);
+		case "do" -> new Token(TokenType.KW_DO, null, line, tokenStart, curColumn - 1);
+		default -> new Token(TokenType.IDENTIFIER, subString, line, tokenStart, curColumn - 1);
 		};
 	}
 
@@ -152,7 +133,7 @@ public class Lexer {
 			advance();
 		}
 		if (whitespaceCount >= 4)
-			t = new Token(TokenType.TAB, "" + (int) Math.floor(whitespaceCount / 4));
+			t = new Token(TokenType.TAB, "" + (int) Math.floor(whitespaceCount / 4), line, tokenStart, curColumn - 1);
 		return t;
 	}
 
@@ -169,8 +150,9 @@ public class Lexer {
 				break;
 		}
 		if (isFloat)
-			return new Token(TokenType.FLOATING_POINT, text.substring(start, charIndex));
-		return new Token(TokenType.INTEGER, text.substring(start, charIndex));
+			return new Token(TokenType.FLOATING_POINT, text.substring(start, charIndex), line, tokenStart,
+					curColumn - 1);
+		return new Token(TokenType.INTEGER, text.substring(start, charIndex), line, tokenStart, curColumn - 1);
 	}
 
 	private Token buildComparisonToken(char c) {
@@ -178,10 +160,10 @@ public class Lexer {
 		if (charIndex < text.length()) {
 			if (currentChar == '=') {
 				advance();
-				return new Token(TokenType.COMPARISON, c + "=");
+				return new Token(TokenType.COMPARISON, c + "=", line, tokenStart, curColumn - 1);
 			}
 		}
-		return new Token(TokenType.EQUAL, "" + c);
+		return new Token(TokenType.EQUAL, "" + c, line, tokenStart, curColumn - 1);
 	}
 
 	private Token buildStringToken() {
@@ -196,7 +178,7 @@ public class Lexer {
 				break;
 			}
 		}
-		return new Token(TokenType.STRING, text.substring(start, charIndex - 1));
+		return new Token(TokenType.STRING, text.substring(start, charIndex - 1), line, tokenStart, curColumn - 1);
 	}
 
 	private void skipComment() {
@@ -225,5 +207,6 @@ public class Lexer {
 		tokenMap.put('%', TokenType.PERCENT);
 		tokenMap.put('&', TokenType.AND);
 		tokenMap.put('|', TokenType.OR);
+		tokenMap.put('\0', TokenType.EOF);
 	}
 }

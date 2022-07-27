@@ -2,7 +2,15 @@
   MASTER TODOLIST   MASTER TODOLIST MASTER TODOLIST     MASTER TODOLIST
 /////////////////////////////////////////////////////////////////////////
 
+TODO
+- parser nach grammar.txt umbauen
+Jede production bekommt eine eigene Klasse. Im Parser wird die Syntax der productions
+gecheckt und falls korrekt, die passende Klasse der Production erzeugt.
+Die Klassen der Productions enthalten alle für sie wichtigen infos.
+Bsp.
+IfNode speichert einen boolean und ein statement
 
+- ++ und -- erstmals entfernen
 TODO
 erstmal nur als Scriptsprache(keine Tababstände), die Logik kann dann nachher easy
 ins OOP übertragen werden
@@ -12,8 +20,6 @@ ins OOP übertragen werden
 [+] - conditions klammern
 [+] - variablen
 [+]	- Die *Build Klassen in den Parser einbauen
-[+] - ++x, x++ Operand (Increment)
-[+] - --x, x-- Operand (Decrement)
 [+]	- += operand
 [+]	- -= Operand
 [+]	- *= Operand
@@ -38,19 +44,20 @@ ins OOP übertragen werden
 [+] - schauen, warum Parser so langsam ist
 [+] - ?EqualAssignNode redundant, einfach AssignNode benutzen?
 [+] - Pointer 
-[]  - ++, -- operatoren sind schlecht implementiert
-[]	- arrays -> ArrayNode
-[]	- foreach
-[]	- ?Preprocessor?
-[]	- Nutzerfunktionen
-[]	- Parameter
-[] 	- Rueckgabewerte
-[]	- Ein paar builIn Funktionen
-[]  - char
-[]  - string als char[]
-[]  - BUG man kann pointer und rechungen mischen (int a = &a + 2 * 3)
-[]  - Casting int()
-
+[-] - ++x, x++ Operand (Increment)
+[-] - --x, x-- Operand (Decrement)
+[-] - Errorchecking verbessern  
+[-] - arrays -> ArrayNode
+[-] - foreach
+[-] - ?Preprocessor?
+[-] - Nutzerfunktionen
+[-] - Parameter
+[-] - Rueckgabewerte
+[-] - Ein paar builIn Funktionen
+[-] - char
+[-] - string als char[]
+[-] - Casting int()
+[-] - pointer arithmetic
 
 TODO
  - Strings als erste Klasse
@@ -94,7 +101,7 @@ MatLab hat sehr schöne Syntax zum erzeugen von arrays und generell iterativen S
 	for (int x = 0, x <= 10, x++):
 		#code
 	
-	int x (0:10:1):
+	int x (0:<10:1):
 		#code
 
 
@@ -103,14 +110,32 @@ Momentaner Ablauf:
 Interpretieren:	
 1. Lexer
 2. Parser
-3. Interpreter -> ConversionChecking
+3. Interpreter + Symboltable -> ConversionChecking
 
 Compilen (noch nicht eingefuegt):
 1. Lexer
-2. Parser			  (Syntax)
+2. Parser			  (Syntax) + Symboltable
 3. ConversionChecking (Semantic)
 4. AST Optimizer
 5. ByteCode Generator
 6. ByteCode Optimizer
 
 !!! 2 Optimizer sinnvoll?
+
+
+int i = 10
+if (i < 11):
+	int x = i * i
+	out i
+
+
+i
+i
+	x i i
+	i
+
+
+stumpfes eintragen in hashmap
+i
+	x
+	i

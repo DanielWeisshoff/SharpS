@@ -1,7 +1,5 @@
 package com.danielweisshoff.parser.nodesystem;
 
-import com.danielweisshoff.parser.PError;
-
 /* TODO
  *  - asChar and asBoolean conversion are cursed
  *  - idk if asPointer and asLong should be separate or not
@@ -33,9 +31,18 @@ public class Data {
 		case FLOAT -> data = Float.valueOf(0);
 		case DOUBLE -> data = Double.valueOf(0);
 		//diverse
-		case CHAR -> new PError("err01 not implemented");
-		case POINTER -> new PError("err02 not implemented");
-		case VOID -> new PError("err03 not implemented");
+		case CHAR -> {
+			System.out.println("err01 not implemented");
+			System.exit(0);
+		}
+		case POINTER -> {
+			System.out.println("err02 not implemented");
+			System.exit(0);
+		}
+		case VOID -> {
+			System.out.println("err03 not implemented");
+			System.exit(0);
+		}
 		case BOOLEAN -> data = Byte.valueOf((byte) 0);
 		}
 	}

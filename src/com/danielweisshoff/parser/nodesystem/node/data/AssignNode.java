@@ -12,7 +12,7 @@ public abstract class AssignNode extends Node {
 	public VariableNode variable;
 
 	public Node expression;
-	private final String name;
+	protected final String name;
 
 	public AssignNode(String name, NodeType nodeType) {
 		super(null, null, nodeType);

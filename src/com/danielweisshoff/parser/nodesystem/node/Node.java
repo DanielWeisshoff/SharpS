@@ -1,12 +1,13 @@
 package com.danielweisshoff.parser.nodesystem.node;
 
+import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 
 /**
  * The power of creation lies at our feet.
  * The only thing holding you back is <i>imagination</i>
  */
-public class Node {
+public abstract class Node {
 
 	/*//Spezifiziert, welche/r Datentyp angenommen / ausgegeben wird
 	private final DataType[] inputType;
@@ -19,4 +20,6 @@ public class Node {
 		// this.outputType = outputType;
 		this.nodeType = nodeType;
 	}
+
+	public abstract Data run();
 }

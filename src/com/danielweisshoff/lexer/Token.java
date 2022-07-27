@@ -2,16 +2,20 @@ package com.danielweisshoff.lexer;
 
 import java.util.ArrayList;
 
-import com.danielweisshoff.parser.PError;
-
 public class Token {
 
 	private final TokenType type;
 	public String value;
+	public int line;
+	public int start;
+	public int end;
 
-	public Token(TokenType type, String value) {
+	public Token(TokenType type, String value, int line, int start, int end) {
 		this.type = type;
 		this.value = value;
+		this.line = line;
+		this.start = start;
+		this.end = end;
 	}
 
 	public static boolean areSameCategoryOP(Token t1, Token t2) {
@@ -24,10 +28,18 @@ public class Token {
 	}
 
 	public String getDescription() {
-		if (value != null)
-			return ("[" + type + ", " + value + "]");
+
+		String position = "";
+
+		if (start == end)
+			position = line + "," + start;
 		else
-			return ("[" + type + "]");
+			position = line + "," + start + ":" + end;
+
+		if (value != null)
+			return ("[" + type + ", " + value + "] " + position);
+		else
+			return ("[" + type + "] " + position);
 	}
 
 	public TokenType type() {
@@ -42,7 +54,6 @@ public class Token {
 		return type == TokenType.STAR || type == TokenType.SLASH;
 	}
 
-	//TODO i hope mod doesnt fuck smth up
 	public boolean isOP() {
 		return isLineOP() || isDotOP() || type == TokenType.PERCENT;
 	}
@@ -55,18 +66,24 @@ public class Token {
 		return type == TokenType.INTEGER || type == TokenType.FLOATING_POINT;
 	}
 
-	//TODO needs constant updates
+	//TODO boolean?
 	public boolean isPrimitive() {
 
 		return switch (type) {
+		case KW_BYTE -> true;
+		case KW_SHORT -> true;
 		case KW_INT -> true;
+		case KW_LONG -> true;
+		case KW_FLOAT -> true;
+		case KW_DOUBLE -> true;
 		default -> unknownPrimitiveError();
 		};
 	}
 
 	//TODO just helper for now
 	private boolean unknownPrimitiveError() {
-		new PError("Unknown primitive '" + type + "'");
+		System.out.println("Unknown primitive '" + type + "'");
+		System.exit(0);
 		return false;
 	}
 }

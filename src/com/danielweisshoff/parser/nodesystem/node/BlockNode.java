@@ -2,6 +2,7 @@ package com.danielweisshoff.parser.nodesystem.node;
 
 import java.util.ArrayList;
 
+import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 
 /**
@@ -18,5 +19,14 @@ public class BlockNode extends Node {
 
 	public void add(Node n) {
 		children.add(n);
+	}
+
+	@Override
+	public Data run() {
+		for (Node n : children)
+			n.run();
+
+		//TODO empty
+		return new Data();
 	}
 }

@@ -1,0 +1,139 @@
+Es steht geschrieben, dass der Symboltable während des gesamten Prozesses genutzt wird.
+Er wird dabei schon seit dem Lexer aufgebaut.
+So wird anstatt einem Token t(IDENTIFIER,"x") ein Token t(IDENTIFIER,1) erstellt,
+wobei die 1 der passende Index für den Eintrag im Symboltable ist
+
+
+SymbolTable:
+An essential function of a compiler is to record the variable names used in the
+source program and collect information about various attributes of each name.
+These attributes may provide information about the storage allocated for a
+name, its type, its scope (where in the program its value may be used), and
+in the case of procedure names, such things as the number and types of its
+arguments, the method of passing each argument (for example, by value or by
+reference), and the type returned.
+The symbol table is a data structure containing a record for each variable
+name, with fields for the attributes of the name. The data structure should be
+designed to allow the compiler to find the record for each name quickly and to
+store or retrieve data from that record quickly. Symbol tables are discussed in
+Chapter 2.
+
+
+Using registers effectively is probably the single most important problem in
+optimizing a program. Unlike registers that have to be managed explicitly in
+software, caches and physical memories are hidden from the instruction set and
+are managed by hardware.
+
+
+Three adress code:
+intermediate representation, die gut in maschinencode kompiliert werden kann.
+
+the form x = y op z, where op is a binary operator, y and z are the addresses
+for the operands, and x is the address for the result of the operation. A three-
+address instruction carries out at most one operation, typically a computation,
+a comparison, or a branch.
+In Appendix A, we put
+
+
+type coercion -> explizite type conversion beim kompilieren
+Procedure inlining -> anstatt methode aufzurufen, methodenrumpf an stelle kopieren um effizienz zu gewinnen
+instruction-level-parallelism ->
+memory hierachies-> Processor Registers ->> Processor Cache ->> RAM ->> Data Storage Medium
+VLIW -> Very Long Instruction Word
+SIMD -> Single Instruction, Multiple Data
+fully-qualified-name -> src.test.Main.class
+name -> compile time name
+variable -> runtime location denoted by name
+qualified-name -> composition of names ->> Car.color
+function -> returns something
+procedure -> returns nothing (or void)
+method -> procedure/function that is associated with a class
+declaration -> int i
+definition -> i = 10
+initialization -> int i = 10
+call by value/reference -> Wert/Adresse übergeben
+Backus-Naur-Form -> Notation for context-free grammars
+
+
+IDEE
+if grammar:
+
+KW_IF  '(' EXPR ')' STMT
+
+STMT = Statement ist die ein/vielzahl von instructions.
+Ein Statement umfasst alle Instructions, die den selben Tababstand haben
+
+if(1 < 2):
+	int a = 10						-|
+	int b = a * a					 |	Statement
+	out b + " = 10 zum quadrat"		_|
+
+
+
+======================
+DEFINITION OF GRAMMARS
+======================
+
+stmt -> if ( expr ) stmt else stmt
+the arrow is read as "can have the form".
+Such rule is called a production.
+It consists of terminals and nonterminals.
+
+A context-free grammar has four components:
+1. A set of terminals (tokens). Tokens are the elementary symbols of 
+	the language defined by the grammar.
+2. A set of nonterminals, sometimes called syntactic variables. Each non-
+	terminal represents a set/string of terminals, in a manner we shall describe.
+3. A set of productions, where each production consists of a nonterminal,
+	called the head or left side of the production, an arrow, and a sequence of
+	terminals and/or nonterminals, called the body or right side of the produc-
+	tion. The intuitive intent of a production is to specify one of the written
+	forms of a construct; if the head nonterminal represents a construct, then
+	the body represents a written form of the construct.
+4. A designation of one of the nonterminals as the start symbol.
+
+A string of terminals is a sequence of zero or more terminals.
+The string of zero terminals, also knwown as the "empty string",
+is written as greek epsilon.
+
+a non-terminal is ambigous(zweideutig) if it has more than one production.
+for parsing it is the simplest to have no ambigous non-terminals.
+
+
+A parse-tree according to the grammar has 3 properties:
+1. The root is labeled by the start symbol.
+2. Each interior node is labeled by a nonterminal.
+3. Each leaf is labeled by a terminal or by the "empty string".
+
+Tree:
+- root
+- interior nodes
+- leafs
+- siblings
+
+
+expr -> expr + term 
+	  | expr - term 
+	  | term
+
+term   -> term * factor 
+		| term / factor
+		| factor
+
+factor -> digit 
+		| ( expr )
+		| - digit
+		| - ( expr )
+		| - ID
+
+ID -> letter
+
+letter -> a-z | A-Z
+digit -> 1-9
+
+
+
+parser:
+recursive descent 
+top-bottom
+predictive

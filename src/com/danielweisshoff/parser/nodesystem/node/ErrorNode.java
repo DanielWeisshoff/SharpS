@@ -1,13 +1,13 @@
-package com.danielweisshoff.parser.nodesystem.node;
+// package com.danielweisshoff.parser.nodesystem.node;
 
-import com.danielweisshoff.parser.nodesystem.DataType;
+// import com.danielweisshoff.parser.nodesystem.DataType;
 
-public class ErrorNode extends Node {
+// public class ErrorNode extends Node {
 
-	/**
-	 * A placeholder for debugging
-	 */
-	public ErrorNode() {
-		super(new DataType[] {}, DataType.INT, NodeType.ERROR_NODE);
-	}
-}
+// 	/**
+// 	 * A placeholder for debugging
+// 	 */
+// 	public ErrorNode() {
+// 		super(new DataType[] {}, DataType.INT, NodeType.ERROR_NODE);
+// 	}
+// }

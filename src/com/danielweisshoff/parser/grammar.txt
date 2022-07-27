@@ -1,0 +1,103 @@
+BLOCK ->
+		| stmt*
+		| €
+
+STMT -> 
+	| {TAB} VAR_DECLARATION
+	| {TAB} VAR_DEFINITION
+	| {TAB} VAR_INITIALIZATION
+	| {TAB} PTR_DEFINITION
+	| {TAB} PTR_INITIALIZATION
+	| {TAB} IF
+	| {TAB} FOR
+	| {TAB} WHILE
+	| {TAB} DO_WHILE
+
+VAR_DECLARATION -> 
+			| PRIMITIVE ID
+VAR_DEFINITION -> 
+			| - - ID
+			| + + ID
+			| ID = EXPR	
+			| ID + = EXPR
+			| ID + +
+			| ID - = EXPR
+			| ID - -
+			| ID * = EXPR
+			| ID / = EXPR
+			| ID % = EXPR
+			| 
+VAR_INITIALIZATION -> VAR_DECLARATION = EXPR
+
+PTR_DECLARATION -> PRIMITIVE PTR	
+PTR_DEFINITION -> 
+				| PTR = ADRESS 
+				| PTR += EXPR
+				| PTR -= EXPR 
+PTR_INITIALIZATION -> PTR_DECLARATION = ADRESS
+PTR -> * ID
+ADRESS -> & ID
+
+
+PRIMITIVE -> bte|sht|int|lng|flt|dbl|bln
+
+BOOL ->  | PREDICATE { < && | || > PREDICATE}*
+
+PREDICATE -> 
+					| ( EXPR COMPARE EXPR )
+					| true 
+					| false
+					| EXPR COMPARE EXPR
+
+COMPARE -> 
+		| <
+		| <=
+		| ==
+		| !=
+		| >
+		| >=
+
+EXPR -> 
+	  	| TERM
+		| TERM < * | / > TERM  {TERM < * | / > TERM}*
+
+TERM   -> 
+		| FACTOR
+		| FACTOR < * | / | % > FACTOR  {FACTOR < * | / | % > FACTOR}*
+
+FACTOR -> 
+		| INTEGER 
+		| FLOATING_POINT
+		| - INTEGER
+		| - FLOATING_POINT
+		| - ( EXPR )
+		| - ID
+		| - - ID
+		| + + ID
+		| ( EXPR )
+		| ID - -
+		| ID + +
+		| ID
+
+INTEGER -> bte|sht|int|long
+FLOATING_POINT -> flt|dbl
+
+PREINCREMENT -> + + ID
+PREDECREMENT -> - - ID
+POSTINCREMENT -> ID + + 
+POSTDECREMENT -> ID - -
+
+ADRESS -> 
+		| & ID + EXPR
+		| & ID - EXPR
+		| & ID
+
+FUNCTION_CALL -> ID ( PARAMS )
+PARAMS -> <INTEGER | FLOATING_POINT | ID> , {<INTEGER | FLOATING_POINT | ID> ,}*
+
+WHILE -> while ( BOOL ) : BLOCK
+FOR -> for ( INITIALIZATION , BOOL , DEFINITION ) : BLOCK
+IF -> if ( BOOL ) : BLOCK { elif ( BOOL ) : BLOCK }* {else : BLOCK }
+DO_WHILE -> do while ( BOOL ) : BLOCK
+
+pointerdefinition

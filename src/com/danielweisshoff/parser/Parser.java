@@ -1,12 +1,11 @@
 package com.danielweisshoff.parser;
 
-import java.security.Permissions;
 import java.util.Stack;
 
 import com.danielweisshoff.interpreter.builtin.BuiltInFunction;
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
-import com.danielweisshoff.logger.Logger;
+import com.danielweisshoff.parser.PError.*;
 import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.*;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.*;
@@ -15,10 +14,10 @@ import com.danielweisshoff.parser.nodesystem.node.data.assigning.*;
 import com.danielweisshoff.parser.nodesystem.node.data.assigning.shortcuts.*;
 import com.danielweisshoff.parser.nodesystem.node.data.primitives.*;
 import com.danielweisshoff.parser.nodesystem.node.logic.*;
-import com.danielweisshoff.parser.nodesystem.node.logic.bitwise.BitWiseOrNode;
-import com.danielweisshoff.parser.nodesystem.node.logic.bitwise.BitwiseAndNode;
 import com.danielweisshoff.parser.nodesystem.node.loops.*;
 import com.danielweisshoff.parser.semantic.ConversionChecker;
+import com.danielweisshoff.parser.symboltable.SymbolTableManager;
+import com.danielweisshoff.parser.symboltable.VariableEntry;
 
 //TODO addInstruction schlecht gelöst
 /**
@@ -26,8 +25,9 @@ import com.danielweisshoff.parser.semantic.ConversionChecker;
  */
 public class Parser {
 
-	//?change to RootNode later?
-	private BlockNode root = new BlockNode();
+	public static boolean debug = true;
+
+	private BlockNode root;
 
 	private Token curToken;
 	private int position = -1;
@@ -35,84 +35,113 @@ public class Parser {
 	private Token[] tokens;
 
 	private boolean error = false;
-	private Node instruction;
+	private boolean lock = false; //if instructions are added or not
 
 	//For block building
 	private Stack<BlockNode> scopeNode = new Stack<>();
 	private int scopeDepth = -1;
 
-	//some quirky code for scoping
-	private boolean lateScopeIn = false;
-	private BlockNode scopeInBlock;
-	private boolean addInstruction = true;
+	//variables
+	private SymbolTableManager stm = new SymbolTableManager();
 
 	public Parser() {
 		BuiltInFunction.registerAll();
 		root = new BlockNode();
-		scopeDepth = 0;
 		scopeNode.add(root);
 	}
 
-	/**
-	 * Assumes it gets a non empty array
-	 * @param tokens
-	 */
-	public void parseLine(Token[] tokens) {
+	public void parseBlock() {
+
+	}
+
+	public Node parseInstruction(Token[] tokens) {
 		this.tokens = tokens;
 		position = -1;
 		advance();
 
-		instruction = null;
-		addInstruction = true;
+		Node instruction = null;
 
 		//if tab count is reduced, scope out
-		scopeOutIfNeeded();
+		tryScopeOut();
 
 		switch (curToken.type()) {
 		case KW_IF -> instruction = parseIf();
 		case KW_ELSE -> instruction = parseElse();
 		case KW_ELIF -> instruction = parseElif();
 		//PRIMITIVES
-		case KW_BYTE -> instruction = parseVariableDeclaration();
-		case KW_SHORT -> instruction = parseVariableDeclaration();
-		case KW_INT -> instruction = parseVariableDeclaration();
-		case KW_LONG -> instruction = parseVariableDeclaration();
-		case KW_FLOAT -> instruction = parseVariableDeclaration();
-		case KW_DOUBLE -> instruction = parseVariableDeclaration();
-		//
-		case KW_WHILE -> instruction = parseWhile();
+		case KW_BYTE, KW_SHORT, KW_INT, KW_LONG, KW_FLOAT, KW_DOUBLE -> {
+			if (next(TokenType.STAR)) {
+				if (next(3, TokenType.EQUAL))
+					instruction = parsePtrInitialization();
+				else
+					instruction = parsePtrDeclaration();
+			}
+			// VAR_INITIALIZATION
+			else if (next(2, TokenType.EQUAL))
+				instruction = parseVarInitialization();
+			// VAR_DECLARATION
+			else
+				instruction = parseVarDeclaration();
+		}
+		// LOOPS
 		case KW_FOR -> instruction = parseFor();
 		case KW_DO -> instruction = parseDoWhile();
-		case IDENTIFIER -> identifierStuff();
-		case PLUS -> instruction = parsePreIncrement(); //++ increment
-		case MINUS -> instruction = parsePreDecrement(); //-- decrement
-		default -> new PError("[PARSER] Action for Token " + curToken.type() + " not implemented");
+		case KW_WHILE -> instruction = parseWhile();
+		//
+		case IDENTIFIER -> {
+			//FUNCTION
+			if (next(TokenType.O_ROUND_BRACKET)) {
+				return parseFunctionCall();
+			}
+			// x = EXPR
+			else if (next(TokenType.EQUAL))
+				return parseVarDefinition();
+		}
+		//
+		case PLUS -> instruction = parsePreIncrement();
+		case MINUS -> instruction = parsePreDecrement();
+		case STAR -> instruction = parsePtrDefinition();
+		case EOF -> {
+			return null;
+		}
+		default -> new UnimplementedError("[PARSER] Action for Token " + curToken.type() + " not implemented",
+				curToken);
 		}
 
-		if (error)
-			printParseError();
+		endOfInstruction();
 
-		//add instrucent to current scope
-		if (addInstruction)
+		if (error)
+			new UnimplementedError("Unknown instruction:\n", curToken);
+
+		return instruction;
+	}
+
+	private void addInstruction(Node instruction) {
+		if (!lock)
 			scopeNode.peek().add(instruction);
 
-		//could need an overhaul LMAO 
-		if (lateScopeIn) {
-			scopeDepth++;
-			scopeNode.add(scopeInBlock);
-			lateScopeIn = false;
+		if (debug) {
+			String nodeName = instruction.getClass().getSimpleName();
+			String tableName = stm.getCurrentTable().getName();
+			System.out.println(nodeName + " added to scope " + tableName);
 		}
 	}
 
 	private void advance() {
-		position++;
-		if (position < tokens.length)
-			curToken = tokens[position];
+		advance(1);
 	}
 
-	// private boolean atEnd() {
-	// 	return position == tokens.length;
-	// }
+	private void advance(int steps) {
+		for (int i = 0; i < steps; i++) {
+			position++;
+			if (position < tokens.length)
+				curToken = tokens[position];
+			else {
+				curToken = new Token(TokenType.EOL, "End of Line", -1, -1, -1);
+				break;
+			}
+		}
+	}
 
 	private void retreat() {
 		retreat(1);
@@ -127,48 +156,48 @@ public class Parser {
 	}
 
 	/**
+	 * Vergleicht den aktuellen Token
+	 */
+	public boolean is(TokenType type) {
+		return curToken.type() == type;
+	}
+
+	public boolean is(String value) {
+		return is(value);
+	}
+
+	/**
 	 * Check, if current token type equals r, if not print error
 	 */
 	private void assume(TokenType t, String error) {
 		if (is(t))
 			advance();
 		else
-			new PError(error);
-	}
-
-	private void assume(TokenType t, String value, String error) {
-		if (is(t) && is(value))
-			advance();
-		else
-			new PError(error);
+			new UnimplementedError(error, curToken);
 	}
 
 	private Token next() {
-		if (position < tokens.length - 1)
-			return tokens[position + 1];
-		return new Token(TokenType.EOF, "");
+		return next(1);
+	}
+
+	private Token next(int lookahead) {
+		if (position < tokens.length - lookahead)
+			return tokens[position + lookahead];
+		//TODO col and pos weird
+		return new Token(TokenType.EOL, "", -1, -1, -1);
+	}
+
+	private boolean next(int lookahead, TokenType t) {
+		return next(lookahead).type() == t;
 	}
 
 	private boolean next(TokenType t) {
-		if (position < tokens.length - 1)
-			return tokens[position + 1].type() == t;
-		return false;
+		return next().type() == t;
 	}
 
-	private void identifierStuff() {
-
-		if (next(TokenType.O_ROUND_BRACKET)) { //FNC
-			instruction = parseFunctionCall();
-		} else
-			// x = EXPR
-			instruction = parseVariableInitialization();
-	}
-
-	private void printParseError() {
-		String tokenList = "";
-		for (Token t : tokens)
-			tokenList += t.getDescription() + "\n";
-		new PError("Parsing error. Unknown instruction:\n" + tokenList);
+	private void endOfInstruction() {
+		if (position < tokens.length)
+			new ExpectedInstructionEndError(curToken);
 	}
 
 	//returns the latest IfNode in the present scope
@@ -182,12 +211,12 @@ public class Parser {
 				break;
 			}
 		if (in == null)
-			new PError("else statement doesnt have corresponding if");
+			new UnimplementedError("else statement doesnt have corresponding if", curToken);
 
 		return in.elseBlock == null ? in : findIfWithoutElseBlock(in.elseBlock);
 	}
 
-	private void scopeOutIfNeeded() {
+	private void tryScopeOut() {
 		int curScope = 0;
 		if (is(TokenType.TAB)) {
 			curScope = Integer.parseInt(curToken.value);
@@ -200,23 +229,40 @@ public class Parser {
 		}
 	}
 
-	private void lateScopeIn(BlockNode bn) {
-		lateScopeIn = true;
-		scopeInBlock = bn;
-	}
-
-	private void scopeIn(BlockNode bn) {
+	private BlockNode scopeIn(String scope) {
+		BlockNode bn = new BlockNode();
+		stm.newScope(scope);
 		scopeDepth++;
 		scopeNode.add(bn);
+
+		return bn;
 	}
 
 	private void scopeOut(int amount) {
 		for (int i = 0; i < amount; i++) {
+			stm.endScope();
 			scopeNode.pop();
 			scopeDepth--;
 		}
 	}
 
+	public void printSymbolTable() {
+		stm.print();
+	}
+
+	private DataType getPrimitiveType(TokenType keyword) {
+		DataType type = null;
+		switch (keyword) {
+		case KW_BYTE -> type = DataType.BYTE;
+		case KW_SHORT -> type = DataType.SHORT;
+		case KW_INT -> type = DataType.INT;
+		case KW_LONG -> type = DataType.LONG;
+		case KW_FLOAT -> type = DataType.FLOAT;
+		case KW_DOUBLE -> type = DataType.DOUBLE;
+		default -> new UnimplementedError("parser: unknown primitive type " + keyword, curToken);
+		}
+		return type;
+	}
 	/*
 	 * Parsing Methoden
 	 * 
@@ -226,16 +272,16 @@ public class Parser {
 		assume(TokenType.KW_IF, "Keyword IF missing");
 		assume(TokenType.O_ROUND_BRACKET, "Parameterlist not found");
 
-		ConditionNode condition = parsePredicate();
+		ConditionNode condition = parseBool();
 
 		assume(TokenType.C_ROUND_BRACKET, "Parameterlist not closed");
 		assume(TokenType.COLON, "if-block missing");
 
-		IfNode in = new IfNode();
-		in.condition = condition;
-		lateScopeIn(in.condBlock);
+		IfNode in = new IfNode(condition);
 
-		Logger.log("found condition");
+		addInstruction(in);
+		in.condBlock = scopeIn("if-body");
+
 		return in;
 	}
 
@@ -243,97 +289,90 @@ public class Parser {
 		assume(TokenType.KW_ELIF, "Keyword ELIF missing");
 
 		IfNode in = findIfWithoutElseBlock(scopeNode.peek());
-		in.elseBlock = new BlockNode();
+		in.elseBlock = scopeIn("else-body");
 
 		assume(TokenType.O_ROUND_BRACKET, "Parameterlist not found");
 
-		ConditionNode condition = parsePredicate();
+		ConditionNode condition = parseBool();
 
 		assume(TokenType.C_ROUND_BRACKET, "Parameterlist not closed");
 		assume(TokenType.COLON, "elif-block missing");
 
-		IfNode elif = new IfNode();
-		elif.condition = condition;
-		lateScopeIn(elif.condBlock);
+		IfNode elif = new IfNode(condition);
 
-		Logger.log("found condition");
+		addInstruction(elif);
+		elif.condBlock = scopeIn("elif-body");
+
 		in.elseBlock.add(elif);
-
-		scopeIn(elif.condBlock);
-		addInstruction = false;
 
 		return elif;
 	}
 
-	private BlockNode parseElse() {
+	private IfNode parseElse() {
 		assume(TokenType.KW_ELSE, "Keyword ELSE missing");
 		IfNode in = findIfWithoutElseBlock(scopeNode.peek());
 
 		assume(TokenType.COLON, "unknown syntax for else statement");
 
-		in.elseBlock = new BlockNode();
-		scopeIn(in.elseBlock);
-		addInstruction = false;
-
-		return new BlockNode();
+		in.elseBlock = scopeIn("else-body");
+		return in;
 	}
 
-	private ConditionNode parsePredicate() {
-		ConditionNode left = parseCondition();
+	private ConditionNode parseBool() {
+		ConditionNode left = parsePredicate();
 
 		ConditionNode cn = null;
 
 		while (is(TokenType.AND) || is(TokenType.OR)) {
-			if (is(TokenType.AND)) {
-				advance();
-				if (is(TokenType.AND)) {// &&
-					advance();
-					cn = new BooleanAndNode();
-				} else // &
-					cn = new BitwiseAndNode();
-			} else if (is(TokenType.OR)) {
-				advance();
-				if (is(TokenType.OR)) {// ||
-					advance();
-					cn = new BooleanOrNode();
-				} else // |
-					cn = new BitWiseOrNode();
+			// PREDICATE && PREDICATE
+			if (is(TokenType.AND) && next(TokenType.AND)) {
+				advance(2);
+				cn = new BooleanAndNode();
 			}
-			ConditionNode right = parseCondition();
+			//PREDICATE || PREDICATE
+			else if (is(TokenType.OR) && next(TokenType.OR)) {
+				advance(2);
+				cn = new BooleanOrNode();
+			}
+
+			ConditionNode right = parsePredicate();
 			cn.left = left;
 			cn.right = right;
 			left = cn;
 		}
-
 		return left;
 	}
 
-	private ConditionNode parseCondition() {
-		if (is(TokenType.O_ROUND_BRACKET)) {
+	private ConditionNode parsePredicate() {
+
+		switch (curToken.type()) {
+		case O_ROUND_BRACKET:
 			advance();
-
-			ConditionNode n = parsePredicate();
-
+			ConditionNode n = parseBool();
 			assume(TokenType.C_ROUND_BRACKET, "Expression error. Bracket not properly closed");
 			return n;
+		case KW_TRUE:
+			advance();
+			return new TrueNode();
+		case KW_FALSE:
+			advance();
+			return new FalseNode();
+		default:
+			Node leftExpr = parseExpression();
+			Token compareType = curToken;
+			advance();
+			Node rightExpr = parseExpression();
+
+			return switch (compareType.value) {
+			case "<" -> new LessNode(leftExpr, rightExpr);
+			case "<=" -> new LessEqualNode(leftExpr, rightExpr);
+			case ">" -> new MoreNode(leftExpr, rightExpr);
+			case ">=" -> new MoreEqualNode(leftExpr, rightExpr);
+			case "==" -> new EqualNode(leftExpr, rightExpr);
+			case "!=" -> new NotEqualNode(leftExpr, rightExpr);
+			default -> null;
+			};
 		}
-
-		Node leftExpr = parseExpression();
-		Token compareType = curToken;
-		advance();
-		Node rightExpr = parseExpression();
-
-		Logger.log("Gleichung erstellt");
-
-		return switch (compareType.value) {
-		case "<" -> new LessNode(leftExpr, rightExpr);
-		case "<=" -> new LessEqualNode(leftExpr, rightExpr);
-		case ">" -> new MoreNode(leftExpr, rightExpr);
-		case ">=" -> new MoreEqualNode(leftExpr, rightExpr);
-		case "==" -> new EqualNode(leftExpr, rightExpr);
-		case "!=" -> new NotEqualNode(leftExpr, rightExpr);
-		default -> null;
-		};
 	}
 
 	private Node parseExpression() {
@@ -342,14 +381,6 @@ public class Parser {
 		BinaryOperationNode op = null;
 
 		while (curToken.isLineOP()) {
-			TokenType tt = curToken.type();// bcause +- and -+ arent a thing
-
-			advance();
-			if (curToken.type() == tt) { // increment /decrement
-				retreat(2);
-				break;
-			}
-			retreat();
 
 			if (curToken.type() == TokenType.PLUS)
 				op = new BinaryAddNode();
@@ -389,72 +420,85 @@ public class Parser {
 		return left;
 	}
 
-	//TODO spaghetti, incr,decr woanders parsen?
 	private Node parseFactor() {
-		char sign = '+';
 
-		//? Ternary / --x	
-		if (is(TokenType.MINUS)) {
-			if (next(TokenType.MINUS))
-				return parsePreDecrement();
-			else {
+		Node n = null;
+		switch (curToken.type()) {
+		case INTEGER:
+			n = parseInteger(curToken.value);
+			advance();
+			break;
+		case FLOATING_POINT:
+			n = parseFloatingPoint(curToken.value);
+			advance();
+			break;
+		case MINUS:
+			advance();
+			switch (curToken.type()) {
+			// - DIGIT
+			case INTEGER:
+				n = parseInteger('-' + curToken.value);
 				advance();
-				sign = '-';
-			}
-		}
-		//? ++x 
-		else if (is(TokenType.PLUS)) {
-			if (next(TokenType.PLUS))
-				return parsePreIncrement();
-			else
-				advance(); //unnecessary symbol, just skip  (+10 = 10)
-		}
-
-		//? integer number
-		if (is(TokenType.INTEGER)) {
-			Node n = parseIntegerNumber(sign + curToken.value);
-			advance();
-			return n;
-		}
-		//?floating point numbers
-		else if (is(TokenType.FLOATING_POINT)) {
-			Node n = parseFloatingPointNumber(sign + curToken.value);
-			advance();
-			return n;
-		}
-		//? Var
-		else if (is(TokenType.IDENTIFIER)) {
-			String varName = curToken.value;
-			advance();
-
-			//? x++
-			if (is(TokenType.PLUS) && next(TokenType.PLUS)) {
+				break;
+			// - DIGIT
+			case FLOATING_POINT:
+				n = parseFloatingPoint('-' + curToken.value);
+				advance();
+				break;
+			// - ( EXPR )
+			case O_ROUND_BRACKET:
+				advance();
+				n = parseExpression();
+				assume(TokenType.C_ROUND_BRACKET, "Expression error. Bracket not properly closed");
+				break;
+			// - ID
+			case IDENTIFIER:
+				String varName = curToken.value;
+				advance();
+				n = new VariableNode(varName);
+				break;
+			// - - ID
+			case MINUS:
 				retreat();
-				return parsePostIncrement();
+				n = parsePreDecrement();
+				break;
+			default:
+				new UnimplementedError("error parsing factor with -", curToken);
 			}
-			//? x--
-			else if (is(TokenType.MINUS) && next(TokenType.MINUS)) {
-				retreat();
-				return parsePostDecrement();
-			} else {
-				VariableNode n = new VariableNode(varName);
-				return n;
-			}
-		}
-		//? paranthesized expr 
-		else if (is(TokenType.O_ROUND_BRACKET)) {
+		case PLUS:
+			// + + ID	
+			n = parsePreIncrement();
+			break;
+		case O_ROUND_BRACKET:
+			// ( EXPR )
 			advance();
 
-			Node n = parseExpression();
+			n = parseExpression();
 			assume(TokenType.C_ROUND_BRACKET, "Expression error. Bracket not properly closed");
-
-			return n;
+			break;
+		case IDENTIFIER:
+			// ID - -	
+			if (next(TokenType.MINUS) && next(2, TokenType.MINUS))
+				n = parsePostDecrement();
+			// ID + +
+			else if (next(TokenType.PLUS) && next(2, TokenType.PLUS))
+				n = parsePostIncrement();
+			// ID
+			else {
+				String varName = curToken.value;
+				advance();
+				n = new VariableNode(varName);
+			}
+			break;
+		default:
+			new UnimplementedError("parseFactor()", curToken);
 		}
-		return null;
+		return n;
 	}
 
+	//TODO move to semantics
 	//converts an Integer Number into the best fitting primitive
-	private PrimitiveNode parseIntegerNumber(String value) {
+	private PrimitiveNode parseInteger(String value) {
 		//? byte
 		if (ConversionChecker.isByte(value))
 			return new ByteNode(Byte.parseByte(value));
@@ -468,13 +512,14 @@ public class Parser {
 		else if (ConversionChecker.isLong(value))
 			return new LongNode(Long.parseLong(value));
 		else {
-			new PError(value + " is not an Integer?!");
+			new UnimplementedError(value + " is not an Integer?!", curToken);
 			return null;
 		}
 	}
 
+	//TODO move to semantics
 	//converts a Floating-Point Number into the best fitting primitive
-	private PrimitiveNode parseFloatingPointNumber(String value) {
+	private PrimitiveNode parseFloatingPoint(String value) {
 		//? float
 		if (ConversionChecker.isFloat(value))
 			return new FloatNode(Float.parseFloat(value));
@@ -482,7 +527,7 @@ public class Parser {
 		else if (ConversionChecker.isDouble(value))
 			return new DoubleNode(Double.parseDouble(value));
 		else {
-			new PError(value + " is not a Floating Point Number?!");
+			new UnimplementedError(value + " is not a Floating Point Number?!", curToken);
 			return null;
 		}
 	}
@@ -497,22 +542,17 @@ public class Parser {
 
 		assume(TokenType.C_ROUND_BRACKET, "Parameterlist not closed");
 
-		Logger.log("Functioncall '" + name + "'(" + params + ")");
-
 		CallNode cn = new CallNode(name);
+		addInstruction(cn);
 
 		return cn;
 	}
 
-	/*
-	 *erstmals nur placeholder
-	 TODO add fnc return value as param
-	 */
 	private String parseParameters() {
 		String params = "";
 
 		while (!is(TokenType.C_ROUND_BRACKET)) {
-			if (is(TokenType.INTEGER) || is(TokenType.IDENTIFIER)) {
+			if (is(TokenType.INTEGER) || is(TokenType.FLOATING_POINT) || is(TokenType.IDENTIFIER)) {
 				params += curToken.value;
 				advance();
 				if (is(TokenType.COMMA)) {
@@ -522,100 +562,197 @@ public class Parser {
 					break;
 			}
 		}
-		advance();
-
 		return params;
 	}
 
-	private DeclareNode parseVariableDeclaration() {
+	private DeclareNode parseVarDeclaration() {
 		TokenType keyword = curToken.type();
 		advance();
 
-		String varName = curToken.value;
+		//getting the primitive type
+		DataType type = getPrimitiveType(keyword);
+
+		String name = curToken.value;
 		assume(TokenType.IDENTIFIER, "Fehler beim Deklarieren einer Variable");
+		DeclareNode dn = new DeclareNode(name, type);
 
-		DataType type = null;
-		switch (keyword) {
-		case KW_BYTE -> type = DataType.BYTE;
-		case KW_SHORT -> type = DataType.SHORT;
-		case KW_INT -> type = DataType.INT;
-		case KW_LONG -> type = DataType.LONG;
-		case KW_FLOAT -> type = DataType.FLOAT;
-		case KW_DOUBLE -> type = DataType.DOUBLE;
-		default -> new PError("parser: unknown primitive type " + keyword);
-		}
+		//schauen, ob variable schon existiert
+		if (stm.lookupVariable(name))
+			new UnimplementedError("var '" + name + "': " + type + " is already declared", curToken);
 
-		DeclareNode n;
-		//Variable wird zusätzlich initialisiert
-		if (is(TokenType.EQUAL)) {
-			advance();
+		//Variable eintragen
+		long id = IdRegistry.newID();
+		VariableEntry ve = new VariableEntry(name, id, type, null);
+		stm.addVariable(id, ve);
 
-			Node expr = null;
-			//check if is pointer
-			if (is(TokenType.AND))
-				expr = parsePointer();
-			else
-				expr = parseExpression();
-
-			Logger.log("Variable " + varName + " deklariert und initialisiert");
-
-			n = new DeclareNode(varName, type, expr);
-		} else {
-			//Variable wird deklariert
-			n = new DeclareNode(varName, type);
-			Logger.log("Variable " + varName + " deklariert");
-		}
-		return n;
+		addInstruction(dn);
+		return dn;
 	}
 
-	private AssignNode parseVariableInitialization() {
+	private AssignNode parseVarDefinition() {
+		if (is(TokenType.MINUS))
+			return parsePreDecrement();
+		else if (is(TokenType.PLUS))
+			return parsePreIncrement();
+
 		String varName = curToken.value;
-		assume(TokenType.IDENTIFIER, "var name for assignment missing");
+		assume(TokenType.IDENTIFIER, "var for definition missing");
 
-		if (is(TokenType.EQUAL)) {
+		//check if var is already defined
+		if (!stm.lookupVariable(varName))
+			new UnimplementedError("var '" + varName + "' not declared", curToken);
+
+		AssignNode an = null;
+		Node expr = null;
+		switch (curToken.type()) {
+		// ID = EXPR
+		case EQUAL:
 			advance();
-
-			Node expr;
-			//check if is pointer
-			if (is(TokenType.AND))
-				expr = parsePointer();
-			else
-				expr = parseExpression();
-
-			InitNode an = new InitNode(varName);
+			expr = parseExpression();
+			an = new DefineNode(varName, expr);
 			an.expression = expr;
+			break;
+		// ID + =  EXPR || ID + +
+		case PLUS:
+			if (next(TokenType.PLUS)) {
+				retreat();
+				an = parsePostIncrement();
+				break;
+			}
 
-			Logger.log("Assigned value to variable '" + varName + "'");
-			return an;
+			advance();
+			assume(TokenType.EQUAL, "+=");
+
+			expr = parseExpression();
+			an = new DefineNode(varName, expr);
+			an.expression = expr;
+			break;
+		// ID - =  EXPR || ID - -
+		case MINUS:
+			if (next(TokenType.MINUS)) {
+				retreat();
+				an = parsePostDecrement();
+				break;
+			}
+
+			advance();
+			assume(TokenType.EQUAL, "+=");
+
+			expr = parseExpression();
+			an = new DefineNode(varName, expr);
+			an.expression = expr;
+			break;
+		// ID * =  EXPR
+		case STAR:
+			advance();
+			assume(TokenType.EQUAL, "+=");
+
+			expr = parseExpression();
+			an = new DefineNode(varName, expr);
+			an.expression = expr;
+			break;
+		// ID / =  EXPR
+		case SLASH:
+			advance();
+			assume(TokenType.EQUAL, "+=");
+
+			expr = parseExpression();
+			an = new DefineNode(varName, expr);
+			an.expression = expr;
+			break;
+		// ID % =  EXPR
+		case PERCENT:
+			advance();
+			assume(TokenType.EQUAL, "+=");
+
+			expr = parseExpression();
+			an = new DefineNode(varName, expr);
+			an.expression = expr;
+			break;
 		}
-		// +=, -=, *=, ...
-		else if (curToken.isOP() && next().type() == TokenType.EQUAL) {
-			retreat();
-			return parseBinaryAssignNode();
-		}
-		//x++
-		else if (is(TokenType.PLUS) && next(TokenType.PLUS)) {
-			retreat();
-			return parsePostIncrement();
-		}
-		//x--
-		else if (is(TokenType.MINUS) && next(TokenType.MINUS)) {
-			retreat();
-			return parsePostDecrement();
-		} else {
-			error = true;
-			return null;
-		}
+
+		addInstruction(an);
+		return an;
 	}
 
-	private PointerNode parsePointer() {
-		assume(TokenType.AND, "pointer notation incorrect");
+	private VarInitNode parseVarInitialization() {
+		// DECLARATION = EXPR
+		DeclareNode dn = parseVarDeclaration();
 
-		String varName = curToken.value;
+		assume(TokenType.EQUAL, "init '=' missing");
+
+		Node expr = parseExpression();
+		VarInitNode in = new VarInitNode(dn.getName(), dn.dataType, expr);
+
+		addInstruction(in);
+		return in;
+	}
+
+	private DeclareNode parsePtrDeclaration() {
+		// PRIMITIVE PTR
+
+		TokenType keyword = curToken.type();
+		//TODO getting the primitive type of the pointer
+		//DataType type = getPrimitiveType(keyword);
+
 		advance();
+		String name = parsePointer().getName();
 
-		return new PointerNode(varName);
+		//schauen, ob variable schon existiert
+		if (stm.lookupVariable(name))
+			new UnimplementedError("var '" + name + "': " + DataType.POINTER + " is already declared", curToken);
+
+		//Variable eintragen
+		long id = IdRegistry.newID();
+		VariableEntry ve = new VariableEntry(name, id, DataType.POINTER, null);
+		stm.addVariable(id, ve);
+
+		DeclareNode dn = new DeclareNode(name, DataType.POINTER);
+		addInstruction(dn);
+		return dn;
 	}
+
+	private PointerNode parsePtrDefinition() {
+		PointerNode pn = parsePointer();
+		switch (curToken.type()) {
+		// PTR = ADRESS
+		case EQUAL:
+			advance();
+			pn.adress = parseAdress();
+			break;
+		// PTR + = EXPR
+		case PLUS:
+			//TODO
+			assume(TokenType.EQUAL, "pointer def = missing");
+			parseExpression();
+			break;
+		//PTR - = EXPR
+		case MINUS:
+			//TODO
+			assume(TokenType.EQUAL, "pointer def = missing");
+			parseExpression();
+			break;
+		default:
+			new UnimplementedError("error parsing pointer def", curToken);
+		}
+
+		addInstruction(pn);
+		return pn;
+	}
+
+	private PtrInitNode parsePtrInitialization() {
+		DeclareNode pn = parsePtrDeclaration();
+
+		assume(TokenType.EQUAL, "= sign missing for ptr init");
+
+		String adress = parseAdress();
+		VariableEntry var = stm.findVariable(adress);
+		PtrInitNode pin = new PtrInitNode(pn.getName(), pn.dataType, adress);
+
+		addInstruction(pin);
+		return pin;
+	}
+
 	//
 	//LOOPS
 	//
@@ -624,62 +761,74 @@ public class Parser {
 		assume(TokenType.KW_WHILE, "Keyword WHILE missing");
 		assume(TokenType.O_ROUND_BRACKET, "Missing open bracket for while-loop");
 
-		ConditionNode cn = parsePredicate();
+		ConditionNode cn = parseBool();
 
 		assume(TokenType.C_ROUND_BRACKET, "Missing close bracket for while-loop");
 		assume(TokenType.COLON, "while-body not defined");
 
-		WhileNode wn = new WhileNode();
-		wn.condition = cn;
-		wn.whileBlock = new BlockNode();
+		WhileNode wn = new WhileNode(cn);
 
-		lateScopeIn(wn.whileBlock);
+		addInstruction(wn);
+		wn.whileBlock = scopeIn("while-body");
 
 		return wn;
 	}
 
 	private DoWhileNode parseDoWhile() {
 		assume(TokenType.KW_DO, "Keyword DO missing");
-		WhileNode wn = parseWhile();
+		assume(TokenType.KW_WHILE, "Keyword WHILE missing");
+		assume(TokenType.O_ROUND_BRACKET, "Missing open bracket for while-loop");
 
-		DoWhileNode dwn = new DoWhileNode();
-		dwn.condition = wn.condition;
-		dwn.whileBlock = wn.whileBlock;
+		ConditionNode cn = parseBool();
+
+		assume(TokenType.C_ROUND_BRACKET, "Missing close bracket for while-loop");
+		assume(TokenType.COLON, "while-body not defined");
+
+		DoWhileNode dwn = new DoWhileNode(cn);
+
+		addInstruction(dwn);
+		dwn.whileBlock = scopeIn("do-while-body");
 
 		return dwn;
 	}
 
 	//TODO this needs a major overhaul someday when more variations will be added
 	private ForNode parseFor() {
+		ForNode fn = new ForNode();
+		addInstruction(fn);
+
+		scopeIn("for-init");
+
 		assume(TokenType.KW_FOR, "Keyword FOR missing");
 		assume(TokenType.O_ROUND_BRACKET, "Missing open bracket for for-loop");
 
-		DeclareNode in = parseVariableDeclaration();
+		VarInitNode in = parseVarInitialization();
+		addInstruction(in);
 
 		assume(TokenType.COMMA, "comma missing");
 
-		ConditionNode cn = parsePredicate();
+		ConditionNode cn = parseBool();
 
 		assume(TokenType.COMMA, "comma missing");
 
-		AssignNode an = parseVariableInitialization();
+		AssignNode an = parseVarDefinition();
 
 		assume(TokenType.C_ROUND_BRACKET, "Missing closed bracket for for-loop");
 		assume(TokenType.COLON, "for-body-declarator missing");
 
-		ForNode fn = new ForNode();
 		fn.init = in;
 		fn.condition = cn;
 		fn.assignment = an;
-		fn.block = new BlockNode();
 
-		lateScopeIn(fn.block);
+		fn.block = scopeIn("for-body");
+
+		System.out.println("added for to " + stm.getCurrentTable().getName());
 		return fn;
 	}
 
 	private AssignNode parsePostIncrement() {
 		String varName = curToken.value;
-		assume(TokenType.IDENTIFIER, "increment-assignment var missing");
+		assume(TokenType.IDENTIFIER, "post-increment-assignment var missing");
 
 		assume(TokenType.PLUS, "Incrementor + missing");
 		assume(TokenType.PLUS, "Incrementor + missing");
@@ -692,16 +841,16 @@ public class Parser {
 
 	private AssignNode parsePostDecrement() {
 		String varName = curToken.value;
-		assume(TokenType.IDENTIFIER, "decrement-assignment var missing");
+		assume(TokenType.IDENTIFIER, "post-decrement-assignment var missing");
 
 		assume(TokenType.MINUS, "Decrementor - missing");
 		assume(TokenType.MINUS, "Decrementor - missing");
 
+		System.out.println("currently at: " + curToken.type());
 		PostDecrementNode ldn = new PostDecrementNode(varName);
 		ldn.variable = new VariableNode(varName);
 
 		return ldn;
-
 	}
 
 	private AssignNode parsePreIncrement() {
@@ -709,7 +858,7 @@ public class Parser {
 		assume(TokenType.PLUS, "Incrementor + missing");
 
 		String varName = curToken.value;
-		assume(TokenType.IDENTIFIER, "increment-assignment var missing");
+		assume(TokenType.IDENTIFIER, "pre-increment-assignment var missing");
 
 		PreIncrementNode in = new PreIncrementNode(varName);
 		in.variable = new VariableNode(varName);
@@ -722,53 +871,29 @@ public class Parser {
 		assume(TokenType.MINUS, "Decrementor - missing");
 
 		String varName = curToken.value;
-		assume(TokenType.IDENTIFIER, "decrement-assignment var missing");
+		assume(TokenType.IDENTIFIER, "pre-decrement-assignment var missing");
 
 		PreDecrementNode dn = new PreDecrementNode(varName);
 		dn.variable = new VariableNode(varName);
 
 		return dn;
-
 	}
 
-	private AssignNode parseBinaryAssignNode() {
-		String varName = curToken.value;
-		assume(TokenType.IDENTIFIER, "var missing");
+	private PointerNode parsePointer() {
+		// * ID
+		assume(TokenType.STAR, "pointer * missing");
+		String name = curToken.value;
+		assume(TokenType.IDENTIFIER, "pointer name missing");
 
-		BinaryOperationNode bon = null;
-		switch (curToken.type()) {
-		case PLUS -> bon = new BinaryAddNode();
-		case MINUS -> bon = new BinarySubNode();
-		case STAR -> bon = new BinaryMulNode();
-		case SLASH -> bon = new BinaryDivNode();
-		case PERCENT -> bon = new BinaryModNode();
-		default -> new PError("Unknown operation syntax '" + curToken.type() + "='");
-		}
-		advance();
-		assume(TokenType.EQUAL, "'=' missing");
-
-		Node expr = parseExpression();
-
-		InitNode ean = new InitNode(varName);
-
-		VariableNode vn = new VariableNode(varName);
-		bon.left = vn;
-		bon.right = expr;
-
-		ean.expression = bon;
-
-		return ean;
+		return new PointerNode(name);
 	}
 
-	/**
-	 * Vergleicht den aktuellen Token
-	 */
-	public boolean is(TokenType type) {
-		return curToken.type() == type;
-	}
+	private String parseAdress() {
+		assume(TokenType.AND, "adress & missing");
+		String name = curToken.value;
+		assume(TokenType.IDENTIFIER, "adress name missing");
 
-	public boolean is(String value) {
-		return is(value);
+		return name;
 	}
 
 	public BlockNode getAST() {

@@ -1,5 +1,8 @@
 package com.danielweisshoff.parser.nodesystem.node;
 
+import com.danielweisshoff.interpreter.builtin.BuiltInFunction;
+import com.danielweisshoff.parser.nodesystem.Data;
+
 /**
  * Calls the defined function
  */
@@ -13,5 +16,13 @@ public class CallNode extends Node {
 
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public Data run() {
+		if (BuiltInFunction.builtInFunctions.containsKey(name)) {
+			return BuiltInFunction.builtInFunctions.get(name).call();
+		}
+		return new Data();
 	}
 }
