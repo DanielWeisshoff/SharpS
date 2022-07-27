@@ -5,6 +5,7 @@ import java.util.Stack;
 import com.danielweisshoff.interpreter.builtin.BuiltInFunction;
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
+import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.PError.*;
 import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.*;
@@ -123,7 +124,7 @@ public class Parser {
 		if (debug) {
 			String nodeName = instruction.getClass().getSimpleName();
 			String tableName = stm.getCurrentTable().getName();
-			System.out.println(nodeName + " added to scope " + tableName);
+			Logger.log(nodeName + " added to scope " + tableName);
 		}
 	}
 

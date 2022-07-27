@@ -14,18 +14,37 @@ import com.danielweisshoff.parser.nodesystem.node.Node;
 
 public class Shell {
 
-	public static boolean benchmark = true;
-	public static boolean debug = true;
+	public static boolean benchmark = false;
+	public static boolean debug = false;
 
 	public static void main(String[] args) {
+		parseArgs(args);
+
 		Logger.enabled = true;
 		if (benchmark)
 			benchmark();
 		else
 			run();
+		if (benchmark) {
+			System.out.println(benchmarks);
+			System.out.println("all done in " + benchmarkMS + " ms");
+		}
+	}
 
-		System.out.println(benchmarks);
-		System.out.println("all done in " + benchmarkMS + " ms");
+	public static void parseArgs(String[] args) {
+		for (String s : args) {
+			switch (s) {
+			case "-d":
+				Shell.debug = true;
+				break;
+			case "-b":
+				Shell.benchmark = true;
+				break;
+			default:
+				System.out.println("Unknown tag " + s);
+				System.exit(1);
+			}
+		}
 	}
 
 	public static void run() {
