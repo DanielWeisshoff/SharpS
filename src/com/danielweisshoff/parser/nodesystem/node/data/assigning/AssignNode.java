@@ -1,8 +1,9 @@
-package com.danielweisshoff.parser.nodesystem.node.data;
+package com.danielweisshoff.parser.nodesystem.node.data.assigning;
 
 import com.danielweisshoff.parser.nodesystem.node.Node;
 import com.danielweisshoff.parser.nodesystem.node.NodeType;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.NumberNode;
+import com.danielweisshoff.parser.nodesystem.node.data.VariableNode;
 
 /**
  * Sets the value of a variable

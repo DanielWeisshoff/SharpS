@@ -2,7 +2,7 @@ package com.danielweisshoff.parser.nodesystem.node;
 
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
-import com.danielweisshoff.parser.nodesystem.node.logic.ConditionNode;
+import com.danielweisshoff.parser.nodesystem.node.logic.conditions.ConditionNode;
 
 public class IfNode extends Node {
 

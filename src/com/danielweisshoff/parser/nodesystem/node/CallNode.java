@@ -1,6 +1,6 @@
 package com.danielweisshoff.parser.nodesystem.node;
 
-import com.danielweisshoff.interpreter.builtin.BuiltInFunction;
+import com.danielweisshoff.interpreter.builtin.functions.BuiltInFunction;
 import com.danielweisshoff.parser.nodesystem.Data;
 
 /**

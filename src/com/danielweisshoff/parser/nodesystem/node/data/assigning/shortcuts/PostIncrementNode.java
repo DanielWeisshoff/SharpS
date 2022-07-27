@@ -5,7 +5,7 @@ import com.danielweisshoff.parser.PError.UnimplementedError;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.NodeType;
-import com.danielweisshoff.parser.nodesystem.node.data.AssignNode;
+import com.danielweisshoff.parser.nodesystem.node.data.assigning.AssignNode;
 import com.danielweisshoff.parser.symboltable.VariableEntry;
 
 public class PostIncrementNode extends AssignNode {

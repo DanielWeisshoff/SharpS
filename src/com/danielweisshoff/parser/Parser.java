@@ -2,7 +2,7 @@ package com.danielweisshoff.parser;
 
 import java.util.Stack;
 
-import com.danielweisshoff.interpreter.builtin.BuiltInFunction;
+import com.danielweisshoff.interpreter.builtin.functions.BuiltInFunction;
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.logger.Logger;
@@ -15,6 +15,15 @@ import com.danielweisshoff.parser.nodesystem.node.data.assigning.*;
 import com.danielweisshoff.parser.nodesystem.node.data.assigning.shortcuts.*;
 import com.danielweisshoff.parser.nodesystem.node.data.primitives.*;
 import com.danielweisshoff.parser.nodesystem.node.logic.*;
+import com.danielweisshoff.parser.nodesystem.node.logic.conditions.ConditionNode;
+import com.danielweisshoff.parser.nodesystem.node.logic.conditions.EqualNode;
+import com.danielweisshoff.parser.nodesystem.node.logic.conditions.FalseNode;
+import com.danielweisshoff.parser.nodesystem.node.logic.conditions.LessEqualNode;
+import com.danielweisshoff.parser.nodesystem.node.logic.conditions.LessNode;
+import com.danielweisshoff.parser.nodesystem.node.logic.conditions.MoreEqualNode;
+import com.danielweisshoff.parser.nodesystem.node.logic.conditions.MoreNode;
+import com.danielweisshoff.parser.nodesystem.node.logic.conditions.NotEqualNode;
+import com.danielweisshoff.parser.nodesystem.node.logic.conditions.TrueNode;
 import com.danielweisshoff.parser.nodesystem.node.loops.*;
 import com.danielweisshoff.parser.semantic.ConversionChecker;
 import com.danielweisshoff.parser.symboltable.SymbolTableManager;

@@ -3,6 +3,7 @@ package com.danielweisshoff.parser.nodesystem.node.logic;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.NodeType;
+import com.danielweisshoff.parser.nodesystem.node.logic.conditions.ConditionNode;
 
 /**
  * Returns 1 if both the booleans are true

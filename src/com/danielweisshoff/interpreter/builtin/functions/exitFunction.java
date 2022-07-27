@@ -1,6 +1,5 @@
 package com.danielweisshoff.interpreter.builtin.functions;
 
-import com.danielweisshoff.interpreter.builtin.BuiltInFunction;
 import com.danielweisshoff.parser.nodesystem.Data;
 
 public class exitFunction extends BuiltInFunction {

@@ -2,6 +2,7 @@ package com.danielweisshoff.parser.nodesystem.node.data;
 
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
+import com.danielweisshoff.parser.nodesystem.node.data.assigning.DeclareNode;
 
 /*
 Saves the name of a vatiable and searches for its id at runtime

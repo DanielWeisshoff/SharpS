@@ -1,4 +1,4 @@
-package com.danielweisshoff.parser.nodesystem.node.data;
+package com.danielweisshoff.parser.nodesystem.node.data.assigning;
 
 import com.danielweisshoff.interpreter.Interpreter;
 import com.danielweisshoff.parser.nodesystem.Data;

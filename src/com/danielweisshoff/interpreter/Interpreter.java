@@ -2,7 +2,7 @@ package com.danielweisshoff.interpreter;
 
 import java.util.Scanner;
 
-import com.danielweisshoff.interpreter.builtin.BuiltInFunction;
+import com.danielweisshoff.interpreter.builtin.functions.BuiltInFunction;
 import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.IdRegistry;
 import com.danielweisshoff.parser.PError.UnimplementedError;
@@ -13,16 +13,16 @@ import com.danielweisshoff.parser.nodesystem.node.CallNode;
 import com.danielweisshoff.parser.nodesystem.node.IfNode;
 import com.danielweisshoff.parser.nodesystem.node.Node;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.BinaryOperationNode;
-import com.danielweisshoff.parser.nodesystem.node.data.DeclareNode;
 import com.danielweisshoff.parser.nodesystem.node.data.PointerNode;
-import com.danielweisshoff.parser.nodesystem.node.data.PrimitiveNode;
 import com.danielweisshoff.parser.nodesystem.node.data.VariableNode;
+import com.danielweisshoff.parser.nodesystem.node.data.assigning.DeclareNode;
 import com.danielweisshoff.parser.nodesystem.node.data.assigning.VarInitNode;
 import com.danielweisshoff.parser.nodesystem.node.data.assigning.shortcuts.PostDecrementNode;
 import com.danielweisshoff.parser.nodesystem.node.data.assigning.shortcuts.PostIncrementNode;
 import com.danielweisshoff.parser.nodesystem.node.data.assigning.shortcuts.PreDecrementNode;
 import com.danielweisshoff.parser.nodesystem.node.data.assigning.shortcuts.PreIncrementNode;
-import com.danielweisshoff.parser.nodesystem.node.logic.ConditionNode;
+import com.danielweisshoff.parser.nodesystem.node.data.primitives.PrimitiveNode;
+import com.danielweisshoff.parser.nodesystem.node.logic.conditions.ConditionNode;
 import com.danielweisshoff.parser.nodesystem.node.loops.DoWhileNode;
 import com.danielweisshoff.parser.nodesystem.node.loops.ForNode;
 import com.danielweisshoff.parser.nodesystem.node.loops.WhileNode;
