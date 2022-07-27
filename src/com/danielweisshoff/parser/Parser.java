@@ -210,7 +210,16 @@ public class Parser {
 
 	private void endOfInstruction() {
 		if (position < tokens.length)
-			new ExpectedInstructionEndError(curToken);
+			new ExpectedInstructionEndError(tokensToEnd());
+	}
+
+	private Token[] tokensToEnd() {
+		Token[] toks = new Token[tokens.length - position];
+		int counter = 0;
+		for (int i = position; i < tokens.length; i++)
+			toks[counter++] = tokens[i];
+
+		return toks;
 	}
 
 	//returns the latest IfNode in the present scope

@@ -2,6 +2,7 @@ package com.danielweisshoff.parser.PError;
 
 import com.danielweisshoff.Goethe;
 import com.danielweisshoff.lexer.Token;
+import com.danielweisshoff.lexer.TokenType;
 
 /**
  * Logs the error message and exits the program
@@ -47,19 +48,24 @@ public abstract class PError {
 			System.out.println(lineNumber + "|" + line);
 		}
 
+		//offset
+		System.out.print("  ");
+
 		//printing the markers
 		int pos = 0;
 		for (Token t : tokens) {
+			//TODO generelle funktion fuer whitespace nutzen
+			if (t.type() == TokenType.TAB)
+				continue;
 
-			//System.out.println("pos: " + tokens[0].start + " " + tokens[0].end);
-			for (int i = pos; i < t.start; i++)
-				System.out.print(" ");
-
-			//offset
-			System.out.print("  ");
-
-			for (int i = t.start; i <= t.end; i++)
-				System.out.print(colorRed + "+");
+			//offset till error token
+			for (int i = pos; i <= t.end; i++) {
+				if (pos < t.start)
+					System.out.print(" ");
+				else
+					System.out.print(colorRed + "+");
+				pos++;
+			}
 			System.out.print(colorReset);
 		}
 	}
