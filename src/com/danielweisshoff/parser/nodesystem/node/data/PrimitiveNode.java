@@ -1,10 +1,10 @@
 package com.danielweisshoff.parser.nodesystem.node.data;
 
 import com.danielweisshoff.parser.nodesystem.Data;
-import com.danielweisshoff.parser.nodesystem.node.Node;
 import com.danielweisshoff.parser.nodesystem.node.NodeType;
+import com.danielweisshoff.parser.nodesystem.node.binaryoperations.NumberNode;
 
-public class PrimitiveNode extends Node {
+public class PrimitiveNode extends NumberNode {
 
 	public Data data;
 

@@ -44,8 +44,8 @@ ins OOP übertragen werden
 [+] - schauen, warum Parser so langsam ist
 [+] - ?EqualAssignNode redundant, einfach AssignNode benutzen?
 [+] - Pointer 
-[-] - ++x, x++ Operand (Increment)
-[-] - --x, x-- Operand (Decrement)
+[+] - ++x, x++ Operand (Increment)
+[+] - --x, x-- Operand (Decrement)
 [-] - Errorchecking verbessern  
 [-] - arrays -> ArrayNode
 [-] - foreach
@@ -123,19 +123,3 @@ Compilen (noch nicht eingefuegt):
 !!! 2 Optimizer sinnvoll?
 
 
-int i = 10
-if (i < 11):
-	int x = i * i
-	out i
-
-
-i
-i
-	x i i
-	i
-
-
-stumpfes eintragen in hashmap
-i
-	x
-	i

@@ -91,16 +91,19 @@ public class Parser {
 		//
 		case IDENTIFIER -> {
 			//FUNCTION
-			if (next(TokenType.O_ROUND_BRACKET)) {
-				return parseFunctionCall();
-			}
+			if (next(TokenType.O_ROUND_BRACKET))
+				instruction = parseFunctionCall();
 			// x = EXPR
 			else if (next(TokenType.EQUAL))
-				return parseVarDefinition();
+				instruction = parseVarDefinition();
+			else if (next(TokenType.MINUS))
+				instruction = parsePostDecrement(true);
+			else if (next(TokenType.PLUS))
+				instruction = parsePostIncrement(true);
 		}
 		//
-		case PLUS -> instruction = parsePreIncrement();
-		case MINUS -> instruction = parsePreDecrement();
+		case PLUS -> instruction = parsePreIncrement(true);
+		case MINUS -> instruction = parsePreDecrement(true);
 		case STAR -> instruction = parsePtrDefinition();
 		case EOF -> {
 			return null;
@@ -376,8 +379,8 @@ public class Parser {
 		}
 	}
 
-	private Node parseExpression() {
-		Node left = parseTerm();
+	private NumberNode parseExpression() {
+		NumberNode left = parseTerm();
 
 		BinaryOperationNode op = null;
 
@@ -390,7 +393,7 @@ public class Parser {
 
 			advance();
 
-			Node right = parseTerm();
+			NumberNode right = parseTerm();
 			op.left = left;
 			op.right = right;
 			left = op;
@@ -398,8 +401,8 @@ public class Parser {
 		return left;
 	}
 
-	private Node parseTerm() {
-		Node left = parseFactor();
+	private NumberNode parseTerm() {
+		NumberNode left = parseFactor();
 
 		BinaryOperationNode op = null;
 		while (curToken.isDotOP() || is(TokenType.PERCENT)) {
@@ -413,7 +416,7 @@ public class Parser {
 
 			advance();
 
-			Node right = parseFactor();
+			NumberNode right = parseFactor();
 			op.left = left;
 			op.right = right;
 			left = op;
@@ -421,9 +424,9 @@ public class Parser {
 		return left;
 	}
 
-	private Node parseFactor() {
+	private NumberNode parseFactor() {
 
-		Node n = null;
+		NumberNode n = null;
 		switch (curToken.type()) {
 		case INTEGER:
 			n = parseInteger(curToken.value);
@@ -461,14 +464,14 @@ public class Parser {
 			// - - ID
 			case MINUS:
 				retreat();
-				n = parsePreDecrement();
+				n = parsePreDecrement(false);
 				break;
 			default:
 				new UnimplementedError("error parsing factor with -", curToken);
 			}
 		case PLUS:
 			// + + ID	
-			n = parsePreIncrement();
+			n = parsePreIncrement(false);
 			break;
 		case O_ROUND_BRACKET:
 			// ( EXPR )
@@ -480,10 +483,10 @@ public class Parser {
 		case IDENTIFIER:
 			// ID - -	
 			if (next(TokenType.MINUS) && next(2, TokenType.MINUS))
-				n = parsePostDecrement();
+				n = parsePostDecrement(false);
 			// ID + +
 			else if (next(TokenType.PLUS) && next(2, TokenType.PLUS))
-				n = parsePostIncrement();
+				n = parsePostIncrement(false);
 			// ID
 			else {
 				String varName = curToken.value;
@@ -592,9 +595,9 @@ public class Parser {
 
 	private AssignNode parseVarDefinition() {
 		if (is(TokenType.MINUS))
-			return parsePreDecrement();
+			return parsePreDecrement(false);
 		else if (is(TokenType.PLUS))
-			return parsePreIncrement();
+			return parsePreIncrement(false);
 
 		String varName = curToken.value;
 		assume(TokenType.IDENTIFIER, "var for definition missing");
@@ -617,7 +620,7 @@ public class Parser {
 		case PLUS:
 			if (next(TokenType.PLUS)) {
 				retreat();
-				an = parsePostIncrement();
+				an = parsePostIncrement(false);
 				break;
 			}
 
@@ -632,7 +635,7 @@ public class Parser {
 		case MINUS:
 			if (next(TokenType.MINUS)) {
 				retreat();
-				an = parsePostDecrement();
+				an = parsePostDecrement(false);
 				break;
 			}
 
@@ -827,7 +830,7 @@ public class Parser {
 		return fn;
 	}
 
-	private AssignNode parsePostIncrement() {
+	private AssignNode parsePostIncrement(boolean isStandalone) {
 		String varName = curToken.value;
 		assume(TokenType.IDENTIFIER, "post-increment-assignment var missing");
 
@@ -837,10 +840,12 @@ public class Parser {
 		PostIncrementNode lin = new PostIncrementNode(varName);
 		lin.variable = new VariableNode(varName);
 
+		if (isStandalone)
+			addInstruction(lin);
 		return lin;
 	}
 
-	private AssignNode parsePostDecrement() {
+	private AssignNode parsePostDecrement(boolean isStandalone) {
 		String varName = curToken.value;
 		assume(TokenType.IDENTIFIER, "post-decrement-assignment var missing");
 
@@ -851,10 +856,12 @@ public class Parser {
 		PostDecrementNode ldn = new PostDecrementNode(varName);
 		ldn.variable = new VariableNode(varName);
 
+		if (isStandalone)
+			addInstruction(ldn);
 		return ldn;
 	}
 
-	private AssignNode parsePreIncrement() {
+	private AssignNode parsePreIncrement(boolean isStandalone) {
 		assume(TokenType.PLUS, "Incrementor + missing");
 		assume(TokenType.PLUS, "Incrementor + missing");
 
@@ -864,10 +871,12 @@ public class Parser {
 		PreIncrementNode in = new PreIncrementNode(varName);
 		in.variable = new VariableNode(varName);
 
+		if (isStandalone)
+			addInstruction(in);
 		return in;
 	}
 
-	private AssignNode parsePreDecrement() {
+	private AssignNode parsePreDecrement(boolean isStandalone) {
 		assume(TokenType.MINUS, "Decrementor - missing");
 		assume(TokenType.MINUS, "Decrementor - missing");
 
@@ -877,6 +886,8 @@ public class Parser {
 		PreDecrementNode dn = new PreDecrementNode(varName);
 		dn.variable = new VariableNode(varName);
 
+		if (isStandalone)
+			addInstruction(dn);
 		return dn;
 	}
 

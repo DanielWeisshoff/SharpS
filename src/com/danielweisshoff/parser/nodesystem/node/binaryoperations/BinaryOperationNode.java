@@ -8,7 +8,7 @@ import com.danielweisshoff.parser.nodesystem.node.NodeType;
 /**
  * Divides two values and returns the result
  */
-public abstract class BinaryOperationNode extends Node {
+public abstract class BinaryOperationNode extends NumberNode {
 
 	public Node left;
 	public Node right;

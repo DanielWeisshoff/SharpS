@@ -6,6 +6,7 @@ import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.Node;
 import com.danielweisshoff.parser.nodesystem.node.NodeType;
+import com.danielweisshoff.parser.nodesystem.node.binaryoperations.NumberNode;
 import com.danielweisshoff.parser.symboltable.VariableEntry;
 
 /* TODO
@@ -15,7 +16,7 @@ import com.danielweisshoff.parser.symboltable.VariableEntry;
 /**
  * Holds the name of a variable and returns the stored data
  */
-public class VariableNode extends Node {
+public class VariableNode extends NumberNode {
 
 	private final String name;
 
