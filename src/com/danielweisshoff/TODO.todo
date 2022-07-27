@@ -10,11 +10,8 @@ Die Klassen der Productions enthalten alle für sie wichtigen infos.
 Bsp.
 IfNode speichert einen boolean und ein statement
 
-- ++ und -- erstmals entfernen
 TODO
-erstmal nur als Scriptsprache(keine Tababstände), die Logik kann dann nachher easy
-ins OOP übertragen werden
-[+]	- Logik von Nodes zum Interpreter schieben
+erstmal nur als funktionale Sprache, dann nachher OOP 
 [+]	- booleansche Logik &, &&, |, || implementieren
 [+]	- verkettung von conditions
 [+] - conditions klammern
@@ -56,7 +53,7 @@ ins OOP übertragen werden
 [-] - Ein paar builIn Funktionen
 [-] - char
 [-] - string als char[]
-[-] - Casting int()
+[-] - casting int()
 [-] - pointer arithmetic
 
 TODO
@@ -71,6 +68,9 @@ TODO
 [] - >> (right shift) takes two numbers, right shifts the bits of the first operand, the second operand decides the number of places to shift.
 - Testen, ob bitwise &,| wirklich funktionieren
 
+
+
+TODO OOP:
 - Das erzeugen von Objekten soll moeglich sein
  - Objekte sollen als Parameter/R�ckgabewert m�glich sein -> evtl. Data �berarbeiten ?
  - Enums
@@ -91,6 +91,8 @@ TODO
 int a = 2² + |test()| * (a|a)
 int a = pow(2,2) + abs(test()) * (a*a)
 [-] - The datetime calculation on the Log class is fucking slow
+
+
 *!NEUE SYNTAX?*:
 
 MatLab hat sehr schöne Syntax zum erzeugen von arrays und generell iterativen Strukturen
@@ -103,6 +105,7 @@ MatLab hat sehr schöne Syntax zum erzeugen von arrays und generell iterativen S
 	
 	int x (0:<10:1):
 		#code
+
 
 
 Momentaner Ablauf:
