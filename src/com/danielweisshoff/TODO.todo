@@ -11,8 +11,8 @@ v2.x - QOL und Features
 
 TODO VERSION 0.1 -- Funktionale Scriptsprache:
 [x] booleansche Logik &, &&, |, || implementieren
-[+] - & (bitwise AND)
-[+] - | (bitwise OR) 
+[x] - & (bitwise AND)
+[x] - | (bitwise OR) 
 [x] verkettung von conditions
 [x] conditions klammern
 [x] variablen
@@ -64,18 +64,18 @@ TODO VERSION 0.1 -- Funktionale Scriptsprache:
 
 
 TODO VERSION 1.0 -- OOP:
-    [-] Klassen
-    [-] Strings als erste Klasse
-    [-] Objekte sollen als Parameter/R�ckgabewert m�glich sein
-    [-] access modifier hinzufuegen
-    [-] public +
-    [-] private -
-    [-] static *
-    [ ] (protected?) /
-    [-] read r
-    [-] write w
-    [-] foreach
-    [-] Interfaces
+[-] Klassen
+[-] Strings als erste Klasse
+[-] Objekte sollen als Parameter/R�ckgabewert m�glich sein
+[-] access modifier hinzufuegen
+[-] public +
+[-] private -
+[-] static *
+[ ] (protected?) /
+[-] read r
+[-] write w
+[-] foreach
+[-] Interfaces
 [-] Vererbung
 [-] Überschreiben von Rechenoperationen für Objekte
 
