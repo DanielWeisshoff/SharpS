@@ -14,126 +14,127 @@ import com.danielweisshoff.parser.nodesystem.node.Node;
 
 public class Shell {
 
-	public static boolean benchmark = false;
-	public static boolean debug = false;
+    public static boolean benchmark = true;
+    public static boolean debug = false;
 
-	public static void main(String[] args) {
-		parseArgs(args);
+    public static void main(String[] args) {
+        parseArgs(args);
 
-		Logger.enabled = true;
-		if (benchmark)
-			benchmark();
-		else
-			run();
-		if (benchmark) {
-			System.out.println(benchmarks);
-			System.out.println("all done in " + benchmarkMS + " ms");
-		}
-	}
+        Logger.enabled = true;
+        if (benchmark)
+            benchmark();
+        else
+            run();
+        if (benchmark) {
+            System.out.println(benchmarks);
+            System.out.println("all done in " + benchmarkMS + " ms");
+        }
+    }
 
-	public static void parseArgs(String[] args) {
-		for (String s : args) {
-			switch (s) {
-			case "-d":
-				Shell.debug = true;
-				break;
-			case "-b":
-				Shell.benchmark = true;
-				break;
-			default:
-				System.out.println("Unknown tag " + s);
-				System.exit(1);
-			}
-		}
-	}
+    public static void parseArgs(String[] args) {
+        for (String s : args) {
+            switch (s) {
+            case "-d":
+                Shell.debug = true;
+                break;
+            case "-b":
+                Shell.benchmark = true;
+                break;
+            default:
+                System.out.println("Unknown tag " + s);
+                System.exit(1);
+            }
+        }
+    }
 
-	public static void run() {
+    public static void run() {
 
-		Goethe.clearLog();
+        Goethe.clearLog();
 
-		String text = Goethe.getText();
-		Lexer lexer = new Lexer(text);
-		Parser parser = new Parser();
+        String text = Goethe.getText();
+        Lexer lexer = new Lexer(text);
+        Parser parser = new Parser();
 
-		Token[] line;
+        Token[] line;
 
-		while (lexer.hasNextLine()) {
-			line = lexer.nextLine();
-			if (line.length == 0 || (line.length == 1 && line[0].type() == TokenType.TAB))
-				continue;
+        while (lexer.hasNextLine()) {
+            line = lexer.nextLine();
+            if (line.length == 0 || (line.length == 1 && line[0].type() == TokenType.TAB))
+                continue;
 
-			parser.parseInstruction(line);
-		}
+            parser.parseInstruction(line);
+        }
 
-		//INTERPRETATION
-		Interpreter interpreter = new Interpreter();
-		Interpreter.debug = debug;
+        //INTERPRETATION
+        Interpreter interpreter = new Interpreter();
+        Interpreter.debug = debug;
 
-		Node ast = parser.getAST();
-		interpreter.interpret(ast);
-	}
+        Node ast = parser.getAST();
+        interpreter.interpret(ast);
+    }
 
-	//Modules are running separated and are benchmarked
-	public static void benchmark() {
-		Goethe.clearLog();
+    //Modules are running separated and are benchmarked
+    public static void benchmark() {
+        Goethe.clearLog();
 
-		String text = Goethe.getText();
-		Lexer lexer = new Lexer(text);
-		Parser parser = new Parser();
+        String text = Goethe.getText();
+        Lexer lexer = new Lexer(text);
+        Parser parser = new Parser();
 
-		Token[] line;
-		ArrayList<Token[]> tokens = new ArrayList<>();
+        Token[] line;
+        ArrayList<Token[]> tokens = new ArrayList<>();
 
-		//LEXING
-		start();
-		while (lexer.hasNextLine()) {
-			line = lexer.nextLine();
-			if (line.length == 0 || (line.length == 1 && line[0].type() == TokenType.TAB))
-				continue;
-			tokens.add(line);
-		}
-		for (Token[] t : tokens) {
-			for (Token to : t)
-				System.out.println(to.getDescription());
-			System.out.println();
-		}
-		stop("LEXER");
-		System.out.println(benchmarks);
+        //LEXING
+        start();
+        while (lexer.hasNextLine()) {
+            line = lexer.nextLine();
+            if (line.length == 0 || (line.length == 1 && line[0].type() == TokenType.TAB))
+                continue;
+            tokens.add(line);
+        }
+        for (Token[] t : tokens) {
+            for (Token to : t)
+                System.out.println(to.getDescription());
+            System.out.println();
+        }
+        stop("LEXER");
+        System.out.println(benchmarks);
 
-		//PARSING
-		start();
-		for (Token[] t : tokens) {
-			parser.parseInstruction(t);
-		}
-		stop("PARSER");
+        //PARSING
+        start();
+        for (Token[] t : tokens) {
+            parser.parseInstruction(t);
+        }
+        stop("PARSER");
 
-		parser.printSymbolTable();
+        if (debug)
+            parser.printSymbolTable();
 
-		//INTERPRETATION
-		Interpreter interpreter = new Interpreter();
-		Interpreter.debug = debug;
-		Node ast = parser.getAST();
+        //INTERPRETATION
+        Interpreter interpreter = new Interpreter();
+        Interpreter.debug = debug;
+        Node ast = parser.getAST();
 
-		//INTERPRETING
-		start();
-		interpreter.interpret(ast);
-		stop("INTERPRETER");
-	}
+        //INTERPRETING
+        start();
+        interpreter.interpret(ast);
+        stop("INTERPRETER");
+    }
 
-	//
-	private static Instant start, end;
-	private static String benchmarks = "";
-	private static long benchmarkMS;
+    //
+    private static Instant start, end;
+    private static String benchmarks = "";
+    private static long benchmarkMS;
 
-	public static void start() {
-		start = Instant.now();
-	}
+    public static void start() {
+        start = Instant.now();
+    }
 
-	public static void stop(String msg) {
-		end = Instant.now();
-		long time = Duration.between(start, end).toMillis();
-		benchmarks += msg + " done in " + time + "ms\n";
-		benchmarkMS += time;
-	}
+    public static void stop(String msg) {
+        end = Instant.now();
+        long time = Duration.between(start, end).toMillis();
+        benchmarks += msg + " done in " + time + "ms\n";
+        benchmarkMS += time;
+    }
 
 }
