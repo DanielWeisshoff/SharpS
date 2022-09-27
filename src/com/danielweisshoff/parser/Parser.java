@@ -48,11 +48,14 @@ public class Parser {
     private SymbolTableManager stm = new SymbolTableManager();
 
     public Parser() {
+        //TODO belongs to semantics
         BuiltInFunction.registerAll();
+
         root = new BlockNode();
         scopeNode.add(root);
     }
 
+    //TODO
     public void parseBlock() {
 
     }
@@ -71,6 +74,8 @@ public class Parser {
         case KW_IF -> instruction = parseIf();
         case KW_ELSE -> instruction = parseElse();
         case KW_ELIF -> instruction = parseElif();
+        // Printing
+        case KW_OUT -> instruction = parseOut();
         //PRIMITIVES
         case KW_BYTE, KW_SHORT, KW_INT, KW_LONG, KW_FLOAT, KW_DOUBLE -> {
             if (next(TokenType.STAR)) {
@@ -250,7 +255,7 @@ public class Parser {
         }
         //Rausscopen, falls noetig
         if (curScope < scopeDepth) {
-            int diff = scopeDepth - (curScope);
+            int diff = Math.abs(curScope - scopeDepth);
             scopeOut(diff);
         }
     }
@@ -607,6 +612,7 @@ public class Parser {
         assume(TokenType.IDENTIFIER, "Fehler beim Deklarieren einer Variable");
         DeclareNode dn = new DeclareNode(name, type);
 
+        //TODO gehört zur Semantik
         //schauen, ob variable schon existiert
         if (stm.lookupVariable(name))
             new UnimplementedError("var '" + name + "': " + type + " is already declared", curToken);
@@ -632,6 +638,7 @@ public class Parser {
         String varName = curToken.value;
         assume(TokenType.IDENTIFIER, "var for definition missing");
 
+        //TODO gehört zur Semantik
         //check if var is already defined
         if (!stm.lookupVariable(varName))
             new UnimplementedError("var '" + varName + "' not declared", curToken);
@@ -733,7 +740,7 @@ public class Parser {
 
         advance();
         String name = parsePointer().name;
-
+        //TODO gehört zur Semantik
         //schauen, ob variable schon existiert
         if (stm.lookupVariable(name))
             new UnimplementedError("var '" + name + "': " + DataType.POINTER + " is already declared", curToken);
@@ -787,6 +794,7 @@ public class Parser {
         advance();
         String name = parsePointer().name;
 
+        //TODO gehört zur Semantik
         //schauen, ob variable schon existiert
         if (stm.lookupVariable(name))
             new UnimplementedError("var '" + name + "': " + DataType.POINTER + " is already declared", curToken);
@@ -803,6 +811,18 @@ public class Parser {
         stm.addVariable(id, ve);
         addInstruction(pn);
         return pn;
+    }
+
+    private OutNode parseOut() {
+        // KW_OUT ID
+        assume(TokenType.KW_OUT, "kw 'OUT' missing");
+
+        Token output = curToken;
+        advance();
+
+        OutNode on = new OutNode(output);
+        addInstruction(on);
+        return on;
     }
 
     //
@@ -875,7 +895,6 @@ public class Parser {
         fn.assignment = an;
 
         fn.block = scopeIn("for-body");
-
         System.out.println("added for to " + stm.getCurrentTable().getName());
         return fn;
     }
