@@ -3,11 +3,7 @@
  SYNTAX
 *
 
-TODO der COmpiler unterscheidet schlecht zwischen Initialization und Declaration
-int i			#declaration
-int i = 10 		#both
-i = 10			#initialization
-
+PRODUCTIONS:
 
 Boolean stuff
 
@@ -23,6 +19,10 @@ FACTOR			:	NUMBER|VARIABLE
 
 TODO
 TypeCast		:	KW_PRIMITIVE '(' EXPR ')'
+
+
+
+
 
 
 
