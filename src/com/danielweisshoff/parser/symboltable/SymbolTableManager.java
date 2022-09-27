@@ -7,96 +7,90 @@ import java.util.LinkedList;
  */
 public class SymbolTableManager {
 
-	public boolean deleteTableOnScopeEnd = false;
+    public boolean deleteTableOnScopeEnd = false;
 
-	private SymbolTable root;
-	private SymbolTable currentTable;
-	//collection of all SymbolTables
-	private LinkedList<SymbolTable> lookup = new LinkedList<>();
-	private int depth = 0;
+    private SymbolTable root;
+    private SymbolTable currentTable;
+    //collection of all SymbolTables
+    private LinkedList<SymbolTable> lookup = new LinkedList<>();
 
-	public SymbolTableManager() {
-		root = new SymbolTable("ROOT", depth);
-		lookup.add(root);
-		currentTable = root;
-	}
+    public SymbolTableManager() {
+        root = new SymbolTable("ROOT");
+        lookup.add(root);
+        currentTable = root;
+    }
 
-	public void newScope(String name) {
-		depth++;
+    public void newScope(String name) {
+        SymbolTable st = new SymbolTable(name);
+        currentTable.children.add(st);
+        st.parent = currentTable;
+        currentTable = st;
 
-		SymbolTable st = new SymbolTable(name, depth);
-		st.parent = currentTable;
-		currentTable = st;
+        lookup.add(st);
+    }
 
-		lookup.add(st);
-	}
+    public void endScope() {
+        SymbolTable temp = currentTable;
+        currentTable = currentTable.parent;
 
-	public void endScope() {
-		depth--;
+        if (deleteTableOnScopeEnd)
+            lookup.remove(temp);
+    }
 
-		SymbolTable temp = currentTable;
-		currentTable = currentTable.parent;
+    public SymbolTable getCurrentTable() {
+        return currentTable;
+    }
 
-		if (deleteTableOnScopeEnd)
-			lookup.remove(temp);
-	}
+    public void clearCurrentTable() {
+        currentTable.clear();
+    }
 
-	public SymbolTable getCurrentTable() {
-		return currentTable;
-	}
+    public void addVariable(long id, VariableEntry entry) {
+        currentTable.addVariable(entry);
+    }
 
-	public void clearCurrentTable() {
-		currentTable.clear();
-	}
+    public void addFunction(long id, FunctionEntry entry) {
+        currentTable.addFunction(entry);
+    }
 
-	public void addVariable(long id, VariableEntry entry) {
-		currentTable.addVariable(entry);
-	}
+    public void addStaticVariable(long id, VariableEntry entry) {
+        root.addVariable(entry);
+    }
 
-	public void addFunction(long id, FunctionEntry entry) {
-		currentTable.addFunction(entry);
-	}
+    public void addStaticFunction(long id, FunctionEntry entry) {
+        root.addFunction(entry);
+    }
 
-	public void addStaticVariable(long id, VariableEntry entry) {
-		root.addVariable(entry);
-	}
+    public VariableEntry findVariable(String name) {
+        return currentTable.findVariable(name);
+    }
 
-	public void addStaticFunction(long id, FunctionEntry entry) {
-		root.addFunction(entry);
-	}
+    public VariableEntry findStaticVariable(String name) {
+        return root.findVariable(name);
+    }
+    // public VariableEntry findVariable(long id) {
+    // 	return currentTable.findVariable(id);
+    // }
 
-	public VariableEntry findVariable(String name) {
-		return currentTable.findVariable(name);
-	}
+    // public FunctionEntry findFunction(String name) {
+    // 	return currentTable.findFunction(name);
+    // }
 
-	public VariableEntry findStaticVariable(String name) {
-		return root.findVariable(name);
-	}
-	// public VariableEntry findVariable(long id) {
-	// 	return currentTable.findVariable(id);
-	// }
+    // public FunctionEntry findStaticFunction(String name) {
+    // 	return root.findFunction(name);
+    // }
 
-	// public FunctionEntry findFunction(String name) {
-	// 	return currentTable.findFunction(name);
-	// }
+    public boolean lookupVariable(String name) {
+        return currentTable.findVariable(name) != null;
+    }
 
-	// public FunctionEntry findStaticFunction(String name) {
-	// 	return root.findFunction(name);
-	// }
+    // public boolean lookupFunction(String name) {
+    // 	return currentTable.findFunction(name) != null;
+    // }
 
-	public boolean lookupVariable(String name) {
-		return currentTable.findVariable(name) != null;
-	}
-
-	// public boolean lookupFunction(String name) {
-	// 	return currentTable.findFunction(name) != null;
-	// }
-
-	public void print() {
-		System.out.println("=====SYMBOLTABLE=====");
-		for (SymbolTable st : lookup) {
-			st.print();
-			System.out.println();
-		}
-	}
+    public void print() {
+        System.out.println("=====SYMBOLTABLE=====");
+        root.print(0);
+        System.out.println();
+    }
 }
