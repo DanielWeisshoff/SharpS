@@ -42,7 +42,7 @@ public class Parser {
 
     //For block building
     private Stack<BlockNode> scopeNode = new Stack<>();
-    private int scopeDepth = -1;
+    private int scopeDepth = 0;
 
     //variables
     private SymbolTableManager stm = new SymbolTableManager();
