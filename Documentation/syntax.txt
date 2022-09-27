@@ -17,14 +17,6 @@ EXPR			:	TERM (+|-) TERM
 TERM			:	FACTOR (*|/|%) FACTOR
 FACTOR			:	NUMBER|VARIABLE
 
-TODO
-TypeCast		:	KW_PRIMITIVE '(' EXPR ')'
-
-
-
-
-
-
 
 
 # FOR-LOOP

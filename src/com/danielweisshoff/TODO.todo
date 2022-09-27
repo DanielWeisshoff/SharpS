@@ -118,11 +118,8 @@ Interpretieren:
 Compilen (noch nicht eingefuegt):
 1. Lexer
 2. Parser			  (Syntax) + Symboltable
-3. ConversionChecking (Semantic)
+3. Semantic Analysis  (name binding, type checking,
+   flow check(unreachable code, missing returns, ...))
 4. AST Optimizer
 5. ByteCode Generator
 6. ByteCode Optimizer
-
-!!! 2 Optimizer sinnvoll?
-
-
