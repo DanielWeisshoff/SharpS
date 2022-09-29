@@ -70,7 +70,7 @@ public class SymbolTable {
         System.out.print(nameOffset + "" + name + ":");
 
         if (variables.size() == 0)
-            System.out.print("\n" + offset + "...");
+            System.out.print("\n" + offset + "| ...");
         else
             for (VariableEntry ve : variables)
                 System.out.print("\n" + offset + "| " + ve.getName() + ", " + ve.getType());

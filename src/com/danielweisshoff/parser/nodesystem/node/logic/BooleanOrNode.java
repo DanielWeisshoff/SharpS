@@ -10,17 +10,23 @@ import com.danielweisshoff.parser.nodesystem.node.logic.conditions.ConditionNode
  */
 public class BooleanOrNode extends ConditionNode {
 
-	public BooleanOrNode() {
-		super(NodeType.BOOLEAN_OR_NODE);
-	}
+    public BooleanOrNode() {
+        super(NodeType.BOOLEAN_OR_NODE);
+    }
 
-	@Override
-	public Data run() {
-		boolean val = left.run().asBoolean() == true || right.run().asBoolean() == true;
+    @Override
+    public Data run() {
+        boolean val = left.run().asBoolean() == true || right.run().asBoolean() == true;
 
-		if (val)
-			return new Data(1, DataType.BOOLEAN);
-		else
-			return new Data(0, DataType.BOOLEAN);
-	}
+        if (val)
+            return new Data(1, DataType.BOOLEAN);
+        else
+            return new Data(0, DataType.BOOLEAN);
+    }
+
+    //TODO implementation
+    @Override
+    public void print(int depth) {
+        System.out.println(nodeType);
+    }
 }

@@ -8,21 +8,27 @@ import com.danielweisshoff.parser.nodesystem.node.logic.conditions.ConditionNode
 
 public class DoWhileNode extends Node {
 
-	public ConditionNode condition;
-	public BlockNode whileBlock;
+    public ConditionNode condition;
+    public BlockNode whileBlock;
 
-	public DoWhileNode(ConditionNode condition) {
-		super(null, null, NodeType.DO_WHILE_NODE);
-		this.condition = condition;
-	}
+    public DoWhileNode(ConditionNode condition) {
+        super(null, null, NodeType.DO_WHILE_NODE);
+        this.condition = condition;
+    }
 
-	@Override
-	public Data run() {
-		do {
-			whileBlock.run();
-		} while (condition.run().asBoolean());
+    @Override
+    public Data run() {
+        do {
+            whileBlock.run();
+        } while (condition.run().asBoolean());
 
-		//TODO empty
-		return new Data();
-	}
+        //TODO empty
+        return new Data();
+    }
+
+    //TODO implementation
+    @Override
+    public void print(int depth) {
+        System.out.println(nodeType);
+    }
 }

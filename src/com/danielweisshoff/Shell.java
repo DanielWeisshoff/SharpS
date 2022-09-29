@@ -2,19 +2,18 @@ package com.danielweisshoff;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
 
 import com.danielweisshoff.interpreter.Interpreter;
 import com.danielweisshoff.lexer.Lexer;
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.logger.Logger;
-import com.danielweisshoff.parser.Parser;
 import com.danielweisshoff.parser.nodesystem.node.Node;
+import com.danielweisshoff.parser.parser.Parser;
 
 public class Shell {
 
-    public static boolean benchmark = true;
+    public static boolean benchmark = false;
     public static boolean debug = false;
 
     public static void main(String[] args) {
@@ -26,6 +25,7 @@ public class Shell {
         else
             run();
         if (benchmark) {
+            System.out.println("____________________BENCHMARK____________________\n");
             System.out.println(benchmarks);
             System.out.println("all done in " + benchmarkMS + " ms");
         }
@@ -58,11 +58,11 @@ public class Shell {
         Token[] line;
 
         while (lexer.hasNextLine()) {
-            line = lexer.nextLine();
+            line = lexer.next();
             if (line.length == 0 || (line.length == 1 && line[0].type() == TokenType.TAB))
                 continue;
 
-            parser.parseInstruction(line);
+            parser.parse(line);
         }
 
         //INTERPRETATION
@@ -77,40 +77,31 @@ public class Shell {
     public static void benchmark() {
         Goethe.clearLog();
 
-        String text = Goethe.getText();
-        Lexer lexer = new Lexer(text);
-        Parser parser = new Parser();
-
-        Token[] line;
-        ArrayList<Token[]> tokens = new ArrayList<>();
-
         //LEXING
+        Lexer lexer = new Lexer(Goethe.getText());
         start();
-        while (lexer.hasNextLine()) {
-            line = lexer.nextLine();
-            if (line.length == 0 || (line.length == 1 && line[0].type() == TokenType.TAB))
-                continue;
-            tokens.add(line);
-        }
-        for (Token[] t : tokens) {
-            for (Token to : t)
-                System.out.println(to.getDescription());
-            System.out.println();
-        }
+        Token[] tokens = lexer.next();
+
+        if (debug)
+            for (Token t : tokens)
+                System.out.println(t.getDescription());
+
         stop("LEXER");
         System.out.println(benchmarks);
 
         //PARSING
+        Parser parser = new Parser();
         start();
-        for (Token[] t : tokens) {
-            parser.parseInstruction(t);
-        }
+        parser.parse(tokens);
         stop("PARSER");
 
-        if (debug)
+        if (debug) {
             parser.printSymbolTable();
+            parser.getAST().print(0);
+        }
 
         //INTERPRETATION
+        System.out.println("____________________INTERPRETER____________________\n");
         Interpreter interpreter = new Interpreter();
         Interpreter.debug = debug;
         Node ast = parser.getAST();

@@ -9,21 +9,27 @@ import com.danielweisshoff.parser.symboltable.VariableEntry;
 
 public class PreDecrementNode extends AssignNode {
 
-	public PreDecrementNode(String name) {
-		super(name, NodeType.PRE_DECREMENT_NODE);
+    public PreDecrementNode(String name) {
+        super(name, NodeType.PRE_DECREMENT_NODE);
 
-	}
+    }
 
-	@Override
-	public Data run() {
+    @Override
+    public Data run() {
 
-		VariableEntry var = Interpreter.stm.findVariable(name);
-		if (var == null)
-			new UnimplementedError("Interpreter Error: var '" + name + "' not declared");
+        VariableEntry var = Interpreter.stm.findVariable(name);
+        if (var == null)
+            new UnimplementedError("Interpreter Error: var '" + name + "' not declared");
 
-		double value = var.node.data.asDouble();
-		var.node.data.setValue(value - 1);
+        double value = var.node.data.asDouble();
+        var.node.data.setValue(value - 1);
 
-		return var.node.data;
-	}
+        return var.node.data;
+    }
+
+    //TODO implementation
+    @Override
+    public void print(int depth) {
+        System.out.println(nodeType);
+    }
 }

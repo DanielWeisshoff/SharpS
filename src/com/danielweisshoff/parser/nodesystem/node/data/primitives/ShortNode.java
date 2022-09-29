@@ -6,8 +6,14 @@ import com.danielweisshoff.parser.nodesystem.node.NodeType;
 
 public class ShortNode extends PrimitiveNode {
 
-	public ShortNode(short value) {
-		super(NodeType.SHORT_NODE);
-		data = new Data(value, DataType.SHORT);
-	}
+    public ShortNode(short value) {
+        super(NodeType.SHORT_NODE);
+        data = new Data(value, DataType.SHORT);
+    }
+
+    @Override
+    public void print(int depth) {
+        System.out.println(offset(depth) + nodeType);
+        printAdvanced("" + data.asShort(), depth + 1);
+    }
 }

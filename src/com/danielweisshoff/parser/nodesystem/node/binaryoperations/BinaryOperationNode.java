@@ -9,11 +9,19 @@ import com.danielweisshoff.parser.nodesystem.node.NodeType;
  */
 public abstract class BinaryOperationNode extends NumberNode {
 
-	public NumberNode left;
-	public NumberNode right;
-	protected Data result;
+    public NumberNode left;
+    public NumberNode right;
+    protected Data result;
 
-	public BinaryOperationNode(DataType[] inputType, DataType outputType, NodeType nodeType) {
-		super(inputType, outputType, nodeType);
-	}
+    public BinaryOperationNode(DataType[] inputType, DataType outputType, NodeType nodeType) {
+        super(inputType, outputType, nodeType);
+    }
+
+    //TODO implementation
+    @Override
+    public void print(int depth) {
+        System.out.println(offset(depth) + nodeType);
+        left.print(depth + 1);
+        right.print(depth + 1);
+    }
 }

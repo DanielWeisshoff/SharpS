@@ -17,30 +17,36 @@ import com.danielweisshoff.parser.symboltable.VariableEntry;
  */
 public class VariableNode extends NumberNode {
 
-	private final String name;
-	private final DataType dataType;
+    private final String name;
+    private final DataType dataType;
 
-	public VariableNode(String name, DataType dataType) {
-		super(null, null, NodeType.VARIABLE_NODE);
-		this.name = name;
-		this.dataType = dataType;
-	}
+    public VariableNode(String name, DataType dataType) {
+        super(null, null, NodeType.VARIABLE_NODE);
+        this.name = name;
+        this.dataType = dataType;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public DataType getDataType() {
-		return dataType;
-	}
+    public DataType getDataType() {
+        return dataType;
+    }
 
-	@Override
-	public Data run() {
+    @Override
+    public Data run() {
 
-		VariableEntry var = Interpreter.stm.findVariable(name);
-		if (var == null)
-			new UnimplementedError("Interpreter Error: var '" + name + "' not declared");
+        VariableEntry var = Interpreter.stm.findVariable(name);
+        if (var == null)
+            new UnimplementedError("Interpreter Error: var '" + name + "' not declared");
 
-		return data;
-	}
+        return data;
+    }
+
+    //TODO implementation
+    @Override
+    public void print(int depth) {
+        System.out.println(nodeType);
+    }
 }

@@ -13,33 +13,40 @@ import com.danielweisshoff.parser.symboltable.VariableEntry;
  * Initializes a variable
  */
 public class DeclareNode extends Node {
-	private final String name;
-	public final DataType dataType;
+    private final String name;
+    public final DataType dataType;
 
-	public DeclareNode(String name, DataType dataType) {
-		super(null, null, NodeType.DECLARE_NODE);
+    public DeclareNode(String name, DataType dataType) {
+        super(null, null, NodeType.DECLARE_NODE);
 
-		this.name = name;
-		this.dataType = dataType;
-	}
+        this.name = name;
+        this.dataType = dataType;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	@Override
-	public Data run() {
+    @Override
+    public Data run() {
 
-		//generate an id for the variable
-		long id = IdRegistry.newID();
+        //generate an id for the variable
+        long id = IdRegistry.newID();
 
-		//entry in symboltable
-		VariableNode vn = new VariableNode(name, dataType);
-		vn.data = new Data();
+        //entry in symboltable
+        VariableNode vn = new VariableNode(name, dataType);
+        vn.data = new Data();
 
-		VariableEntry entry = new VariableEntry(name, id, vn);
-		Interpreter.stm.addVariable(id, entry);
+        VariableEntry entry = new VariableEntry(name, id, vn);
+        Interpreter.stm.addVariable(id, entry);
 
-		return new Data();
-	}
+        return new Data();
+    }
+
+    //TODO implementation 2.0
+    @Override
+    public void print(int depth) {
+        System.out.println(offset(depth) + nodeType);
+        printAdvanced(name + " : " + dataType, depth + 1);
+    }
 }

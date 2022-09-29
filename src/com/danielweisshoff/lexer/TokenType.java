@@ -18,5 +18,5 @@ public enum TokenType {
     //PRIMITIVES
     KW_BYTE, KW_SHORT, KW_INT, KW_LONG, KW_FLOAT, KW_DOUBLE,
     //Other shit
-    COMMENT, NEWLINE, TAB, EOF, EOL,
+    COMMENT, NEWLINE, TAB, EOF
 }

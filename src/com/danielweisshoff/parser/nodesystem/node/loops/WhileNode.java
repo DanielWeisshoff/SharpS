@@ -8,20 +8,26 @@ import com.danielweisshoff.parser.nodesystem.node.logic.conditions.ConditionNode
 
 public class WhileNode extends Node {
 
-	public ConditionNode condition;
-	public BlockNode whileBlock;
+    public ConditionNode condition;
+    public BlockNode whileBlock;
 
-	public WhileNode(ConditionNode condition) {
-		super(null, null, NodeType.WHILE_NODE);
-		this.condition = condition;
-	}
+    public WhileNode(ConditionNode condition) {
+        super(null, null, NodeType.WHILE_NODE);
+        this.condition = condition;
+    }
 
-	@Override
-	public Data run() {
-		while (condition.run().asBoolean())
-			whileBlock.run();
+    @Override
+    public Data run() {
+        while (condition.run().asBoolean())
+            whileBlock.run();
 
-		//TODO empty
-		return new Data();
-	}
+        //TODO empty
+        return new Data();
+    }
+
+    //TODO implementation
+    @Override
+    public void print(int depth) {
+        System.out.println(nodeType);
+    }
 }

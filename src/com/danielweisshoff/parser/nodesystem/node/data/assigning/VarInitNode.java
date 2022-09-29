@@ -1,6 +1,7 @@
 package com.danielweisshoff.parser.nodesystem.node.data.assigning;
 
 import com.danielweisshoff.interpreter.Interpreter;
+import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.IdRegistry;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
@@ -11,39 +12,47 @@ import com.danielweisshoff.parser.symboltable.VariableEntry;
 
 public class VarInitNode extends AssignNode {
 
-	private final String name;
-	public final DataType dataType;
-	public final NumberNode expression;
-	public boolean isPointer = false;
+    private final String name;
+    public final DataType dataType;
+    public final NumberNode expression;
+    public boolean isPointer = false;
 
-	public VarInitNode(String name, DataType dataType, NumberNode expression) {
-		super(name, NodeType.INIT_NODE);
+    public VarInitNode(String name, DataType dataType, NumberNode expression) {
+        super(name, NodeType.INIT_NODE);
 
-		this.name = name;
-		this.dataType = dataType;
-		this.expression = expression;
-	}
+        this.name = name;
+        this.dataType = dataType;
+        this.expression = expression;
+    }
 
-	@Override
-	public Data run() {
-		//checking semantics
-		Interpreter.conversionChecker.convert(dataType, expression);
+    @Override
+    public Data run() {
+        //checking semantics
+        Interpreter.conversionChecker.convert(dataType, expression);
 
-		//generate an id for the variable
-		long id = IdRegistry.newID();
+        //generate an id for the variable
+        long id = IdRegistry.newID();
 
-		VariableNode vn = new VariableNode(name, dataType);
-		vn.data = expression.run();
+        VariableNode vn = new VariableNode(name, dataType);
+        vn.data = expression.run();
 
-		VariableEntry ve = new VariableEntry(name, id, vn);
-		Interpreter.stm.addVariable(id, ve);
+        VariableEntry ve = new VariableEntry(name, id, vn);
+        Interpreter.stm.addVariable(id, ve);
 
-		if (Interpreter.debug) {
-			Data data = expression.run();
-			System.out.println(data.data + ", " + dataType);
-		}
+        if (Interpreter.debug) {
+            Data data = expression.run();
+            Logger.log(data.data + ", " + dataType);
+        }
 
-		return new Data();
-	}
+        return new Data();
+    }
 
+    //TODO implementation
+    @Override
+    public void print(int depth) {
+        System.out.println(offset(depth) + nodeType);
+
+        printAdvanced("name: " + name, depth + 1);
+        printAdvanced(expression, depth + 1);
+    }
 }

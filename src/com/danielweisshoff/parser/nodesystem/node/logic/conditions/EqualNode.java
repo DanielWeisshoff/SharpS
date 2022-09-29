@@ -11,20 +11,29 @@ import com.danielweisshoff.parser.nodesystem.node.NodeType;
  */
 public class EqualNode extends ConditionNode {
 
-	public EqualNode(Node left, Node right) {
-		super(NodeType.EQUAL_NODE);
+    public EqualNode(Node left, Node right) {
+        super(NodeType.EQUAL_NODE);
 
-		this.left = left;
-		this.right = right;
-	}
+        this.left = left;
+        this.right = right;
+    }
 
-	@Override
-	public Data run() {
-		boolean val = left.run().asDouble() == right.run().asDouble();
+    @Override
+    public Data run() {
+        boolean val = left.run().asDouble() == right.run().asDouble();
 
-		if (val)
-			return new Data(1, DataType.BOOLEAN);
-		else
-			return new Data(0, DataType.BOOLEAN);
-	}
+        if (val)
+            return new Data(1, DataType.BOOLEAN);
+        else
+            return new Data(0, DataType.BOOLEAN);
+    }
+
+    //TODO implementation 2.0
+    @Override
+    public void print(int depth) {
+        System.out.println(offset(depth) + nodeType);
+
+        left.print(depth + 1);
+        right.print(depth + 1);
+    }
 }

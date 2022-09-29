@@ -6,8 +6,14 @@ import com.danielweisshoff.parser.nodesystem.node.NodeType;
 
 public class FloatNode extends PrimitiveNode {
 
-	public FloatNode(float value) {
-		super(NodeType.FLOAT_NODE);
-		data = new Data(value, DataType.FLOAT);
-	}
+    public FloatNode(float value) {
+        super(NodeType.FLOAT_NODE);
+        data = new Data(value, DataType.FLOAT);
+    }
+
+    @Override
+    public void print(int depth) {
+        System.out.println(offset(depth) + nodeType);
+        printAdvanced("" + data.asFloat(), depth + 1);
+    }
 }

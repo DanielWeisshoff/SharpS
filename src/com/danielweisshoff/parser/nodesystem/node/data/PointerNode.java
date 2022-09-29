@@ -13,26 +13,32 @@ Saves the name of a vatiable and searches for its id at runtime
 */
 public class PointerNode extends NumberNode {
 
-	public String adress;
+    public String adress;
 
-	public final String name;
-	public final DataType dataType;
+    public final String name;
+    public final DataType dataType;
 
-	public PointerNode(String name, String adress, DataType dataType) {
-		super(null, null, NodeType.POINTER_NODE);
-		this.name = name;
-		this.adress = adress;
-		this.dataType = dataType;
-	}
+    public PointerNode(String name, String adress, DataType dataType) {
+        super(null, null, NodeType.POINTER_NODE);
+        this.name = name;
+        this.adress = adress;
+        this.dataType = dataType;
+    }
 
-	@Override
-	public Data run() {
+    @Override
+    public Data run() {
 
-		VariableEntry var = Interpreter.stm.findVariable(adress);
-		//TODO in the end this will point to some anyway
-		if (var == null)
-			new UnimplementedError("Interpreter Error: adress '" + adress + "' empty");
+        VariableEntry var = Interpreter.stm.findVariable(adress);
+        //TODO in the end this will point to some anyway
+        if (var == null)
+            new UnimplementedError("Interpreter Error: adress '" + adress + "' empty");
 
-		return data;
-	}
+        return data;
+    }
+
+    //TODO implementation
+    @Override
+    public void print(int depth) {
+        System.out.println(nodeType);
+    }
 }

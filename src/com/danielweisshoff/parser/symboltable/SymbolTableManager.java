@@ -1,56 +1,53 @@
 package com.danielweisshoff.parser.symboltable;
 
 import java.util.LinkedList;
+import java.util.Stack;
 
 /**
  * Manages all SymbolTables and builds them in a hierarchical order
  */
 public class SymbolTableManager {
 
-    public boolean deleteTableOnScopeEnd = false;
-
     private SymbolTable root;
-    private SymbolTable currentTable;
-    //collection of all SymbolTables
-    private LinkedList<SymbolTable> lookup = new LinkedList<>();
+    private Stack<SymbolTable> tables = new Stack<>();
 
-    public SymbolTableManager() {
-        root = new SymbolTable("ROOT");
-        lookup.add(root);
-        currentTable = root;
-    }
+    //collection of all SymbolTables
+    private LinkedList<SymbolTable> pool = new LinkedList<>();
+
+    public boolean deleteTableOnScopeEnd = false;
 
     public void newScope(String name) {
         SymbolTable st = new SymbolTable(name);
-        currentTable.children.add(st);
-        st.parent = currentTable;
-        currentTable = st;
 
-        lookup.add(st);
+        if (root == null)
+            root = st;
+        else
+            st.parent = tables.peek();
+
+        tables.add(st);
+        pool.add(st);
     }
 
     public void endScope() {
-        SymbolTable temp = currentTable;
-        currentTable = currentTable.parent;
-
         if (deleteTableOnScopeEnd)
-            lookup.remove(temp);
+            pool.remove(tables.peek());
+        tables.pop();
     }
 
     public SymbolTable getCurrentTable() {
-        return currentTable;
+        return tables.peek();
     }
 
     public void clearCurrentTable() {
-        currentTable.clear();
+        tables.peek().clear();
     }
 
     public void addVariable(long id, VariableEntry entry) {
-        currentTable.addVariable(entry);
+        tables.peek().addVariable(entry);
     }
 
     public void addFunction(long id, FunctionEntry entry) {
-        currentTable.addFunction(entry);
+        tables.peek().addFunction(entry);
     }
 
     public void addStaticVariable(long id, VariableEntry entry) {
@@ -62,7 +59,7 @@ public class SymbolTableManager {
     }
 
     public VariableEntry findVariable(String name) {
-        return currentTable.findVariable(name);
+        return tables.peek().findVariable(name);
     }
 
     public VariableEntry findStaticVariable(String name) {
@@ -81,7 +78,7 @@ public class SymbolTableManager {
     // }
 
     public boolean lookupVariable(String name) {
-        return currentTable.findVariable(name) != null;
+        return tables.peek().findVariable(name) != null;
     }
 
     // public boolean lookupFunction(String name) {

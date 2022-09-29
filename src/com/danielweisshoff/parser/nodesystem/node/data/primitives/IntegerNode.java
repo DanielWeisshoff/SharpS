@@ -6,8 +6,14 @@ import com.danielweisshoff.parser.nodesystem.node.NodeType;
 
 public class IntegerNode extends PrimitiveNode {
 
-	public IntegerNode(int value) {
-		super(NodeType.INTEGER_NODE);
-		data = new Data(value, DataType.INT);
-	}
+    public IntegerNode(int value) {
+        super(NodeType.INTEGER_NODE);
+        data = new Data(value, DataType.INT);
+    }
+
+    @Override
+    public void print(int depth) {
+        System.out.println(offset(depth) + nodeType);
+        printAdvanced("" + data.asInt(), depth + 1);
+    }
 }

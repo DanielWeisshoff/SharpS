@@ -15,11 +15,11 @@ public class Lexer {
     private boolean hasNext = true; //if the pointer is at the end or not
 
     //
-    private int line = 0;
+    private int line = 1;
     //the column pos of the current char
-    private int curColumn = -1;
+    private int curColumn = 0;
     //the position at which the current token starts
-    private int tokenStart = -1;
+    private int tokenStart = 0;
 
     public Lexer(String text) {
         this.text = text;
@@ -35,15 +35,17 @@ public class Lexer {
             currentChar = text.charAt(charIndex);
     }
 
-    public Token[] nextLine() {
-        line++;
-        curColumn = 0;
-        tokenStart = 0;
-
+    public Token[] next() {
         ArrayList<Token> tokens = new ArrayList<>();
 
-        while (charIndex < text.length() && currentChar != '\n') {
-            if (tokenMap.containsKey(currentChar)) {
+        while (charIndex < text.length()) {
+            if (currentChar == '\n') {
+                tokens.add(new Token(TokenType.NEWLINE, "", line, tokenStart, curColumn));
+                advance();
+                line++;
+                tokenStart = 0;
+                curColumn = 0;
+            } else if (tokenMap.containsKey(currentChar)) {
                 tokens.add(new Token(tokenMap.get(currentChar), "", line, tokenStart, curColumn));
                 advance();
             } else if (Character.isAlphabetic(currentChar)) {
@@ -201,7 +203,6 @@ public class Lexer {
         tokenMap.put('/', TokenType.SLASH);
         tokenMap.put('(', TokenType.O_ROUND_BRACKET);
         tokenMap.put(')', TokenType.C_ROUND_BRACKET);
-        tokenMap.put('\n', TokenType.NEWLINE);
         tokenMap.put('.', TokenType.DOT);
         tokenMap.put(',', TokenType.COMMA);
         tokenMap.put(':', TokenType.COLON);

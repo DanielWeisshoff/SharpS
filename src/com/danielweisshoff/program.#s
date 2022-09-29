@@ -1,5 +1,5 @@
-int xy
-for (int i = 0, i < 10, i = i+1):
-    int x = 5
-    int y = 5
-    int z = 5
+if(true):
+    if(true):
+        out 1
+    if(true):
+        out 1

@@ -6,9 +6,14 @@ import com.danielweisshoff.parser.nodesystem.node.NodeType;
 
 public class ByteNode extends PrimitiveNode {
 
-	public ByteNode(byte value) {
-		super(NodeType.BYTE_NODE);
-		data = new Data(value, DataType.BYTE);
-	}
+    public ByteNode(byte value) {
+        super(NodeType.BYTE_NODE);
+        data = new Data(value, DataType.BYTE);
+    }
 
+    @Override
+    public void print(int depth) {
+        System.out.println(offset(depth) + nodeType);
+        printAdvanced("" + data.asByte(), depth + 1);
+    }
 }

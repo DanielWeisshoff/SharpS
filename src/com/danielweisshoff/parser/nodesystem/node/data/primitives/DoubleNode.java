@@ -6,8 +6,14 @@ import com.danielweisshoff.parser.nodesystem.node.NodeType;
 
 public class DoubleNode extends PrimitiveNode {
 
-	public DoubleNode(double value) {
-		super(NodeType.DOUBLE_NODE);
-		data = new Data(value, DataType.DOUBLE);
-	}
+    public DoubleNode(double value) {
+        super(NodeType.DOUBLE_NODE);
+        data = new Data(value, DataType.DOUBLE);
+    }
+
+    @Override
+    public void print(int depth) {
+        System.out.println(offset(depth) + nodeType);
+        printAdvanced("" + data.asDouble(), depth + 1);
+    }
 }
