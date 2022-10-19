@@ -85,7 +85,7 @@ public class Parser {
     }
 
     /**
-     * Check, if current token type equals r, if not print error
+     * Compares the current tokens type
      */
     public void assume(TokenType t, String error) {
         if (is(t))
