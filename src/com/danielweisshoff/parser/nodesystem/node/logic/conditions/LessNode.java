@@ -20,9 +20,7 @@ public class LessNode extends ConditionNode {
 
     @Override
     public Data run() {
-        boolean val = left.run().asDouble() < right.run().asDouble();
-
-        if (val)
+        if (left.run().asDouble() < right.run().asDouble())
             return new Data(1, DataType.BOOLEAN);
         else
             return new Data(0, DataType.BOOLEAN);

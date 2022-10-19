@@ -94,6 +94,9 @@ public class VarDefinition {
             an = new DefineNode(varName, expr);
             an.expression = expr;
             break;
+
+        default:
+            new UnimplementedError("unknown operation", p.curToken);
         }
 
         //p.addInstruction(an);

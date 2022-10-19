@@ -21,8 +21,10 @@ public class SymbolTableManager {
 
         if (root == null)
             root = st;
-        else
+        else {
             st.parent = tables.peek();
+            tables.peek().children.add(st);
+        }
 
         tables.add(st);
         pool.add(st);

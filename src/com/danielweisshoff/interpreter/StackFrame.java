@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.danielweisshoff.parser.IdRegistry;
+import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.NumberNode;
 import com.danielweisshoff.parser.symboltable.VariableEntry;
 
@@ -16,10 +17,10 @@ public class StackFrame {
     //for debugging
     public ArrayList<VariableEntry> variables = new ArrayList<>();
 
-    public void addVariable(String name, NumberNode node) {
+    public void addVariable(String name, NumberNode node, DataType dataType) {
         //generate an id for the variable
         long id = IdRegistry.newID();
-        VariableEntry ve = new VariableEntry(name, id, node);
+        VariableEntry ve = new VariableEntry(name, id, node, dataType);
 
         variableStrTable.put(name, ve);
         variables.add(ve);

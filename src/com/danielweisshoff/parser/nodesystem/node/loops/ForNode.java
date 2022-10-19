@@ -26,6 +26,7 @@ public class ForNode extends Node {
         Interpreter.instance.newStackFrame();
         init.run();
 
+        System.out.println("one loop cycle");
         while (condition.run().asBoolean()) {
             block.run();
             increment.run();

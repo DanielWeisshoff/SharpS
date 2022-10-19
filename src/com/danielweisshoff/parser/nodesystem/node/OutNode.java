@@ -35,13 +35,7 @@ public class OutNode extends Node {
             else
                 output.append("can't output type '" + t.type() + "'");
         }
-
-        //DEBUG
-        Interpreter.instance.printStack();
-        System.out.println("\n\n\n");
-
-        if (Interpreter.debug)
-            System.out.println(">> " + output.toString());
+        System.out.println(">> " + output.toString());
         return new Data();
     }
 

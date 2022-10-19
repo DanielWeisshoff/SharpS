@@ -4,86 +4,104 @@ import java.util.ArrayList;
 
 public class Token {
 
-	private final TokenType type;
-	public String value;
-	public int line;
-	public int start;
-	public int end;
+    private final TokenType type;
+    public String value;
+    public int line;
+    public int start;
+    public int end;
 
-	public Token(TokenType type, String value, int line, int start, int end) {
-		this.type = type;
-		this.value = value;
-		this.line = line;
-		this.start = start;
-		this.end = end;
-	}
+    /**
+     *  Used by the lexer
+     * @param line specifies the line in the .#s file where
+     * the token is. a value of -1 indicates that the token
+     * doesnt belong to a file and thus was created artificially.
+     * 
+     */
+    public Token(TokenType type, String value, int line, int start, int end) {
+        this.type = type;
+        this.value = value;
+        this.line = line;
+        this.start = start;
+        this.end = end;
+    }
 
-	public static boolean areSameCategoryOP(Token t1, Token t2) {
-		return t1.isLineOP() && t2.isLineOP() || t1.isDotOP() && t2.isDotOP();
-	}
+    /**
+     * Use this ctor to create programm independent tokens
+     */
+    public Token(TokenType type, String value) {
+        this.type = type;
+        this.value = value;
+        line = -1;
+        start = 0;
+        end = value.length() - 1;
+    }
 
-	public static Token[] toArray(ArrayList<Token> list) {
-		Token[] tokens = new Token[list.size()];
-		return list.toArray(tokens);
-	}
+    public static boolean areSameCategoryOP(Token t1, Token t2) {
+        return t1.isLineOP() && t2.isLineOP() || t1.isDotOP() && t2.isDotOP();
+    }
 
-	public String getDescription() {
+    public static Token[] toArray(ArrayList<Token> list) {
+        Token[] tokens = new Token[list.size()];
+        return list.toArray(tokens);
+    }
 
-		String position = "";
+    public String getDescription() {
 
-		if (start == end)
-			position = line + "," + start;
-		else
-			position = line + "," + start + ":" + end;
+        String position = "";
 
-		if (value != null)
-			return ("[" + type + ", " + value + "] " + position);
-		else
-			return ("[" + type + "] " + position);
-	}
+        if (start == end)
+            position = line + "," + start;
+        else
+            position = line + "," + start + ":" + end;
 
-	public TokenType type() {
-		return type;
-	}
+        if (value != null)
+            return ("[" + type + ", " + value + "] " + position);
+        else
+            return ("[" + type + "] " + position);
+    }
 
-	public boolean isLineOP() {
-		return type == TokenType.PLUS || type == TokenType.MINUS;
-	}
+    public TokenType type() {
+        return type;
+    }
 
-	public boolean isDotOP() {
-		return type == TokenType.STAR || type == TokenType.SLASH;
-	}
+    public boolean isLineOP() {
+        return type == TokenType.PLUS || type == TokenType.MINUS;
+    }
 
-	public boolean isOP() {
-		return isLineOP() || isDotOP() || type == TokenType.PERCENT;
-	}
+    public boolean isDotOP() {
+        return type == TokenType.STAR || type == TokenType.SLASH;
+    }
 
-	public boolean isEOF() {
-		return type == TokenType.EOF;
-	}
+    public boolean isOP() {
+        return isLineOP() || isDotOP() || type == TokenType.PERCENT;
+    }
 
-	public boolean isNumeric() {
-		return type == TokenType.INTEGER || type == TokenType.FLOATING_POINT;
-	}
+    public boolean isEOF() {
+        return type == TokenType.EOF;
+    }
 
-	//TODO boolean?
-	public boolean isPrimitive() {
+    public boolean isNumeric() {
+        return type == TokenType.INTEGER || type == TokenType.FLOATING_POINT;
+    }
 
-		return switch (type) {
-		case KW_BYTE -> true;
-		case KW_SHORT -> true;
-		case KW_INT -> true;
-		case KW_LONG -> true;
-		case KW_FLOAT -> true;
-		case KW_DOUBLE -> true;
-		default -> unknownPrimitiveError();
-		};
-	}
+    //TODO boolean?
+    public boolean isPrimitive() {
 
-	//TODO just helper for now
-	private boolean unknownPrimitiveError() {
-		System.out.println("Unknown primitive '" + type + "'");
-		System.exit(0);
-		return false;
-	}
+        return switch (type) {
+        case KW_BYTE -> true;
+        case KW_SHORT -> true;
+        case KW_INT -> true;
+        case KW_LONG -> true;
+        case KW_FLOAT -> true;
+        case KW_DOUBLE -> true;
+        default -> unknownPrimitiveError();
+        };
+    }
+
+    //TODO just helper for now
+    private boolean unknownPrimitiveError() {
+        System.out.println("Unknown primitive '" + type + "'");
+        System.exit(0);
+        return false;
+    }
 }

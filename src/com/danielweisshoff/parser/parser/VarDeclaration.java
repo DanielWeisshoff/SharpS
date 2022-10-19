@@ -12,29 +12,29 @@ import com.danielweisshoff.parser.symboltable.VariableEntry;
 public class VarDeclaration {
 
     public static DeclareNode parse(Parser p) {
+        // PRIMITIVE ID
         TokenType keyword = p.curToken.type();
+        DataType dataType = p.getPrimitiveType(keyword);
         p.advance();
-
-        //getting the primitive type
-        DataType type = p.getPrimitiveType(keyword);
 
         String name = p.curToken.value;
         p.assume(TokenType.IDENTIFIER, "Fehler beim Deklarieren einer Variable");
-        DeclareNode dn = new DeclareNode(name, type);
+
+        DeclareNode dn = new DeclareNode(name, dataType);
 
         //TODO gehört zur Semantik
         //schauen, ob variable schon existiert
         if (p.stm.lookupVariable(name)) {
-            String error = "var '" + name + "': " + type + " is already declared";
+            String error = "var '" + name + "': " + dataType + " is already declared";
             new UnimplementedError(error, p.curToken);
         }
 
         //Variable eintragen
         long id = IdRegistry.newID();
-        VariableNode vn = new VariableNode(name, type);
+        VariableNode vn = new VariableNode(name);
         vn.data = new Data();
 
-        VariableEntry ve = new VariableEntry(name, id, vn);
+        VariableEntry ve = new VariableEntry(name, id, vn, dataType);
         p.stm.addVariable(id, ve);
         //p.addInstruction(dn);
         return dn;

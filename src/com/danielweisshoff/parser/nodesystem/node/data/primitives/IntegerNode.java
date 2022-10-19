@@ -6,6 +6,10 @@ import com.danielweisshoff.parser.nodesystem.node.NodeType;
 
 public class IntegerNode extends PrimitiveNode {
 
+    public IntegerNode() {
+        this(0);
+    }
+
     public IntegerNode(int value) {
         super(NodeType.INTEGER_NODE);
         data = new Data(value, DataType.INT);

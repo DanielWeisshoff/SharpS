@@ -26,7 +26,6 @@ public class ArrayNode extends NumberNode {
     //TODO should return the adress
     @Override
     public Data run() {
-
         return data;
     }
 

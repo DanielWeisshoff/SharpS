@@ -2,13 +2,11 @@ package com.danielweisshoff.parser.nodesystem.node.data;
 
 import com.danielweisshoff.interpreter.Interpreter;
 import com.danielweisshoff.logger.Logger;
-import com.danielweisshoff.parser.IdRegistry;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.Node;
 import com.danielweisshoff.parser.nodesystem.node.NodeType;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.NumberNode;
-import com.danielweisshoff.parser.symboltable.VariableEntry;
 
 public class ArrInitNode extends Node {
 
@@ -35,7 +33,7 @@ public class ArrInitNode extends Node {
             an.fields[i] = new Data();
         an.data = size.run();
 
-        Interpreter.instance.addVariable(name, an);
+        Interpreter.instance.addVariable(name, an, dataType);
 
         if (Interpreter.debug) {
             Logger.log(an.data.asInt() + ", " + dataType + "[]");

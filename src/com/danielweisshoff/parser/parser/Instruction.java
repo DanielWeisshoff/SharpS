@@ -1,10 +1,6 @@
 package com.danielweisshoff.parser.parser;
 
-import java.util.Scanner;
-
-import com.danielweisshoff.interpreter.Interpreter;
 import com.danielweisshoff.lexer.TokenType;
-import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.PError.UnimplementedError;
 import com.danielweisshoff.parser.nodesystem.node.Node;
 import com.danielweisshoff.parser.parser.array.ArrayGetField;

@@ -6,6 +6,10 @@ import com.danielweisshoff.parser.nodesystem.node.NodeType;
 
 public class ShortNode extends PrimitiveNode {
 
+    public ShortNode() {
+        this((short) 0);
+    }
+
     public ShortNode(short value) {
         super(NodeType.SHORT_NODE);
         data = new Data(value, DataType.SHORT);

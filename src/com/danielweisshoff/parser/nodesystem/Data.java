@@ -15,109 +15,109 @@ package com.danielweisshoff.parser.nodesystem;
 //TODO ctors without datatype, so the existing type will be used instead (should be standard)
 public class Data {
 
-	public final DataType dataType;
-	public Number data;
+    public final DataType dataType;
+    public Number value;
 
-	public Data(DataType dataType) {
-		this.dataType = dataType;
+    public Data(DataType dataType) {
+        this.dataType = dataType;
 
-		//generate default value 
-		switch (dataType) {
-		//integer 
-		case BYTE -> data = Byte.valueOf((byte) 0);
-		case SHORT -> data = Short.valueOf((short) 0);
-		case INT -> data = Integer.valueOf(0);
-		case LONG -> data = Long.valueOf(0);
-		//floating point 
-		case FLOAT -> data = Float.valueOf(0);
-		case DOUBLE -> data = Double.valueOf(0);
-		//diverse
-		case CHAR -> {
-			System.out.println("err01 not implemented");
-			System.exit(0);
-		}
-		case POINTER -> {
-			System.out.println("err02 not implemented");
-			System.exit(0);
-		}
-		case VOID -> {
-			System.out.println("err03 not implemented");
-			System.exit(0);
-		}
-		case BOOLEAN -> data = Byte.valueOf((byte) 0);
-		}
-	}
+        //generate default value 
+        switch (dataType) {
+        //integer 
+        case BYTE -> value = Byte.valueOf((byte) 0);
+        case SHORT -> value = Short.valueOf((short) 0);
+        case INT -> value = Integer.valueOf(0);
+        case LONG -> value = Long.valueOf(0);
+        //floating point 
+        case FLOAT -> value = Float.valueOf(0);
+        case DOUBLE -> value = Double.valueOf(0);
+        //diverse
+        case CHAR -> {
+            System.out.println("err01 not implemented");
+            System.exit(0);
+        }
+        case POINTER -> {
+            System.out.println("err02 not implemented");
+            System.exit(0);
+        }
+        case VOID -> {
+            System.out.println("err03 not implemented");
+            System.exit(0);
+        }
+        case BOOLEAN -> value = Byte.valueOf((byte) 0);
+        }
+    }
 
-	public Data() {
-		this.data = Integer.valueOf(0);
-		this.dataType = DataType.INT;
-	}
+    public Data() {
+        this.value = Integer.valueOf(0);
+        this.dataType = DataType.INT;
+    }
 
-	public Data(Number data, DataType dataType) {
-		this.data = data;
-		this.dataType = dataType;
-	}
+    public Data(Number data, DataType dataType) {
+        this.value = data;
+        this.dataType = dataType;
+    }
 
-	public void setValue(Number value) {
-		//check if Number is same as dataType
-		data = value;
-	}
+    public void setValue(Number value) {
+        //check if Number is same as dataType
+        this.value = value;
+    }
 
-	public Number getData() {
-		return data;
-	}
+    public Number getData() {
+        return value;
+    }
 
-	/*
-	 * Integers
-	 */
-	public byte asByte() {
-		assert data != null;
-		return data.byteValue();
-	}
+    /*
+     * Integers
+     */
+    public byte asByte() {
+        assert value != null;
+        return value.byteValue();
+    }
 
-	public short asShort() {
-		assert data != null;
-		return data.shortValue();
-	}
+    public short asShort() {
+        assert value != null;
+        return value.shortValue();
+    }
 
-	public int asInt() {
-		assert data != null;
-		return data.intValue();
-	}
+    public int asInt() {
+        assert value != null;
+        return value.intValue();
+    }
 
-	public long asLong() {
-		assert data != null;
-		return data.longValue();
-	}
+    public long asLong() {
+        assert value != null;
+        return value.longValue();
+    }
 
-	/*
-	 * Floating Point
-	 */
-	public float asFloat() {
-		assert data != null;
-		return data.floatValue();
-	}
+    /*
+     * Floating Point
+     */
+    public float asFloat() {
+        assert value != null;
+        return value.floatValue();
+    }
 
-	public double asDouble() {
-		assert data != null;
-		return data.doubleValue();
-	}
+    public double asDouble() {
+        assert value != null;
+        return value.doubleValue();
+    }
 
-	/*
-	 * Diverse
-	 */
-	public char asChar() {
-		assert data != null;
-		return (char) data.shortValue();
-	}
+    /*
+     * Diverse
+     */
+    public char asChar() {
+        assert value != null;
+        return (char) value.shortValue();
+    }
 
-	public boolean asBoolean() {
-		assert data != null;
-		return data.byteValue() == 1;
-	}
+    public boolean asBoolean() {
+        assert value != null;
+        return value.byteValue() == 1;
+    }
 
-	public long asPointer() {
-		assert data != null;
-		return data.longValue();
-	}
+    public long asPointer() {
+        assert value != null;
+        return value.longValue();
+    }
 }

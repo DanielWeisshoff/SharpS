@@ -25,12 +25,12 @@ public class PtrInitNode extends AssignNode {
 
     @Override
     public Data run() {
-        PointerNode pn = new PointerNode(name, adress, dataType);
-        Interpreter.instance.addVariable(name, pn);
+        PointerNode pn = new PointerNode(name, adress);
+        Interpreter.instance.addVariable(name, pn, dataType);
 
         if (Interpreter.debug) {
             Data data = Interpreter.instance.findVariable(adress).node.run();
-            Logger.log(data.data + ", " + dataType);
+            Logger.log(data.value + ", " + dataType);
         }
 
         return new Data();

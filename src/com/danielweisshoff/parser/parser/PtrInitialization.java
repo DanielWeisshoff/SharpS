@@ -15,6 +15,7 @@ public class PtrInitialization {
         // PRIMITIVE PTR = ADRESS
 
         TokenType keyword = p.curToken.type();
+        DataType dataType = p.getPrimitiveType(keyword);
         //TODO getting the primitive type of the pointer
         //DataType type = getPrimitiveType(keyword);
 
@@ -36,7 +37,7 @@ public class PtrInitialization {
         //Variable eintragen
         long id = IdRegistry.newID();
         PtrInitNode pn = new PtrInitNode(name, p.getPrimitiveType(keyword), adress);
-        VariableEntry ve = new VariableEntry(name, id, pn);
+        VariableEntry ve = new VariableEntry(name, id, pn, dataType);
 
         p.stm.addVariable(id, ve);
         // p.addInstruction(pn);

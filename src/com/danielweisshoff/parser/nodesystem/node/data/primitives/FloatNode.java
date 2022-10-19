@@ -6,6 +6,10 @@ import com.danielweisshoff.parser.nodesystem.node.NodeType;
 
 public class FloatNode extends PrimitiveNode {
 
+    public FloatNode() {
+        this(0);
+    }
+
     public FloatNode(float value) {
         super(NodeType.FLOAT_NODE);
         data = new Data(value, DataType.FLOAT);

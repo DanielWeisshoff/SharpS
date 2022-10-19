@@ -6,6 +6,10 @@ import com.danielweisshoff.parser.nodesystem.node.NodeType;
 
 public class DoubleNode extends PrimitiveNode {
 
+    public DoubleNode() {
+        this(0);
+    }
+
     public DoubleNode(double value) {
         super(NodeType.DOUBLE_NODE);
         data = new Data(value, DataType.DOUBLE);

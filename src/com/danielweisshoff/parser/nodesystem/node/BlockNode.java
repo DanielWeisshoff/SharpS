@@ -27,11 +27,11 @@ public class BlockNode extends Node {
     @Override
     public Data run() {
         Interpreter.instance.newStackFrame();
+
         for (Node n : children)
             n.run();
         Interpreter.instance.popStackFrame();
 
-        //TODO empty
         return new Data();
     }
 

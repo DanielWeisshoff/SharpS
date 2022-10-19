@@ -15,6 +15,7 @@ public class PtrDeclaration {
         // PRIMITIVE PTR
 
         TokenType keyword = p.curToken.type();
+        DataType dataType = p.getPrimitiveType(keyword);
         //TODO getting the primitive type of the pointer
         //DataType type = getPrimitiveType(keyword);
 
@@ -29,8 +30,8 @@ public class PtrDeclaration {
 
         //Variable eintragen
         long id = IdRegistry.newID();
-        PointerNode pn = new PointerNode(name, "nullptr", p.getPrimitiveType(keyword));
-        VariableEntry ve = new VariableEntry(name, id, pn);
+        PointerNode pn = new PointerNode(name, "nullptr");
+        VariableEntry ve = new VariableEntry(name, id, pn, dataType);
         p.stm.addVariable(id, ve);
 
         DeclareNode dn = new DeclareNode(name, DataType.POINTER);

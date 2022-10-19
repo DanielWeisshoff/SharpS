@@ -6,6 +6,10 @@ import com.danielweisshoff.parser.nodesystem.node.NodeType;
 
 public class LongNode extends PrimitiveNode {
 
+    public LongNode() {
+        this(0);
+    }
+
     public LongNode(long value) {
         super(NodeType.LONG_NODE);
         data = new Data(value, DataType.LONG);

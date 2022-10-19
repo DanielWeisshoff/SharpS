@@ -3,6 +3,7 @@ package com.danielweisshoff.interpreter;
 import java.util.Stack;
 
 import com.danielweisshoff.parser.nodesystem.Data;
+import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.BlockNode;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.NumberNode;
 import com.danielweisshoff.parser.symboltable.VariableEntry;
@@ -29,8 +30,8 @@ public class Interpreter {
             Interpreter.instance = this;
     }
 
-    public Data interpret(BlockNode n) {
-        return n.run();
+    public Data interpret(BlockNode block) {
+        return block.run();
     }
 
     public void newStackFrame() {
@@ -50,8 +51,8 @@ public class Interpreter {
         return stack.peek().findVariable(name);
     }
 
-    public void addVariable(String name, NumberNode node) {
-        stack.peek().addVariable(name, node);
+    public void addVariable(String name, NumberNode node, DataType dataType) {
+        stack.peek().addVariable(name, node, dataType);
     }
 
     public void printStack() {

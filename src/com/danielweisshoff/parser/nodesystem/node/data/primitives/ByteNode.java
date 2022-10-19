@@ -6,6 +6,10 @@ import com.danielweisshoff.parser.nodesystem.node.NodeType;
 
 public class ByteNode extends PrimitiveNode {
 
+    public ByteNode() {
+        this((byte) 0);
+    }
+
     public ByteNode(byte value) {
         super(NodeType.BYTE_NODE);
         data = new Data(value, DataType.BYTE);

@@ -12,6 +12,7 @@ public class Pointer {
         String name = p.curToken.value;
         p.assume(TokenType.IDENTIFIER, "pointer name missing");
 
-        return new PointerNode(name, null, null);
+        //TODO adresse fuer nullptr anlegen
+        return new PointerNode(name, null);
     }
 }

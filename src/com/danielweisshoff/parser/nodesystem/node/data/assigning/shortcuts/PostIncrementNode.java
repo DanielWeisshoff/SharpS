@@ -23,7 +23,6 @@ public class PostIncrementNode extends AssignNode {
 
         double value = var.node.data.asDouble();
         var.node.data.setValue(value + 1);
-
         return new Data(value, DataType.DOUBLE);
     }
 

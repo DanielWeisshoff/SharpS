@@ -25,14 +25,14 @@ public class VarInitNode extends AssignNode {
 
     @Override
     public Data run() {
-        VariableNode vn = new VariableNode(name, dataType);
+        VariableNode vn = new VariableNode(name);
         vn.data = expression.run();
 
-        Interpreter.instance.addVariable(name, vn);
+        Interpreter.instance.addVariable(name, vn, dataType);
 
         if (Interpreter.debug) {
             Data data = expression.run();
-            Logger.log(data.data + ", " + dataType);
+            Logger.log("initializing variable " + data.value + " :" + dataType);
         }
 
         return new Data();
