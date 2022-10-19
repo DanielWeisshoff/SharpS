@@ -21,7 +21,7 @@ public class If {
         in.block = Block.parse(p, "if-body");
 
         if (p.is(TokenType.KW_ELIF)) {
-            in.elseBlock = new BlockNode(p.getScope(), "if-body");
+            in.elseBlock = new BlockNode("if-body");
             in.elseBlock.add(Elif.parse(p));
         } else if (p.is(TokenType.KW_ELSE))
             in.elseBlock = Else.parse(p);

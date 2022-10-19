@@ -21,14 +21,13 @@ public class DefineNode extends AssignNode {
     @Override
     public Data run() {
 
-        VariableEntry entry = Interpreter.stm.findVariable(name);
+        double value = expression.run().asDouble();
 
-        double val = expression.run().asDouble();
-        entry.node.data.setValue(val);
+        VariableEntry entry = Interpreter.instance.findVariable(name);
+        entry.node.data.setValue(value);
 
-        if (Interpreter.debug) {
-            Logger.log(val + ", " + ((VariableNode) entry.node).getDataType());
-        }
+        if (Interpreter.debug)
+            Logger.log(value + ", " + ((VariableNode) entry.node).getDataType());
 
         return new Data();
     }

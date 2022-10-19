@@ -12,6 +12,7 @@ import com.danielweisshoff.parser.parser.shortcuts.PostIncrement;
 import com.danielweisshoff.parser.parser.shortcuts.PreDecrement;
 import com.danielweisshoff.parser.parser.shortcuts.PreIncrement;
 import com.danielweisshoff.parser.semantic.ConversionChecker;
+import com.danielweisshoff.parser.symboltable.VariableEntry;
 
 public class Factor {
 
@@ -89,7 +90,15 @@ public class Factor {
             } else {
                 String varName = p.curToken.value;
                 p.advance();
-                n = p.stm.findVariable(varName).node;
+                VariableEntry ve = p.stm.findVariable(varName);
+
+                //TODO only temporary -> put in semantic part
+                if (ve == null) {
+
+                    System.out.println("ERROR: var " + varName + " not declared");
+                    System.exit(1);
+                } else
+                    n = ve.node;
             }
             break;
         default:

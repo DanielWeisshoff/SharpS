@@ -12,14 +12,14 @@ public class Bool {
 
         ConditionNode cn = null;
 
-        while (p.is(TokenType.AND) || p.is(TokenType.OR)) {
+        while (p.is(TokenType.AND) || p.is(TokenType.PIPE)) {
             // PREDICATE && PREDICATE
             if (p.is(TokenType.AND) && p.next(TokenType.AND)) {
                 p.advance(2);
                 cn = new BooleanAndNode();
             }
             //PREDICATE || PREDICATE
-            else if (p.is(TokenType.OR) && p.next(TokenType.OR)) {
+            else if (p.is(TokenType.PIPE) && p.next(TokenType.PIPE)) {
                 p.advance(2);
                 cn = new BooleanOrNode();
             }

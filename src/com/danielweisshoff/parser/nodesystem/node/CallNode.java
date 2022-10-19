@@ -29,6 +29,6 @@ public class CallNode extends Node {
     //TODO implementation
     @Override
     public void print(int depth) {
-        System.out.println(nodeType);
+        System.out.println(offset(depth) + nodeType);
     }
 }

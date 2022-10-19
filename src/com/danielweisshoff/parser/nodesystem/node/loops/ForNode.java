@@ -13,7 +13,7 @@ public class ForNode extends Node {
 
     public VarInitNode init;
     public ConditionNode condition;
-    public AssignNode assignment;
+    public AssignNode increment;
     public BlockNode block;
 
     public ForNode() {
@@ -22,17 +22,16 @@ public class ForNode extends Node {
 
     @Override
     public Data run() {
-
-        Interpreter.stm.newScope("for-init");
+        //new Stackframe for the index variable
+        Interpreter.instance.newStackFrame();
         init.run();
 
-        Interpreter.stm.newScope("for-body");
         while (condition.run().asBoolean()) {
             block.run();
-            assignment.run();
+            increment.run();
         }
-        Interpreter.stm.endScope();
-        Interpreter.stm.endScope();
+        //closing Stackframe of index variable
+        Interpreter.instance.popStackFrame();
 
         //TODO empty
         return new Data();
@@ -45,7 +44,7 @@ public class ForNode extends Node {
 
         printAdvanced(init, depth + 1);
         printAdvanced(condition, depth + 1);
-        printAdvanced(assignment, depth + 1);
+        printAdvanced(increment, depth + 1);
 
         block.print(depth + 1);
     }

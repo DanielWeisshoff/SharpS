@@ -13,11 +13,14 @@ public class SymbolTable {
     private final HashMap<String, FunctionEntry> functionStrTable = new HashMap<>();
     private final HashMap<String, VariableEntry> variableStrTable = new HashMap<>();
 
+    int depth;
+
     //for debugging
     private ArrayList<VariableEntry> variables = new ArrayList<>();
 
-    public SymbolTable(String name) {
+    public SymbolTable(String name, int depth) {
         this.name = name;
+        this.depth = depth;
     }
 
     public void clear() {

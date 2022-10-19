@@ -1,5 +1,6 @@
 package com.danielweisshoff.parser.nodesystem.node.loops;
 
+import com.danielweisshoff.interpreter.Interpreter;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.node.BlockNode;
 import com.danielweisshoff.parser.nodesystem.node.Node;
@@ -20,14 +21,17 @@ public class WhileNode extends Node {
     public Data run() {
         while (condition.run().asBoolean())
             whileBlock.run();
-
         //TODO empty
+
         return new Data();
     }
 
     //TODO implementation
     @Override
     public void print(int depth) {
-        System.out.println(nodeType);
+        System.out.println(offset(depth) + nodeType);
+        printAdvanced(condition, depth);
+
+        whileBlock.print(depth + 1);
     }
 }

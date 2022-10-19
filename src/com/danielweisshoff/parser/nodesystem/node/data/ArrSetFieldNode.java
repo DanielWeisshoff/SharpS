@@ -23,7 +23,7 @@ public class ArrSetFieldNode extends Node {
 
     @Override
     public Data run() {
-        ArrayNode an = (ArrayNode) Interpreter.stm.findVariable(name).node;
+        ArrayNode an = (ArrayNode) Interpreter.instance.findVariable(name).node;
 
         int i = index.run().asInt();
         an.fields[i] = value.run();

@@ -37,16 +37,16 @@ public class VariableNode extends NumberNode {
     @Override
     public Data run() {
 
-        VariableEntry var = Interpreter.stm.findVariable(name);
+        VariableEntry var = Interpreter.instance.findVariable(name);
         if (var == null)
             new UnimplementedError("Interpreter Error: var '" + name + "' not declared");
 
-        return data;
+        return var.node.data;
     }
 
     //TODO implementation
     @Override
     public void print(int depth) {
-        System.out.println(nodeType);
+        System.out.println(offset(depth) + nodeType);
     }
 }

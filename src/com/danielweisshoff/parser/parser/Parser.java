@@ -6,7 +6,6 @@ import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.parser.PError.UnimplementedError;
 import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.BlockNode;
-import com.danielweisshoff.parser.nodesystem.node.Node;
 import com.danielweisshoff.parser.symboltable.SymbolTableManager;
 
 // TODO durch for-init wird falsch gescoped -> siehe
@@ -27,9 +26,8 @@ public class Parser {
 
     private Token[] tokens;
 
-    //For block building
-    //public Stack<BlockNode> currentBlock = new Stack<>();
-    private int scopeDepth = -1;
+    public int curInstructionScope = -1;
+    public int curScope = -1;
 
     //variables
     public SymbolTableManager stm = new SymbolTableManager();
@@ -39,7 +37,7 @@ public class Parser {
         BuiltInFunction.registerAll();
     }
 
-    public Node parse(Token[] tokens) {
+    public BlockNode parse(Token[] tokens) {
         this.tokens = tokens;
         advance();
 
@@ -115,24 +113,24 @@ public class Parser {
         return next().type() == t;
     }
 
-    // private Token[] tokensToEnd() {
-    //     Token[] toks = new Token[tokens.length - position];
-    //     int counter = 0;
-    //     for (int i = position; i < tokens.length; i++)
-    //         toks[counter++] = tokens[i];
+    public void scopeIn(String scope) {
+        scopeIn(scope, false);
+    }
 
-    //     return toks;
-    // }
-
-    public void scopeIn(BlockNode bn, String scope) {
-        stm.newScope(scope);
-        scopeDepth++;
-        //currentBlock.add(bn);
+    public void scopeIn(String name, boolean sameScope) {
+        if (!sameScope)
+            curScope++;
+        stm.newScope(name, curScope);
     }
 
     public void scopeOut() {
+        scopeOut(false);
+    }
+
+    public void scopeOut(boolean sameScope) {
         stm.endScope();
-        scopeDepth--;
+        if (!sameScope)
+            curScope--;
     }
 
     public void printSymbolTable() {
@@ -154,38 +152,24 @@ public class Parser {
         return type;
     }
 
-    public int getScope() {
-        return scopeDepth;
+    //TODO wird in Block u. Instruction overused
+    /**
+     * Begin Of Instruction
+     * parser will advance() to the next instruction
+     */
+    public void BOI() {
+        while (is(TokenType.COMMENT) || is(TokenType.NEWLINE)
+                || (is(TokenType.TAB) && next(TokenType.COMMENT) || (is(TokenType.TAB) && next(TokenType.NEWLINE)))) {
+            advance();
+        }
+
+        if (is(TokenType.TAB))
+            curInstructionScope = Integer.parseInt(curToken.value);
+        else
+            curInstructionScope = 0;
     }
 
     public BlockNode getAST() {
         return root;
     }
-
-    // //returns the latest IfNode in the present scope
-    // //that doesnt have an else-block
-    // IfNode findIfWithoutElseBlock(BlockNode n) {
-    //     //get the latest IfNode from current scope
-    //     IfNode in = null;
-    //     for (int i = n.children.size() - 1; i >= 0; i--)
-    //         if (n.children.get(i).nodeType == NodeType.IF_NODE) {
-    //             in = (IfNode) n.children.get(i);
-    //             break;
-    //         }
-    //     if (in == null)
-    //         new UnimplementedError("else statement doesnt have corresponding if", curToken);
-
-    //     return in.elseBlock == null ? in : findIfWithoutElseBlock(in.elseBlock);
-    // }
-
-    // public void addInstruction(Node instruction) {
-    //     scopeNode.peek().add(instruction);
-
-    //     if (debug) {
-    //         String nodeName = instruction.getClass().getSimpleName();
-    //         String tableName = stm.getCurrentTable().getName();
-    //         Logger.log(nodeName + " added to scope " + tableName);
-    //     }
-    // }
-
 }

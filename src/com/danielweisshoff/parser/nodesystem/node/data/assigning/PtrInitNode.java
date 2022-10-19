@@ -2,12 +2,10 @@ package com.danielweisshoff.parser.nodesystem.node.data.assigning;
 
 import com.danielweisshoff.interpreter.Interpreter;
 import com.danielweisshoff.logger.Logger;
-import com.danielweisshoff.parser.IdRegistry;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.NodeType;
 import com.danielweisshoff.parser.nodesystem.node.data.PointerNode;
-import com.danielweisshoff.parser.symboltable.VariableEntry;
 
 //TODO NumberNode.data is unused!!!
 public class PtrInitNode extends AssignNode {
@@ -27,16 +25,11 @@ public class PtrInitNode extends AssignNode {
 
     @Override
     public Data run() {
-
-        //generate an id for the variable
-        long id = IdRegistry.newID();
-
         PointerNode pn = new PointerNode(name, adress, dataType);
-        VariableEntry entry = new VariableEntry(name, id, pn);
-        Interpreter.stm.addVariable(id, entry);
+        Interpreter.instance.addVariable(name, pn);
 
         if (Interpreter.debug) {
-            Data data = Interpreter.stm.findVariable(adress).node.run();
+            Data data = Interpreter.instance.findVariable(adress).node.run();
             Logger.log(data.data + ", " + dataType);
         }
 

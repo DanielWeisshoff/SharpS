@@ -24,7 +24,7 @@ public class OutNode extends Node {
         for (Token t : token) {
 
             if (t.type() == TokenType.IDENTIFIER) {
-                VariableEntry var = Interpreter.stm.findVariable(t.value);
+                VariableEntry var = Interpreter.instance.findVariable(t.value);
                 output.append(var.node.data.asDouble());
             } else if (t.isNumeric())
                 output.append(Double.parseDouble(t.value));
@@ -35,6 +35,10 @@ public class OutNode extends Node {
             else
                 output.append("can't output type '" + t.type() + "'");
         }
+
+        //DEBUG
+        Interpreter.instance.printStack();
+        System.out.println("\n\n\n");
 
         if (Interpreter.debug)
             System.out.println(">> " + output.toString());

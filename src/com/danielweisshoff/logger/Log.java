@@ -3,17 +3,21 @@ package com.danielweisshoff.logger;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import com.danielweisshoff.logger.Logger.Channel;
+
 /*TODO
  * - appending the datetime is way to complicated
  */
 public class Log {
 
-    private final String dateTime;
     private final String message;
+    private final Channel channel;
 
-    public Log(String message) {
+    private final String dateTime;
+
+    public Log(String message, Channel channel) {
         this.message = message;
-
+        this.channel = channel;
         dateTime = getCurrentTimeStamp();
     }
 
@@ -21,15 +25,23 @@ public class Log {
 
         String dateStr = buildDateString();
         String timeStr = buildTimeString();
-        return dateStr + "\t" + timeStr;
+        return dateStr + "|" + timeStr;
+    }
+
+    public Channel getChannel() {
+        return channel;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public String getLogFormat() {
-        return "[" + dateTime + "]" + "  " + message + "\n";
+    public String getFormattedMessage() {
+
+        if (channel == Channel.ANONYMOUS)
+            return "[" + dateTime + "]" + " " + message;
+        else
+            return "[" + dateTime + "] " + channel + ": " + message;
     }
 
     private String buildDateString() {
@@ -60,19 +72,19 @@ public class Log {
 
     private String toMonth(int month) {
         return switch (month) {
-            case 1 -> "JAN";
-            case 2 -> "FEB";
-            case 3 -> "MAR";
-            case 4 -> "APR";
-            case 5 -> "MAY";
-            case 6 -> "JUN";
-            case 7 -> "JUL";
-            case 8 -> "AUG";
-            case 9 -> "SEP";
-            case 10 -> "OCT";
-            case 11 -> "NOV";
-            case 12 -> "DEC";
-            default -> "ERR";
+        case 1 -> "JAN";
+        case 2 -> "FEB";
+        case 3 -> "MAR";
+        case 4 -> "APR";
+        case 5 -> "MAY";
+        case 6 -> "JUN";
+        case 7 -> "JUL";
+        case 8 -> "AUG";
+        case 9 -> "SEP";
+        case 10 -> "OCT";
+        case 11 -> "NOV";
+        case 12 -> "DEC";
+        default -> "ERR";
         };
     }
 }

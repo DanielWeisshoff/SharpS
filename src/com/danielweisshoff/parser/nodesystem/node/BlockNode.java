@@ -11,14 +11,12 @@ import com.danielweisshoff.parser.nodesystem.DataType;
  */
 public class BlockNode extends Node {
 
-    public ArrayList<Node> children;
-    public int depth;
+    private ArrayList<Node> children;
     private String name;
 
-    public BlockNode(int depth, String name) {
+    public BlockNode(String name) {
         super(null, DataType.INT, NodeType.BLOCK_NODE);
         this.name = name;
-        this.depth = depth;
         children = new ArrayList<>();
     }
 
@@ -28,10 +26,10 @@ public class BlockNode extends Node {
 
     @Override
     public Data run() {
-        Interpreter.stm.newScope("block");
+        Interpreter.instance.newStackFrame();
         for (Node n : children)
             n.run();
-        Interpreter.stm.endScope();
+        Interpreter.instance.popStackFrame();
 
         //TODO empty
         return new Data();
@@ -39,12 +37,7 @@ public class BlockNode extends Node {
 
     @Override
     public void print(int depth) {
-
-        System.out.println(offset(depth) + nodeType);
-
-        printAdvanced("name: " + name, depth + 1);
-
         for (Node n : children)
-            n.print(depth + 1);
+            n.print(depth);
     }
 }

@@ -16,8 +16,8 @@ public class SymbolTableManager {
 
     public boolean deleteTableOnScopeEnd = false;
 
-    public void newScope(String name) {
-        SymbolTable st = new SymbolTable(name);
+    public void newScope(String name, int scope) {
+        SymbolTable st = new SymbolTable(name, scope);
 
         if (root == null)
             root = st;

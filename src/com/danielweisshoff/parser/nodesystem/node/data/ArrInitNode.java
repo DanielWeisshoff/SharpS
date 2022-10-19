@@ -35,11 +35,7 @@ public class ArrInitNode extends Node {
             an.fields[i] = new Data();
         an.data = size.run();
 
-        //generate an id for the variable
-        long id = IdRegistry.newID();
-
-        VariableEntry ve = new VariableEntry(name, id, an);
-        Interpreter.stm.addVariable(id, ve);
+        Interpreter.instance.addVariable(name, an);
 
         if (Interpreter.debug) {
             Logger.log(an.data.asInt() + ", " + dataType + "[]");

@@ -22,7 +22,7 @@ public class DoWhile {
         DoWhileNode dwn = new DoWhileNode(cn);
 
         //p.addInstruction(dwn);
-        p.scopeIn(dwn.whileBlock, "do-while-body");
+        p.scopeIn("do-while-body");
 
         return dwn;
     }

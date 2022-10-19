@@ -28,7 +28,7 @@ public class PointerNode extends NumberNode {
     @Override
     public Data run() {
 
-        VariableEntry var = Interpreter.stm.findVariable(adress);
+        VariableEntry var = Interpreter.instance.findVariable(adress);
         //TODO in the end this will point to some anyway
         if (var == null)
             new UnimplementedError("Interpreter Error: adress '" + adress + "' empty");

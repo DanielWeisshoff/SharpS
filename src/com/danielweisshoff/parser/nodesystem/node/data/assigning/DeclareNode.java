@@ -1,13 +1,11 @@
 package com.danielweisshoff.parser.nodesystem.node.data.assigning;
 
 import com.danielweisshoff.interpreter.Interpreter;
-import com.danielweisshoff.parser.IdRegistry;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.Node;
 import com.danielweisshoff.parser.nodesystem.node.NodeType;
 import com.danielweisshoff.parser.nodesystem.node.data.VariableNode;
-import com.danielweisshoff.parser.symboltable.VariableEntry;
 
 /**
  * Initializes a variable
@@ -29,16 +27,11 @@ public class DeclareNode extends Node {
 
     @Override
     public Data run() {
-
-        //generate an id for the variable
-        long id = IdRegistry.newID();
-
         //entry in symboltable
         VariableNode vn = new VariableNode(name, dataType);
         vn.data = new Data();
 
-        VariableEntry entry = new VariableEntry(name, id, vn);
-        Interpreter.stm.addVariable(id, entry);
+        Interpreter.instance.addVariable(name, vn);
 
         return new Data();
     }

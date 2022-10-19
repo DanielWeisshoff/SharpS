@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 //TODO? implement RegRex bcause its faster
+//TODO zusammenbau von COMPARISON in Parser verschieben
 public class Lexer {
 
     public static String VERSION = "V 0.8.1";
@@ -208,7 +209,7 @@ public class Lexer {
         tokenMap.put(':', TokenType.COLON);
         tokenMap.put('%', TokenType.PERCENT);
         tokenMap.put('&', TokenType.AND);
-        tokenMap.put('|', TokenType.OR);
+        tokenMap.put('|', TokenType.PIPE);
         tokenMap.put('\0', TokenType.EOF);
         tokenMap.put('[', TokenType.O_BLOCK_BRACKET);
         tokenMap.put(']', TokenType.C_BLOCK_BRACKET);

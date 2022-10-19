@@ -19,7 +19,7 @@ public class ArrGetFieldNode extends NumberNode {
 
     @Override
     public Data run() {
-        VariableEntry ve = Interpreter.stm.findVariable(name);
+        VariableEntry ve = Interpreter.instance.findVariable(name);
 
         return ((ArrayNode) ve.node).getField(index.run().asInt());
     }

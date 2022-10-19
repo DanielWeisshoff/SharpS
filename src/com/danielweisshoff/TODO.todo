@@ -45,6 +45,7 @@ TODO VERSION 0.1 -- Funktionale Scriptsprache:
 [x] --x, x-- Operand (Decrement)
 [/] Errorchecking verbessern  
 [x] arrays -> ArrayNode
+[-] TypeConversion in semantic teil einbauen
 [-] else wird doppelt angehängt (an elif und if)
 [-] for-body wird nicht ausgeführt
 [-] Nutzerfunktionen

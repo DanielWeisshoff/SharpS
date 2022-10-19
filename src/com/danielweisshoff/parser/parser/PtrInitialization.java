@@ -30,6 +30,7 @@ public class PtrInitialization {
 
         p.assume(TokenType.EQUAL, "= sign missing for ptr init");
 
+        //TODO pretty messy
         String adress = Adress.parse(p);
         VariableEntry var = p.stm.findVariable(adress);
         //Variable eintragen

@@ -1,6 +1,10 @@
 package com.danielweisshoff.parser.parser;
 
+import java.util.Scanner;
+
+import com.danielweisshoff.interpreter.Interpreter;
 import com.danielweisshoff.lexer.TokenType;
+import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.PError.UnimplementedError;
 import com.danielweisshoff.parser.nodesystem.node.Node;
 import com.danielweisshoff.parser.parser.array.ArrayGetField;
@@ -20,7 +24,12 @@ public class Instruction {
 
     public static Node parse(Parser p) {
 
+        p.BOI();
+
         Node instruction = null;
+
+        if (p.is(TokenType.TAB))
+            p.advance();
 
         switch (p.curToken.type()) {
         case KW_IF -> instruction = If.parse(p);
@@ -76,7 +85,7 @@ public class Instruction {
         case MINUS -> instruction = PreDecrement.parse(p, true);
         case STAR -> instruction = PtrDefinition.parse(p);
         case EOF -> {
-            return null;
+            instruction = null;
         }
         default -> {
             String error = "[INSTRUCTION] Action for Token " + p.curToken.type() + " not implemented";
@@ -84,11 +93,8 @@ public class Instruction {
         }
         }
 
-        return instruction;
-    }
+        p.BOI();
 
-    private static void endOfInstruction(Parser p) {
-        if (!p.is(TokenType.NEWLINE))
-            new UnimplementedError("expected end of instruction but found " + p.curToken.type(), p.curToken);
+        return instruction;
     }
 }
