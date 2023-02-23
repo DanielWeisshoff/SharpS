@@ -1,5 +1,5 @@
-/src/com/danielweisshoff/log.log
-/src/com/danielweisshoff/lexer.log
+/src/log.log
+/src/lexer.log
 # Ignore Gradle project-specific cache directory
 .gradle
 .vscode

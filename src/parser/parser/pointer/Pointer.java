@@ -1,0 +1,18 @@
+package parser.parser.pointer;
+
+import lexer.TokenType;
+import parser.nodesystem.node.data.var.pointer.PointerNode;
+import parser.parser.Parser;
+
+public class Pointer {
+
+    public static PointerNode parse(Parser p) {
+        // * ID
+        p.assume(TokenType.STAR, "pointer * missing");
+        String name = p.curToken.value;
+        p.assume(TokenType.IDENTIFIER, "pointer name missing");
+
+        //TODO adresse fuer nullptr anlegen
+        return new PointerNode(name, null);
+    }
+}
