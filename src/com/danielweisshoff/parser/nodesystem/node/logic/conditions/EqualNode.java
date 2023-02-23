@@ -20,7 +20,7 @@ public class EqualNode extends ConditionNode {
 
     @Override
     public Data run() {
-        boolean val = left.run().asDouble() == right.run().asDouble();
+        boolean val = left.run() == right.run();
 
         if (val)
             return new Data(1, DataType.BOOLEAN);

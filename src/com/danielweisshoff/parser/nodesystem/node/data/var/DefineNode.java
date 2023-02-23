@@ -1,11 +1,11 @@
-package com.danielweisshoff.parser.nodesystem.node.data.assigning;
+package com.danielweisshoff.parser.nodesystem.node.data.var;
 
 import com.danielweisshoff.interpreter.Interpreter;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.node.Node;
 import com.danielweisshoff.parser.nodesystem.node.NodeType;
-import com.danielweisshoff.parser.symboltable.VariableEntry;
 
+// <ID> = <EXPR>
 public class DefineNode extends AssignNode {
 
     public final Node expression;
@@ -21,8 +21,8 @@ public class DefineNode extends AssignNode {
 
         double value = expression.run().asDouble();
 
-        VariableEntry entry = Interpreter.instance.findVariable(name);
-        entry.node.data.setValue(value);
+        Data data = Interpreter.instance.findVariable(name);
+        data.setValue(value);
 
         return new Data();
     }

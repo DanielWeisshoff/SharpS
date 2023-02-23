@@ -3,10 +3,7 @@ package com.danielweisshoff.interpreter;
 import java.util.Stack;
 
 import com.danielweisshoff.parser.nodesystem.Data;
-import com.danielweisshoff.parser.nodesystem.DataType;
-import com.danielweisshoff.parser.nodesystem.node.BlockNode;
-import com.danielweisshoff.parser.nodesystem.node.binaryoperations.NumberNode;
-import com.danielweisshoff.parser.symboltable.VariableEntry;
+import com.danielweisshoff.parser.nodesystem.node.FunctionNode;
 
 /*
 TODO
@@ -30,12 +27,11 @@ public class Interpreter {
             Interpreter.instance = this;
     }
 
-    public Data interpret(BlockNode block) {
-        return block.run();
+    public Data interpret(FunctionNode function) {
+        return function.run();
     }
 
     public void newStackFrame() {
-
         StackFrame sf = new StackFrame();
 
         if (stack.size() != 0)
@@ -47,24 +43,23 @@ public class Interpreter {
         stack.pop();
     }
 
-    public VariableEntry findVariable(String name) {
-        return stack.peek().findVariable(name);
+    public Data findVariable(String name) {
+        return stack.peek().getVariable(name);
     }
 
-    public void addVariable(String name, NumberNode node, DataType dataType) {
-        stack.peek().addVariable(name, node, dataType);
+    public void addVariable(String name, Data data) {
+        stack.peek().addVariable(name, data);
     }
 
     public void printStack() {
-
         StackFrame sf = stack.peek();
 
         if (sf == null)
             return;
 
         while (true) {
-            for (VariableEntry ve : sf.variables)
-                System.out.println(ve.getDescription() + " " + ve.node.data.asDouble());
+            for (Data ve : sf.getVariables())
+                System.out.println(ve.dataType + " " + ve.asDouble());
 
             if (sf.parent != null) {
                 sf = sf.parent;

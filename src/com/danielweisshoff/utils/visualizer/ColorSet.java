@@ -1,4 +1,4 @@
-package com.danielweisshoff.editor;
+package com.danielweisshoff.utils.visualizer;
 
 public class ColorSet {
 

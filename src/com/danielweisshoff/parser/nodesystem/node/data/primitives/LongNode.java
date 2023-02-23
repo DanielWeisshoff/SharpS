@@ -11,8 +11,7 @@ public class LongNode extends PrimitiveNode {
     }
 
     public LongNode(long value) {
-        super(NodeType.LONG_NODE);
-        data = new Data(value, DataType.LONG);
+        super(new Data(value, DataType.LONG), NodeType.LONG_NODE);
     }
 
     @Override

@@ -3,19 +3,22 @@ package com.danielweisshoff.lexer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.danielweisshoff.logger.Logger;
+import com.danielweisshoff.logger.Logger.Channel;
+
 //TODO? implement RegRex bcause its faster
 //TODO zusammenbau von COMPARISON in Parser verschieben
 public class Lexer {
 
     public static String VERSION = "V 0.8.1";
+    public static boolean debug = false;
 
     private final HashMap<Character, TokenType> tokenMap = new HashMap<>();
     private String text;
     private int charIndex = -1;
     private char currentChar;
-    private boolean hasNext = true; //if the pointer is at the end or not
+    private boolean hasNext = true;
 
-    //
     private int line = 1;
     //the column pos of the current char
     private int curColumn = 0;
@@ -78,6 +81,10 @@ public class Lexer {
         if (charIndex >= text.length())
             hasNext = false;
 
+        if (debug)
+            for (Token t : tokens)
+                Logger.log(t.getDescription(), Channel.LEXER);
+
         return Token.toArray(tokens);
     }
 
@@ -98,6 +105,7 @@ public class Lexer {
                 break;
         }
         String subString = text.substring(start, charIndex);
+        //TODO put this in a separate method
         return switch (subString) {
         //PRIMITIVES
         case "bte" -> new Token(TokenType.KW_BYTE, null, line, tokenStart, curColumn - 1);

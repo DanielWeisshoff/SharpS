@@ -80,9 +80,7 @@ public class Instruction {
         case PLUS -> instruction = PreIncrement.parse(p, true);
         case MINUS -> instruction = PreDecrement.parse(p, true);
         case STAR -> instruction = PtrDefinition.parse(p);
-        case EOF -> {
-            instruction = null;
-        }
+        case EOF -> instruction = null;
         default -> {
             String error = "[INSTRUCTION] Action for Token " + p.curToken.type() + " not implemented";
             new UnimplementedError(error, p.curToken);

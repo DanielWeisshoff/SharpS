@@ -1,4 +1,4 @@
-package com.danielweisshoff.parser.nodesystem.node.data;
+package com.danielweisshoff.parser.nodesystem.node.data.var.array;
 
 import com.danielweisshoff.interpreter.Interpreter;
 import com.danielweisshoff.logger.Logger;
@@ -23,13 +23,13 @@ public class ArrSetFieldNode extends Node {
 
     @Override
     public Data run() {
-        ArrayNode an = (ArrayNode) Interpreter.instance.findVariable(name).node;
+        Data an = Interpreter.instance.findVariable(name);
 
         int i = index.run().asInt();
-        an.fields[i] = value.run();
+        an.setValue(value.run().asDouble(), i);
 
         if (Interpreter.debug)
-            Logger.log(an.fields[i].asDouble() + ", " + name + "[" + i + "]");
+            Logger.log(an.asDouble(i) + ", " + name + "[" + i + "]");
 
         return new Data();
     }

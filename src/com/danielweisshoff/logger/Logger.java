@@ -2,7 +2,7 @@ package com.danielweisshoff.logger;
 
 import java.util.ArrayList;
 
-import com.danielweisshoff.Goethe;
+import com.danielweisshoff.utils.Goethe;
 
 public class Logger {
 
@@ -33,6 +33,10 @@ public class Logger {
 
     public static void writeLogs() {
         Goethe.writeLogs(messages);
+    }
+
+    public static void clearLogs() {
+        Goethe.writeText(Goethe.logPath, "", false);
     }
 
     public static void printAll() {

@@ -1,0 +1,353 @@
+/////////////////////////////////////////////////////////////////////////
+  MASTER TODOLIST   MASTER TODOLIST   MASTER TODOLIST     MASTER TODOLIST
+/////////////////////////////////////////////////////////////////////////
+
+ROADMAP:
+v1.0 - Funktionale Scriptsprache
+v1.1 - bytecode und interpreter
+v1.2 - Code organisieren und strukturieren
+...
+v2.0 - ?OOP
+v2.x - QOL und Features
+
+TODO VERSION 0.1 -- Funktionale Scriptsprache:
+✔ booleansche Logik &, &&, |, || implementieren 
+✔ - & (bitwise AND) 
+✔ - | (bitwise OR) 
+✔ verkettung von conditions 
+✔ conditions klammern 
+✔ variablen 
+✔ Die *Build Klassen in den Parser einbauen 
+✔ += operand 
+✔ -= Operand 
+✔ *= Operand 
+✔ /= Operand 
+✔ %= Operand 
+✔ while 
+✔ do-while 
+✔ for
+✔ *in for-loop initialisierte var ist im falschen scope!!* 
+✔ *ALLE KEYWORDS IN EIGENE TOKENS* 
+✔ statische variablentypen 
+✔ automatic type-conversion 
+✔ type-conversion with loss (int a = 1 / 2 -> a = 0) 
+✔ alle primitiven zahlentypen 
+✔ +=, -=, *=, /=  sollen zu normalen assignNode geparsed werden    (x+= 1 * 2 -> x = x + (1 * 2) ) 
+✔ Dateiendung in .#s aendern 
+✔ curToken.value.equals(value) -> curToken.compare(value) 
+✔ manche TokenTypes umbenennen (ADD -> PLUS) 
+✔ instanceof durch NodeType(enum) ersetzen   	*140ms für parser* 
+✔ MOD operator zu Token.isOP() hinzufuegen 
+✔ schleifen erzeugen i Scopes im SymbolTable (stattdessen SymbolTable des scopes clearen un reusen) 
+✔ schauen, warum Parser so langsam ist 
+✔ ?EqualAssignNode redundant, einfach AssignNode benutzen? 
+✔ Pointer 
+✔ ++x, x++ Operand (Increment) 
+✔ --x, x-- Operand (Decrement) 
+✘ Data soll den DataType berücksichtigen (Momentan wird alles als Double behandelt)
+✘ Errorchecking verbessern  
+✔ arrays -> ArrayNode 
+✘ TypeConversion in semantic teil einbauen
+✘ else wird doppelt angehängt (an elif und if)
+✘ for-body wird nicht ausgeführt
+✘ Nutzerfunktionen
+✘ Parameter
+✘ Rueckgabewerte
+✘ Ein paar builIn Funktionen
+✘ char
+✘ string als char[]
+✘ casting int()
+✘ pointer arithmetic
+✘ << (left shift) 
+✘ >> (right shift) 
+✘ ^ (bitwise XOR) 
+✘ ~ (bitwise NOT)
+✘ Testen ob bitwise &,| funktionieren
+✘ Enums
+
+
+
+
+TODO VERSION 2.0 -- OOP:
+✘ Klassen
+✘ Strings als erste Klasse
+✘ Objekte sollen als Parameter/R�ckgabewert m�glich sein
+✘ access modifier hinzufuegen
+✘ public +
+✘ private -
+✘ static *
+[ ] (protected?) /
+✘ read r
+✘ write w
+✘ foreach
+✘ Interfaces
+✘ Vererbung
+✘ Überschreiben von Rechenoperationen für Objekte
+
+QOL:
+✘ Formatierte Strings   f("Das {} ist {}F",fahrzeug,farbe)
+✘ The datetime calculation on the Log class is fucking slow
+[ ] ?Preprocessor?
+[ ] ? Betragsstriche |a|?
+✘ der Compiler unterscheidet schlecht zwischen Initialization und Declaration
+   int i			#declaration
+   i = 10			#definition
+   int i = 10 		#initialization
+
+
+
+Der AST Interpreter soll nur für Funktionalität
+verantwortlich sein und muss nicht optimiert sein. Mit ihm
+kann man neue Funktionen leicht testen.
+
+Schneller, optimierter Code wird dann ja als bytecode
+gespeichert und verbessert ausgeführt.
+
+
+*!NEUE SYNTAX?*:
+
+For-Schleife:
+
+    #Defaultwerte     
+    for int x (x=0, x>y, x++):    
+        #Von 0 bis y in 1er Schritten
+
+    for int x (10):
+        #Von 0 bis 10 in 1er Schritten
+
+    for int x (3,10):
+        #Von 3 bis 10 in 1er Schritten
+
+    for int x (10,>0,-1):
+        #Von 10 bis 1 in -1er Schritten   
+
+    #Alternative ohne for-Keyword     
+    #Könnte ohne Keyword strukturell unübersichtlich sein    
+    int x (0,10,1):     
+        #code
+
+Momentaner Ablauf:
+
+Semantik:
+- (name binding, type checking,
+    flow check(unreachable code, missing returns, ...)
+
+Interpretieren:	
+1. Lexer
+2. Parser
+3. Interpreter + Symboltable -> ConversionChecking
+
+Compilen:
+1. Lexer
+2. Parser (Syntax)
+3. Parser (Semantik)
+4. AST Optimizer
+5. ByteCode Generator
+6. ByteCode Optimizer
+7. ByteCode Emitter
+
+
+1:
+Der Lexer nimmt als Eingabe eine variable Anzahl an
+Quellcode Dateien (.#s) und wandelt diese in Token um.
+
+2:
+Der Parser geht zunächst durch den Tokenstream und versucht
+ihn in gültige Syntax abzugleichen. Hierbei zählt nur das
+generelle Konstrukt und der korrekte Aufbau der Anweisungen,
+ohne die Bedeutung dahinter zu beachten. Dabei baut er
+stückweise einen AST auf, welcher den Programmablauf wiederspiegelt.
+
+3:
+Da der Parser nun den gesamten Quelltext durchgegangen ist,
+sind bereits alle vom Nutzer deklarierten Datenstrukturen,
+Variablen und Funktionen im SymbolTable eingetragen. Daher
+ist es jetzt an der Zeit zu schauen, ob Parameter,
+Rückgabewerte, oder Accessmodifier richtig genutzt werden.
+
+Die Aufteilung des Parsers in 2 Teile ist wichtig, da man so
+unabhängig von strikten Deklarierung von Funktionen
+und Datenstrukturen ist. Man kann so z.B. in Zeile 1 Eine
+Methode aufrufen, die erst in Zeile 10 definiert wird.
+Würden man Syntax und Semantik direkt in einem Abgang
+prüfen, so müsste man die Funktion vor dem Aufruf
+definieren, da der Parser sie in Zeile 1 noch nicht kennt.
+
+4:
+Der AST Optimizer...
+
+Funktionen:
+Rechnungen optimieren, indem Terme aus Konstanten vorab kalkuliert
+werden. (Bsp.: x + 4 * 5  -> x + 20)
+
+5:
+Der ByteCode generator wandelt den AST in eine IL um, welche 
+vergleichsweise Maschinennah ist, aber noch vom Menschen
+gelesen werden kann. Die Intermediate Language ist mit
+Assembly zu vergleichen.
+
+6:
+Falls möglich werden ByteCode Instruktionen auf ungeklärte
+Weise Optimiert. Optimierungen, die vom ASR Optimizer nicht
+gemacht werden können, werden nun eingeleitet, da man auf
+ByteCode Ebene mehr Freiheit hat.
+
+7:
+Der ByteCode wird dann mit Hilfe des Emitters in seine
+Binärdarstellung umgewandelt. Da jede ByteCode Instruktion
+ihre eigene Binärdarstellung hat, wird hier ein simpler
+LookUp Table genutzt.
+
+8:
+Der Interpreter startet mit einer Startdatei aus ByteCode
+und lädt alle weiteren Ressourcen dynamisch. Er geht
+Schrittweise die Instruktionen durch und nutzt auch einen
+LookUp Table, um diese Zuordnen zu können
+
+
+
+/*
+=====STACK=====
+Jeder Thread bekommt einen eigenen Stack, welcher
+StackFrames speichert (Das Hauptprogramm ist auch
+einThread).
+
+Die aktuell ausgeführte Methode wird current method genannt.
+Die Klasse, der die Methode zugehört ist die current class
+Der oberste/aktuelle StackFrame wird current frame genannt.
+
+Jeder Methodenaufruf erstellt pusht einen neue Stackframe
+auf den Stack.
+
+Der StackFrame speichert parameter, lokale variablen,
+Zwischenergebnisse der Variablen.
+
+Eine Methode kann entweder durch ein return, oder durch eine
+exception beendet werden(Methoden ohne returntype haben am
+ende ein return eingebaut).
+Wenn das passiert, und die Methode somit abgearbeitet ist,
+wird der current frame gepoppt und die Aufrufermethode wird
+wieder zur current method.
+
+=====STACKFRAME=====
+(Java spezifisch)
+Ein StackFrame besteht aus 3 Teilen: lokale variablen,
+operanden stack und frame data.
+
+Die größe eines StackFrames wird während der Compilation
+bereits festgelegt. Jede Methode hat eine fixe anzahl an
+variablen -> festgelegte framegröße.
+
+Der lokale variablen Teil des StackFrames ist ein Array aus
+wörtern.
+Anweisungen, die auf eine variable zugreifen tun dies mit
+dem entsprechenden index. Da die Anzahl, sowie reihenfolge
+der speicherung von variablen in den Stackframes
+voraussehbar ist, geht dies.
+
+intern benutzt Java die primitiven int,long,float,double,ref
+um werte abzuspeichern. Dabei werden dann kleinere
+Datentypen wie byte zum nächstgrößeren umgerechnet: byte -> int
+
+int, float, ref -> 1 Eintrag im Array
+long, double -> 2 Einträge im Array
+
+bei den Datentypen long, double wird das erste Feld adressiert.
+
+public static int runClassMethod(int i, long l, float f,
+        double d, Object o, byte b) {
+
+        return 0;
+    }
+
+0   int     int i
+1   long    long l
+3   float   float f
+4   double  double d
+6   ref     Object o
+7   int     byte b
+
+
+Instanzmethoden haben einen unsichtbaren ersten
+parameter, welcher die referenz zu dem aufrufenden Objekt
+ist
+(In Python muss dieser vom Nutzer angegeben werden).
+
+
+public int runInstanceMethod(char c, double d, short s,
+        boolean b) {
+
+        return 0;
+    }
+
+0   ref     hidden this
+1   int     char  c
+2   double  double d
+4   int     short s
+5   int     boolean b
+
+
+Datentypen werden auch auf dem Operandenstack umgewandelt
+(byte -> int).
+
+Auch wenn die reihenfolge der Parameter im Stackframe
+so festgelegt sind, das sie in richtiger Reihenfolge zuerst
+vorkommen müssen, so kann man lokale variablen aber beliebig
+adressieren.
+
+Eine art der Optimierung liegt darin, felder von Stackframes
+für mehrere variablen zu verwenden, solange ihre
+nutzungsvereiche nicht überlappen.
+
+
+Das festlegen der Adresse, an der die Variable gespeichert
+wird, ist die Aufageb des Betriebssystems.
+In C/C++ ist es möglich, selber eine exakte Adresse zu
+adressieren, dabei weiss man dann aber nicht, ob diese schon
+von anderen Programmen genutzt wird, oder nicht
+
+Wenn man nun in C/C++ eine fremde Adresse adressiert, gibt
+der Compiler keine Fehler aus. Aus sicherheitsgründen kann
+hier dann das Betriebssystem eingreifen, ansonsten könnte
+man ja den kompletten Ram leeren.
+
+variable:
+- allocate
+- deallocate
+- lifetime
+
+local variables
+allocated when scope reached
+deallocated when scope closed
+lifetime: the scope
+
+pointers
+allocated when scope reached
+pointer deallocated when scope closed, but value remains on
+the heap
+heap value deallocated when user calls del()
+
+RAM (pretty big storage, fast)
+lv2 Cache (stored on mainboard, low storage, faster)
+    kernel manages the cache
+lv1 Cache (stored on cpu, lower storage, even faster)
+
+registers (in the cpu, very few, gigachad speed)
+
+
+
+
+
+
+
+
+
+
+
+
+It is important to note that object files are assembled to binary code in a format that is relocatable. This is a form which allows the assembled code to be loaded anywhere into memory for use with other programs by a linker.
+
+Instructions that refer to labels will not yet have an address assigned for these labels in the .o file.
+
+These labels will be written as '0' and the assembler creates a relocation record for these unknown addresses. When the file is linked and output to an executable the unknown addresses are resolved and the program can be executed.
+*/

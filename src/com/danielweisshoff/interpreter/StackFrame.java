@@ -3,36 +3,30 @@ package com.danielweisshoff.interpreter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.danielweisshoff.parser.IdRegistry;
-import com.danielweisshoff.parser.nodesystem.DataType;
-import com.danielweisshoff.parser.nodesystem.node.binaryoperations.NumberNode;
-import com.danielweisshoff.parser.symboltable.VariableEntry;
+import com.danielweisshoff.parser.nodesystem.Data;
 
 public class StackFrame {
 
     public StackFrame parent;
 
-    private final HashMap<String, VariableEntry> variableStrTable = new HashMap<>();
-    //TODO? gebraucht?
-    //for debugging
-    public ArrayList<VariableEntry> variables = new ArrayList<>();
+    public HashMap<String, Data> frame = new HashMap<>();
 
-    public void addVariable(String name, NumberNode node, DataType dataType) {
-        //generate an id for the variable
-        long id = IdRegistry.newID();
-        VariableEntry ve = new VariableEntry(name, id, node, dataType);
+    private ArrayList<Data> variables = new ArrayList<>();
 
-        variableStrTable.put(name, ve);
-        variables.add(ve);
+    public void addVariable(String name, Data data) {
+        variables.add(data);
+        frame.put(name, data);
     }
 
-    public VariableEntry findVariable(String name) {
-        VariableEntry fe = variableStrTable.get(name);
-        if (fe != null)
-            return fe;
-        else if (parent != null)
-            return parent.findVariable(name);
+    public Data getVariable(String name) {
+        Data data = frame.get(name);
+        if (data != null)
+            return data;
         else
-            return null;
+            return parent.getVariable(name);
+    }
+
+    public ArrayList<Data> getVariables() {
+        return variables;
     }
 }

@@ -1,11 +1,10 @@
-package com.danielweisshoff.parser.nodesystem.node.data;
+package com.danielweisshoff.parser.nodesystem.node.data.var;
 
 import com.danielweisshoff.interpreter.Interpreter;
 import com.danielweisshoff.parser.PError.UnimplementedError;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.node.NodeType;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.NumberNode;
-import com.danielweisshoff.parser.symboltable.VariableEntry;
 
 /* TODO
  *   - Sollte eventuell ID anstatt Name speichern
@@ -30,12 +29,11 @@ public class VariableNode extends NumberNode {
     @Override
     public Data run() {
 
-        VariableEntry var = Interpreter.instance.findVariable(name);
-        if (var == null)
+        Data data = Interpreter.instance.findVariable(name);
+        if (data == null)
             new UnimplementedError("Interpreter Error: var '" + name + "' not declared");
 
-        //DEBUG testing
-        return var.node.data;
+        return data;
     }
 
     //TODO implementation

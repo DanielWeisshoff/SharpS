@@ -1,4 +1,4 @@
-package com.danielweisshoff.parser.nodesystem.node.data;
+package com.danielweisshoff.parser.nodesystem.node.data.var.array;
 
 import com.danielweisshoff.interpreter.Interpreter;
 import com.danielweisshoff.logger.Logger;
@@ -23,21 +23,17 @@ public class ArrInitNode extends Node {
 
     @Override
     public Data run() {
-
-        ArrayNode an = new ArrayNode(name, dataType, size);
         int fieldsSize = size.run().asInt();
 
-        an.fields = new Data[fieldsSize];
+        Data arr = new Data(dataType, fieldsSize);
 
         for (int i = 0; i < fieldsSize; i++)
-            an.fields[i] = new Data();
-        an.data = size.run();
+            arr.setValue(0, i);
 
-        Interpreter.instance.addVariable(name, an, dataType);
+        Interpreter.instance.addVariable(name, arr);
 
-        if (Interpreter.debug) {
-            Logger.log(an.data.asInt() + ", " + dataType + "[]");
-        }
+        if (Interpreter.debug)
+            Logger.log(name + ", " + dataType + "[]");
 
         return new Data();
     }

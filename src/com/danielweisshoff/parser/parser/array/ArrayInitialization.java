@@ -3,14 +3,14 @@ package com.danielweisshoff.parser.parser.array;
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.NumberNode;
-import com.danielweisshoff.parser.nodesystem.node.data.ArrInitNode;
+import com.danielweisshoff.parser.nodesystem.node.data.var.array.ArrInitNode;
 import com.danielweisshoff.parser.parser.Parser;
 import com.danielweisshoff.parser.parser.arithmetic.Expression;
 
 public class ArrayInitialization {
 
+    // KW ID [ EXPR ]
     public static ArrInitNode parse(Parser p) {
-        // KW ID [ EXPR ]
         TokenType keyword = p.curToken.type();
         p.advance();
 

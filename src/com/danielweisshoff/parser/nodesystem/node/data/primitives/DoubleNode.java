@@ -11,8 +11,7 @@ public class DoubleNode extends PrimitiveNode {
     }
 
     public DoubleNode(double value) {
-        super(NodeType.DOUBLE_NODE);
-        data = new Data(value, DataType.DOUBLE);
+        super(new Data(value, DataType.DOUBLE), NodeType.DOUBLE_NODE);
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.danielweisshoff.parser.parser.pointer;
 
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.parser.PError.UnimplementedError;
-import com.danielweisshoff.parser.nodesystem.node.data.PointerNode;
+import com.danielweisshoff.parser.nodesystem.node.data.var.pointer.PointerNode;
 import com.danielweisshoff.parser.parser.Parser;
 import com.danielweisshoff.parser.parser.arithmetic.Expression;
 

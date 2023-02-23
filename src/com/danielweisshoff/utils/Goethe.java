@@ -1,4 +1,4 @@
-package com.danielweisshoff;
+package com.danielweisshoff.utils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,9 +17,9 @@ import com.danielweisshoff.logger.Logger.Channel;
  */
 public class Goethe {
 
-    private static final File lexerPath = new File("src/com/danielweisshoff/lexer.log");
-    private static final File logPath = new File("src/com/danielweisshoff/log.log");
-    private static final File programPath = new File("src/com/danielweisshoff/program.#s"); //ß = \u00df
+    public static final File lexerPath = new File("src/com/danielweisshoff/lexer.log");
+    public static final File logPath = new File("src/com/danielweisshoff/log.log");
+    public static final File programPath = new File("src/com/danielweisshoff/program.#s"); //ß = \u00df
 
     public static String getText() {
         StringBuilder program = new StringBuilder();
@@ -92,9 +92,5 @@ public class Goethe {
             pw.close();
         } catch (Exception e) {
         }
-    }
-
-    public static void clearLog() {
-        writeText(logPath, "", false);
     }
 }

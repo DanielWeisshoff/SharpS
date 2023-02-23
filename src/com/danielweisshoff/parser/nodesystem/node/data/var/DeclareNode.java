@@ -1,16 +1,13 @@
-package com.danielweisshoff.parser.nodesystem.node.data.assigning;
+package com.danielweisshoff.parser.nodesystem.node.data.var;
 
 import com.danielweisshoff.interpreter.Interpreter;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.NodeType;
-import com.danielweisshoff.parser.nodesystem.node.data.VariableNode;
 
-/**
- * Initializes a variable
- */
+// <PRIMITIVE> <ID>
 public class DeclareNode extends AssignNode {
-    private final String name;
+    public final String name;
     public final DataType dataType;
 
     public DeclareNode(String name, DataType dataType) {
@@ -20,17 +17,10 @@ public class DeclareNode extends AssignNode {
         this.dataType = dataType;
     }
 
-    public String getName() {
-        return name;
-    }
-
     @Override
     public Data run() {
-        //entry in symboltable
-        VariableNode vn = new VariableNode(name);
-        vn.data = new Data();
-
-        Interpreter.instance.addVariable(name, vn, dataType);
+        //TODO
+        Interpreter.instance.addVariable(name, new Data(dataType));
 
         return new Data();
     }

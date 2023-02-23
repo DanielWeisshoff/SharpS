@@ -7,7 +7,9 @@ import com.danielweisshoff.parser.nodesystem.node.logic.conditions.ConditionNode
 
 public class If {
 
+    /** if ( BOOL ) : BLOCK */
     public static IfNode parse(Parser p) {
+
         p.assume(TokenType.KW_IF, "Keyword IF missing");
         p.assume(TokenType.O_ROUND_BRACKET, "Parameterlist not found");
 

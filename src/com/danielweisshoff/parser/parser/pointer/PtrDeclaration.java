@@ -4,8 +4,8 @@ import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.parser.IdRegistry;
 import com.danielweisshoff.parser.PError.UnimplementedError;
 import com.danielweisshoff.parser.nodesystem.DataType;
-import com.danielweisshoff.parser.nodesystem.node.data.PointerNode;
-import com.danielweisshoff.parser.nodesystem.node.data.assigning.DeclareNode;
+import com.danielweisshoff.parser.nodesystem.node.data.var.DeclareNode;
+import com.danielweisshoff.parser.nodesystem.node.data.var.pointer.PointerNode;
 import com.danielweisshoff.parser.parser.Parser;
 import com.danielweisshoff.parser.symboltable.VariableEntry;
 
@@ -31,9 +31,10 @@ public class PtrDeclaration {
         //Variable eintragen
         long id = IdRegistry.newID();
         PointerNode pn = new PointerNode(name, "nullptr");
-        VariableEntry ve = new VariableEntry(name, id, pn, dataType);
+        VariableEntry ve = new VariableEntry(name, id, dataType);
         p.stm.addVariable(id, ve);
 
+        //TODO wrong, ptr should have name,datatype and ptr type
         DeclareNode dn = new DeclareNode(name, DataType.POINTER);
         //p.addInstruction(dn);
         return dn;

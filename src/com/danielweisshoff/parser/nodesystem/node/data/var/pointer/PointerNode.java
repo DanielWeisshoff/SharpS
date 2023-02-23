@@ -1,11 +1,10 @@
-package com.danielweisshoff.parser.nodesystem.node.data;
+package com.danielweisshoff.parser.nodesystem.node.data.var.pointer;
 
 import com.danielweisshoff.interpreter.Interpreter;
 import com.danielweisshoff.parser.PError.UnimplementedError;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.node.NodeType;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.NumberNode;
-import com.danielweisshoff.parser.symboltable.VariableEntry;
 
 /*
 Saves the name of a vatiable and searches for its id at runtime
@@ -25,9 +24,9 @@ public class PointerNode extends NumberNode {
     @Override
     public Data run() {
 
-        VariableEntry var = Interpreter.instance.findVariable(adress);
+        Data data = Interpreter.instance.findVariable(adress);
         //TODO in the end this will point to some anyway
-        if (var == null)
+        if (data == null)
             new UnimplementedError("Interpreter Error: adress '" + adress + "' empty");
 
         return data;

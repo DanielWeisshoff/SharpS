@@ -11,8 +11,7 @@ public class ByteNode extends PrimitiveNode {
     }
 
     public ByteNode(byte value) {
-        super(NodeType.BYTE_NODE);
-        data = new Data(value, DataType.BYTE);
+        super(new Data(value, DataType.BYTE), NodeType.BYTE_NODE);
     }
 
     @Override

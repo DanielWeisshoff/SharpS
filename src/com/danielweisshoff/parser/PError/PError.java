@@ -1,8 +1,8 @@
 package com.danielweisshoff.parser.PError;
 
-import com.danielweisshoff.Goethe;
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
+import com.danielweisshoff.utils.Goethe;
 
 /**
  * Logs the error message and exits the program

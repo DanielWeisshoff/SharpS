@@ -11,8 +11,7 @@ public class ShortNode extends PrimitiveNode {
     }
 
     public ShortNode(short value) {
-        super(NodeType.SHORT_NODE);
-        data = new Data(value, DataType.SHORT);
+        super(new Data(value, DataType.SHORT), NodeType.SHORT_NODE);
     }
 
     @Override

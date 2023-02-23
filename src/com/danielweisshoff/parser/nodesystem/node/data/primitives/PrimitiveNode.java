@@ -6,12 +6,11 @@ import com.danielweisshoff.parser.nodesystem.node.binaryoperations.NumberNode;
 
 public abstract class PrimitiveNode extends NumberNode {
 
-    public PrimitiveNode(NodeType nodeType) {
-        super(null, null, nodeType);
-    }
+    public final Data data;
 
-    public Data getData() {
-        return data;
+    public PrimitiveNode(Data data, NodeType nodeType) {
+        super(null, null, nodeType);
+        this.data = data;
     }
 
     @Override

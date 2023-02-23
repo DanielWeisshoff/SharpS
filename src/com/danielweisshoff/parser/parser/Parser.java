@@ -5,21 +5,18 @@ import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.parser.PError.UnimplementedError;
 import com.danielweisshoff.parser.nodesystem.DataType;
-import com.danielweisshoff.parser.nodesystem.node.BlockNode;
+import com.danielweisshoff.parser.nodesystem.node.FunctionNode;
 import com.danielweisshoff.parser.symboltable.SymbolTableManager;
 
 // TODO durch for-init wird falsch gescoped -> siehe
 //      symboltable struktur
 
-//TODO addInstruction schlecht gelöst
-/**
- * Converts tokens to a runnable AST
- */
 public class Parser {
 
-    public static boolean debug = true;
+    public static boolean debug = false;
 
-    private BlockNode root;
+    private FunctionNode root;
+    public FunctionNode currentFunction;
 
     public Token curToken;
     private int position = -1;
@@ -37,11 +34,15 @@ public class Parser {
         BuiltInFunction.registerAll();
     }
 
-    public BlockNode parse(Token[] tokens) {
+    public FunctionNode parse(Token[] tokens) {
         this.tokens = tokens;
         advance();
 
-        root = Block.parse(this, "ROOT");
+        root = new FunctionNode("global");
+        currentFunction = root;
+
+        root.block = Block.parse(this, "ROOT");
+
         return root;
     }
 
@@ -169,7 +170,7 @@ public class Parser {
             curInstructionScope = 0;
     }
 
-    public BlockNode getAST() {
+    public FunctionNode getAST() {
         return root;
     }
 }

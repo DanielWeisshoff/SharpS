@@ -11,27 +11,53 @@ package com.danielweisshoff.parser.nodesystem;
  * Is used to receive and send data between Nodes
  *
  */
-//TODO? to many ctors? Could bring alot of bugs later
-//TODO ctors without datatype, so the existing type will be used instead (should be standard)
 public class Data {
-
     public final DataType dataType;
-    public Number value;
+    public Number[] value;
+
+    public Data() {
+        this(DataType.INT);
+    }
 
     public Data(DataType dataType) {
+        this(dataType, 1);
+    }
+
+    //handelt sich um Array
+    public Data(DataType dataType, int size) {
         this.dataType = dataType;
 
-        //generate default value 
+        value = new Number[size];
+        for (int i = 0; i < size; i++) {
+            setValue(0, i);
+        }
+    }
+
+    //handelt sich um einzelnes Feld
+    public Data(Number value, DataType dataType) {
+        this.value = new Number[1];
+        this.value[0] = value;
+        this.dataType = dataType;
+    }
+
+    public void setValue(Number value) {
+        setValue(value, 0);
+    }
+
+    public void setValue(Number value, int index) {
+        Number n = null;
         switch (dataType) {
         //integer 
-        case BYTE -> value = Byte.valueOf((byte) 0);
-        case SHORT -> value = Short.valueOf((short) 0);
-        case INT -> value = Integer.valueOf(0);
-        case LONG -> value = Long.valueOf(0);
+        case BYTE -> n = value.byteValue();
+        case SHORT -> n = value.shortValue();
+        case INT -> n = value.intValue();
+        case LONG -> n = value.longValue();
         //floating point 
-        case FLOAT -> value = Float.valueOf(0);
-        case DOUBLE -> value = Double.valueOf(0);
+        case FLOAT -> n = value.floatValue();
+        case DOUBLE -> n = value.doubleValue();
         //diverse
+        //TODO could be !=0/1
+        case BOOLEAN -> n = value.byteValue();
         case CHAR -> {
             System.out.println("err01 not implemented");
             System.exit(0);
@@ -44,80 +70,93 @@ public class Data {
             System.out.println("err03 not implemented");
             System.exit(0);
         }
-        case BOOLEAN -> value = Byte.valueOf((byte) 0);
         }
+        this.value[index] = n;
     }
 
-    public Data() {
-        this.value = Integer.valueOf(0);
-        this.dataType = DataType.INT;
-    }
-
-    public Data(Number data, DataType dataType) {
-        this.value = data;
-        this.dataType = dataType;
-    }
-
-    public void setValue(Number value) {
-        //check if Number is same as dataType
-        this.value = value;
-    }
-
-    public Number getData() {
-        return value;
+    public boolean isArray() {
+        return value.length > 1;
     }
 
     /*
      * Integers
      */
     public byte asByte() {
-        assert value != null;
-        return value.byteValue();
+        return asByte(0);
+    }
+
+    public byte asByte(int index) {
+        return value[index].byteValue();
     }
 
     public short asShort() {
-        assert value != null;
-        return value.shortValue();
+        return asShort(0);
+    }
+
+    public short asShort(int index) {
+        return value[index].shortValue();
     }
 
     public int asInt() {
-        assert value != null;
-        return value.intValue();
+        return asInt(0);
+    }
+
+    public int asInt(int index) {
+        return value[index].intValue();
     }
 
     public long asLong() {
-        assert value != null;
-        return value.longValue();
+        return asLong(0);
+    }
+
+    public long asLong(int index) {
+        return value[index].longValue();
     }
 
     /*
      * Floating Point
      */
     public float asFloat() {
-        assert value != null;
-        return value.floatValue();
+        return asFloat(0);
+    }
+
+    public float asFloat(int index) {
+        return value[index].floatValue();
     }
 
     public double asDouble() {
-        assert value != null;
-        return value.doubleValue();
+        return asDouble(0);
+    }
+
+    public double asDouble(int index) {
+        return value[index].doubleValue();
     }
 
     /*
      * Diverse
      */
+    //TODO char als short? was ist mit wchar?
     public char asChar() {
-        assert value != null;
-        return (char) value.shortValue();
+        return asChar(0);
+    }
+
+    public char asChar(int index) {
+        return (char) value[index].shortValue();
     }
 
     public boolean asBoolean() {
-        assert value != null;
-        return value.byteValue() == 1;
+        return asBoolean(0);
+    }
+
+    public boolean asBoolean(int index) {
+        return value[index].byteValue() == 1;
     }
 
     public long asPointer() {
-        assert value != null;
-        return value.longValue();
+        return asPointer(0);
+    }
+
+    public long asPointer(int index) {
+        return value[index].longValue();
     }
 }

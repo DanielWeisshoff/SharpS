@@ -3,8 +3,14 @@ package com.danielweisshoff.parser.parser.arithmetic;
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.parser.PError.UnimplementedError;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.NumberNode;
-import com.danielweisshoff.parser.nodesystem.node.data.primitives.*;
+import com.danielweisshoff.parser.nodesystem.node.data.primitives.ByteNode;
+import com.danielweisshoff.parser.nodesystem.node.data.primitives.DoubleNode;
+import com.danielweisshoff.parser.nodesystem.node.data.primitives.FloatNode;
+import com.danielweisshoff.parser.nodesystem.node.data.primitives.IntegerNode;
+import com.danielweisshoff.parser.nodesystem.node.data.primitives.LongNode;
 import com.danielweisshoff.parser.nodesystem.node.data.primitives.PrimitiveNode;
+import com.danielweisshoff.parser.nodesystem.node.data.primitives.ShortNode;
+import com.danielweisshoff.parser.nodesystem.node.data.var.VariableNode;
 import com.danielweisshoff.parser.parser.Parser;
 import com.danielweisshoff.parser.parser.array.ArrayGetField;
 import com.danielweisshoff.parser.parser.shortcuts.PostDecrement;
@@ -54,7 +60,7 @@ public class Factor {
             case IDENTIFIER:
                 String varName = p.curToken.value;
                 p.advance();
-                n = p.stm.findVariable(varName).node;
+                n = new VariableNode(varName);
                 break;
             // - - ID
             case MINUS:
@@ -98,7 +104,7 @@ public class Factor {
                     System.out.println("ERROR: var " + varName + " not declared");
                     System.exit(1);
                 } else
-                    n = ve.node;
+                    n = new VariableNode(varName);
             }
             break;
         default:

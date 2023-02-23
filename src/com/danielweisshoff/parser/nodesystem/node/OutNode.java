@@ -6,7 +6,6 @@ import com.danielweisshoff.interpreter.Interpreter;
 import com.danielweisshoff.lexer.Token;
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.parser.nodesystem.Data;
-import com.danielweisshoff.parser.symboltable.VariableEntry;
 
 public class OutNode extends Node {
 
@@ -24,8 +23,12 @@ public class OutNode extends Node {
         for (Token t : token) {
 
             if (t.type() == TokenType.IDENTIFIER) {
-                VariableEntry var = Interpreter.instance.findVariable(t.value);
-                output.append(var.node.data.asDouble());
+                Data data = Interpreter.instance.findVariable(t.value);
+                if (data == null) {
+                    System.out.println("var '" + t.value + "' not found");
+                    System.exit(1);
+                } else
+                    output.append(data.asDouble());
             } else if (t.isNumeric())
                 output.append(Double.parseDouble(t.value));
             else if (t.type() == TokenType.STRING)

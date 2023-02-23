@@ -1,10 +1,10 @@
-package com.danielweisshoff.parser.nodesystem.node.data;
+package com.danielweisshoff.parser.nodesystem.node.data.var.array;
 
 import com.danielweisshoff.interpreter.Interpreter;
 import com.danielweisshoff.parser.nodesystem.Data;
+import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.NodeType;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.NumberNode;
-import com.danielweisshoff.parser.symboltable.VariableEntry;
 
 public class ArrGetFieldNode extends NumberNode {
 
@@ -19,9 +19,12 @@ public class ArrGetFieldNode extends NumberNode {
 
     @Override
     public Data run() {
-        VariableEntry ve = Interpreter.instance.findVariable(name);
+        Data data = Interpreter.instance.findVariable(name);
 
-        return ((ArrayNode) ve.node).getField(index.run().asInt());
+        //TODO idk
+        double value = data.asDouble(index.run().asInt());
+        Data d = new Data(value, DataType.DOUBLE);
+        return d;
     }
 
     //TODO implementation

@@ -1,8 +1,8 @@
 package com.danielweisshoff.parser.parser.shortcuts;
 
 import com.danielweisshoff.lexer.TokenType;
-import com.danielweisshoff.parser.nodesystem.node.data.assigning.AssignNode;
-import com.danielweisshoff.parser.nodesystem.node.data.assigning.shortcuts.PostIncrementNode;
+import com.danielweisshoff.parser.nodesystem.node.data.var.AssignNode;
+import com.danielweisshoff.parser.nodesystem.node.data.var.shortcuts.PostIncrementNode;
 import com.danielweisshoff.parser.parser.Parser;
 
 public class PostIncrement {

@@ -11,8 +11,7 @@ public class FloatNode extends PrimitiveNode {
     }
 
     public FloatNode(float value) {
-        super(NodeType.FLOAT_NODE);
-        data = new Data(value, DataType.FLOAT);
+        super(new Data(value, DataType.FLOAT), NodeType.FLOAT_NODE);
     }
 
     @Override

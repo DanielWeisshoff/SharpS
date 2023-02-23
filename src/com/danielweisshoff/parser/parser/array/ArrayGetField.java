@@ -2,7 +2,7 @@ package com.danielweisshoff.parser.parser.array;
 
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.parser.nodesystem.node.binaryoperations.NumberNode;
-import com.danielweisshoff.parser.nodesystem.node.data.ArrGetFieldNode;
+import com.danielweisshoff.parser.nodesystem.node.data.var.array.ArrGetFieldNode;
 import com.danielweisshoff.parser.parser.Parser;
 import com.danielweisshoff.parser.parser.arithmetic.Expression;
 

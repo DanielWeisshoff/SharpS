@@ -3,6 +3,7 @@ package com.danielweisshoff.parser.parser.loops;
 import com.danielweisshoff.lexer.TokenType;
 import com.danielweisshoff.parser.nodesystem.node.logic.conditions.ConditionNode;
 import com.danielweisshoff.parser.nodesystem.node.loops.DoWhileNode;
+import com.danielweisshoff.parser.parser.Block;
 import com.danielweisshoff.parser.parser.Bool;
 import com.danielweisshoff.parser.parser.Parser;
 
@@ -20,7 +21,7 @@ public class DoWhile {
         p.assume(TokenType.COLON, "while-body not defined");
 
         DoWhileNode dwn = new DoWhileNode(cn);
-
+        dwn.whileBlock = Block.parse(p, "dowhile-block");
         //p.addInstruction(dwn);
         p.scopeIn("do-while-body");
 

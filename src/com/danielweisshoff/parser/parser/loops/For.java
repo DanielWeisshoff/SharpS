@@ -1,8 +1,8 @@
 package com.danielweisshoff.parser.parser.loops;
 
 import com.danielweisshoff.lexer.TokenType;
-import com.danielweisshoff.parser.nodesystem.node.data.assigning.AssignNode;
-import com.danielweisshoff.parser.nodesystem.node.data.assigning.VarInitNode;
+import com.danielweisshoff.parser.nodesystem.node.data.var.AssignNode;
+import com.danielweisshoff.parser.nodesystem.node.data.var.variable.VarInitNode;
 import com.danielweisshoff.parser.nodesystem.node.logic.conditions.ConditionNode;
 import com.danielweisshoff.parser.nodesystem.node.loops.ForNode;
 import com.danielweisshoff.parser.parser.Block;

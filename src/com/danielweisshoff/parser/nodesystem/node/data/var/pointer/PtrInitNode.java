@@ -1,11 +1,9 @@
-package com.danielweisshoff.parser.nodesystem.node.data.assigning;
+package com.danielweisshoff.parser.nodesystem.node.data.var.pointer;
 
-import com.danielweisshoff.interpreter.Interpreter;
-import com.danielweisshoff.logger.Logger;
 import com.danielweisshoff.parser.nodesystem.Data;
 import com.danielweisshoff.parser.nodesystem.DataType;
 import com.danielweisshoff.parser.nodesystem.node.NodeType;
-import com.danielweisshoff.parser.nodesystem.node.data.PointerNode;
+import com.danielweisshoff.parser.nodesystem.node.data.var.AssignNode;
 
 //TODO NumberNode.data is unused!!!
 public class PtrInitNode extends AssignNode {
@@ -25,13 +23,14 @@ public class PtrInitNode extends AssignNode {
 
     @Override
     public Data run() {
-        PointerNode pn = new PointerNode(name, adress);
-        Interpreter.instance.addVariable(name, pn, dataType);
+        //TODO
+        // PointerNode pn = new PointerNode(name, adress);
+        // Interpreter.instance.addVariable(name, dataType);
 
-        if (Interpreter.debug) {
-            Data data = Interpreter.instance.findVariable(adress).node.run();
-            Logger.log(data.value + ", " + dataType);
-        }
+        // if (Interpreter.debug) {
+        //     Data data = Interpreter.instance.findVariable(adress).node.run();
+        //     Logger.log(data.value + ", " + dataType);
+        // }
 
         return new Data();
     }
@@ -41,5 +40,4 @@ public class PtrInitNode extends AssignNode {
     public void print(int depth) {
         System.out.println(nodeType);
     }
-
 }

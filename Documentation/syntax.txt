@@ -232,3 +232,35 @@ Label textLabel = Label():
 
 
 
+i08 i16 i32 i64
+u08 u16 u32 u64
+        f32 f64
+        chr bln
+
+
+
+cls Pos:
+    x,y flt
+
+    ctor(x flt, y flt):
+        this.x = x
+        this.y = y
+
+ntr():
+    position Pos(1.2f,1.5f)
+
+    pos_pointer* Pos    #? vlt. pos_pointer -> Pos
+    pos_pointer = Pos(1f,2f)
+
+
+#Strukturierung von Variablen- initialisierung/definition
+Str pub stc VERSION = "V 0.8.1"
+bln pub stc debug = false 
+Map<chr, TokenType> cst tokenMap
+str text
+i32 charIndex = -1
+chr currentChar
+bln hasNext = true
+i32 line = 1
+i32 curColumn = 0
+i32 tokenStart = 0
