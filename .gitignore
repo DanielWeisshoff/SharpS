@@ -1,5 +1,3 @@
-/src/log.log
-/src/lexer.log
 # Ignore Gradle project-specific cache directory
 .gradle
 .vscode
@@ -9,3 +7,5 @@
 build
 bin/
 out/
+/src/log.log
+/src/lexer.log

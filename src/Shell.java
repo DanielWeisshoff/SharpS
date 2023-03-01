@@ -1,4 +1,6 @@
 
+import java.util.Scanner;
+
 import interpreter.Interpreter;
 import lexer.Lexer;
 import lexer.Token;
@@ -12,6 +14,7 @@ import utils.stopwatch.StopWatch;
 public class Shell {
 
     public static void main(String[] args) {
+
         parseArgs(args);
         FunctionNode AST = compilation();
         interpretation(AST);
@@ -30,6 +33,9 @@ public class Shell {
                 Interpreter.debug = true;
                 Logger.enabled = true;
                 break;
+            case "repl":
+                REPL();
+                System.exit(0);
             default:
                 System.out.println("Unknown flag " + s);
                 System.exit(1);
@@ -69,6 +75,7 @@ public class Shell {
         }
 
         watch.stop("Compilation");
+
         Logger.log("compilation took " + watch.getRound("Compilation").toMillis() + " ms");
 
         return parser.getAST();
@@ -85,5 +92,31 @@ public class Shell {
         interpreter.interpret(AST);
         watch.stop("Interpreter");
         Logger.log("done after " + watch.getRound("Interpreter").toMillis() + "ms", Channel.INTERPRETER);
+    }
+
+    //First steps on a line-by-line cli
+    public static void REPL() {
+        Scanner scanner = new Scanner(System.in);
+        String input = "";
+
+        Interpreter interpreter = new Interpreter();
+        do {
+            StringBuilder sb = new StringBuilder();
+            while (true) {
+                System.out.print(">");
+                input = scanner.nextLine();
+                if (input.equals("end"))
+                    break;
+                sb.append(input + "\n");
+            }
+            Lexer lexer = new Lexer(sb.toString());
+            Token[] tokens = lexer.next();
+
+            Parser parser = new Parser();
+            FunctionNode root = parser.parse(tokens);
+
+            interpreter.interpret(root);
+        } while (!input.equals("exit"));
+        scanner.close();
     }
 }
