@@ -74,7 +74,8 @@ public class Instruction {
                 else
                     instruction = ArrayGetField.parse(p);
 
-            }
+            } else
+                new UnimplementedError("Unknown identifier '" + p.curToken.value + "'", p.curToken);
         }
         //
         case PLUS -> instruction = PreIncrement.parse(p, true);

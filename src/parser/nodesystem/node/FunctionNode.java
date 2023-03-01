@@ -1,6 +1,7 @@
 package parser.nodesystem.node;
 
-import interpreter.Interpreter;
+import logger.Logger;
+import logger.Logger.Channel;
 import parser.nodesystem.Data;
 
 public class FunctionNode extends Node {
@@ -15,11 +16,7 @@ public class FunctionNode extends Node {
 
     @Override
     public Data run() {
-        //DEBUG
-
-        Interpreter.instance.newStackFrame();
-
-        System.out.println("calling function " + name + "()");
+        Logger.log("calling function " + name + "()", Channel.INTERPRETER);
         return block.run();
     }
 

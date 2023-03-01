@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-//basic stopwatch for benchmarks
+/**basic stopwatch for benchmarks**/
 public class StopWatch {
 
     private ArrayList<Round> stoppedRounds = new ArrayList<>();
