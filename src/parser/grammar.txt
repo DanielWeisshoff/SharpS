@@ -1,3 +1,47 @@
+===============================================================================
+OLD     OLD     OLD     OLD     OLD     OLD     OLD     OLD     OLD     OLD     
+
+
+PRODUCTIONS:
+
+Boolean stuff
+
+predicate		:	(STATEMENT|PREDICATE) BOOLEAN_OP (STATEMENT|PREDICATE)
+statement		:	EXPR COMPARISON EXPR
+
+ARITHMETIC
+TODO evtl. operatoren mit precedence system 
+
+EXPR			:	TERM (+|-) TERM
+TERM			:	FACTOR (*|/|%) FACTOR
+FACTOR			:	NUMBER|VARIABLE
+
+
+
+# FOR-LOOP
+#    INIT				
+#	CONDITION    <--
+#		BLOCK	   |
+#		ASSIGNMENT |
+
+FOR ( INIT ; CONDITION ; ASSIGNMENT ) :
+	BLOCK
+
+
+WHILE ( CONDITION ) :
+	BLOCK
+
+
+IF ( CONDITION ) :
+	BLOCK
+ELIF ( COND ) :
+	BLOCK
+ELSE : 
+	BLOCK
+
+===============================================================================
+
+
 BLOCK ->
 		| stmt*
 		| €

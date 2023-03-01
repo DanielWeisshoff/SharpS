@@ -4,95 +4,153 @@
 
 ROADMAP:
 v1.0 - Funktionale Scriptsprache
-v1.1 - bytecode und interpreter
+v1.1 - bytecode und bytecode-interpreter
 v1.2 - Code organisieren und strukturieren
-...
 v2.0 - ?OOP
 v2.x - QOL und Features
+vx.x - vscode extension
 
-TODO VERSION 0.1 -- Funktionale Scriptsprache:
-✔ booleansche Logik &, &&, |, || implementieren 
-✔ - & (bitwise AND) 
-✔ - | (bitwise OR) 
-✔ verkettung von conditions 
-✔ conditions klammern 
-✔ variablen 
-✔ Die *Build Klassen in den Parser einbauen 
-✔ += operand 
-✔ -= Operand 
-✔ *= Operand 
-✔ /= Operand 
-✔ %= Operand 
-✔ while 
-✔ do-while 
-✔ for
-✔ *in for-loop initialisierte var ist im falschen scope!!* 
-✔ *ALLE KEYWORDS IN EIGENE TOKENS* 
-✔ statische variablentypen 
-✔ automatic type-conversion 
-✔ type-conversion with loss (int a = 1 / 2 -> a = 0) 
-✔ alle primitiven zahlentypen 
-✔ +=, -=, *=, /=  sollen zu normalen assignNode geparsed werden    (x+= 1 * 2 -> x = x + (1 * 2) ) 
-✔ Dateiendung in .#s aendern 
-✔ curToken.value.equals(value) -> curToken.compare(value) 
-✔ manche TokenTypes umbenennen (ADD -> PLUS) 
-✔ instanceof durch NodeType(enum) ersetzen   	*140ms für parser* 
-✔ MOD operator zu Token.isOP() hinzufuegen 
-✔ schleifen erzeugen i Scopes im SymbolTable (stattdessen SymbolTable des scopes clearen un reusen) 
-✔ schauen, warum Parser so langsam ist 
-✔ ?EqualAssignNode redundant, einfach AssignNode benutzen? 
-✔ Pointer 
-✔ ++x, x++ Operand (Increment) 
-✔ --x, x-- Operand (Decrement) 
-✘ Data soll den DataType berücksichtigen (Momentan wird alles als Double behandelt)
-✘ Errorchecking verbessern  
-✔ arrays -> ArrayNode 
-✘ TypeConversion in semantic teil einbauen
-✘ else wird doppelt angehängt (an elif und if)
-✘ for-body wird nicht ausgeführt
-✘ Nutzerfunktionen
-✘ Parameter
-✘ Rueckgabewerte
-✘ Ein paar builIn Funktionen
-✘ char
-✘ string als char[]
-✘ casting int()
-✘ pointer arithmetic
-✘ << (left shift) 
-✘ >> (right shift) 
-✘ ^ (bitwise XOR) 
-✘ ~ (bitwise NOT)
-✘ Testen ob bitwise &,| funktionieren
-✘ Enums
-
-
-
+!!! LESBARKEIT VOR PERFORMANCE !!!
+!!! LESBARKEIT VOR PERFORMANCE !!!
+!!! LESBARKEIT VOR PERFORMANCE !!!
 
 TODO VERSION 2.0 -- OOP:
-✘ Klassen
-✘ Strings als erste Klasse
-✘ Objekte sollen als Parameter/R�ckgabewert m�glich sein
-✘ access modifier hinzufuegen
-✘ public +
-✘ private -
-✘ static *
-[ ] (protected?) /
-✘ read r
-✘ write w
-✘ foreach
-✘ Interfaces
-✘ Vererbung
-✘ Überschreiben von Rechenoperationen für Objekte
+    ☐ Klassen
+    ☐ Strings als erste Klasse
+    ☐ Objekte sollen als Parameter/R�ckgabewert m�glich sein
+    ☐ foreach
+    ☐ Interfaces
+    ☐ Vererbung
+    ☐ Überlagern von Rechenoperationen für Objekte
+    ☐ try und catch
+    access modifier:
+        ☐ public +
+        ☐ private -
+        ☐ static *
+        ☐ (protected?) /
+        ☐ read r
+        ☐ write w
+    
+TODO VERSION 0.X.X -- Funktionale Scriptsprache:
+    ☐ Formatierte Strings  f"Das {fahrzeug} ist {farbe}"
+    ☐ ? Preprocessor
+    ☐ ? Betragsstriche |a|?
+    ☐ For-Schleife 2.0
+    ☐ +=, -=, *=, /=  sollen zu normalen assignNode geparsed werden    (x+= 1 * 2 -> x = x + (1 * 2) ) 
+    ☐ TypeConversion in semantic teil einbauen
+    ☐ Nutzerfunktionen
+    ☐ Parameter
+    ☐ Rueckgabewerte
+    ☐ Mehr builIn Funktionen
+    ☐ char
+    ☐ String als char[]
+    ☐ type casting
+    ☐ pointer arithmetic
+    ☐ Enums
+    ☐ Structs
+    ☐ Namespaces ("::")
+    ☐ statt this -> "::"
+    ☐ Primitive umbenennen
+    ☐ switch
+    einfachere arithmetic:
+        ☐ += operand 
+        ☐ -= Operand 
+        ☐ *= Operand 
+        ☐ /= Operand 
+        ☐ %= Operand 
+    bitwise:
+        ☐ << (left shift) 
+        ☐ >> (right shift) 
+        ☐ ^ (bitwise XOR) 
+        ☐ ~ (bitwise NOT)
+        ☐ - & (bitwise AND) 
+        ☐ - | (bitwise OR) 
 
-QOL:
-✘ Formatierte Strings   f("Das {} ist {}F",fahrzeug,farbe)
-✘ The datetime calculation on the Log class is fucking slow
-[ ] ?Preprocessor?
-[ ] ? Betragsstriche |a|?
-✘ der Compiler unterscheidet schlecht zwischen Initialization und Declaration
-   int i			#declaration
-   i = 10			#definition
-   int i = 10 		#initialization
+TODO VERSION 0.1.4 -- Diverses:
+    ☐ Goethe hat zu viele responsibilities
+    ☐ Log wandelt schlecht timestamps um
+    ☐ Interface für Builtin functions
+    ☐ .utils aufräumen
+
+TODO Version 0.1.3 -- Interpreter:
+    ☐ Interpreter normen
+    ☐ Interpreter nicht mehr static
+
+TODO Version 0.1.2 -- Parser:
+Der Parser beinhaltet so viele Klassen, die entweder nicht
+genutzt werden, einen falschen Namen haben, oder nicht
+wirklich Sinn machen.
+    Parser:
+        ☐ Errorchecking verbessern  
+        ☐ Alle Grammars anpassen und Klassen ggf. umbenennen
+        ☐ Grammars in die Klassen integrieren
+        ☐ Parser normen
+        ☐ assume() braucht in den meisten Fällen keine Fehlererklärung, da nur einzelne Symbole fehlen
+        ☐ ? addInstruction unnütz
+        ☐ ?wird Idregistry gebraucht 
+        .nodesystem:
+            ☐ package in "node" umbenennen
+            ☐ Nodes richtig benennen
+            ☐ Erbbaum teilweise unlogisch
+            ☐ Nodes nicht im Konstruktor miteinander verknüpfen
+            ☐ Data hat zu viele Konstruktoren
+            ☐ Ungenutzte Nodes entfernen, siehe ErrorNode
+            ☐ Data soll den DataType berücksichtigen (Momentan wird alles als Double behandelt)
+            ☐ ?Hat NodeType einen Nutzen
+            ☐ ?NumberNode -> DataNode
+        .parser:
+            ☐ Instruction unübersichtlich
+            .arithmetic:
+                ☐ Factor unübersichtlich
+            .array:
+                ☐ Funktionalität prüfen
+                ☐ Klassen implementieren
+            .pointer:
+                ☐ Von Grund auf neu implementieren
+            .shortcuts:
+                ☐ package umbenennen
+            .parser:
+                ☐ neu strukturieren
+                ☐ else und elif schlecht gelöst
+        .perror:
+            ☐ neu implementieren
+        .semantic:
+            ☐ festlegen, wann conversionchecker genutzt werden soll
+        .symboltable:
+            ☐ ?Ids verwerfen
+
+
+TODO VERSION 0.1.1 -- Lexer:
+    ☐ Lexer normen
+    ☐ Ein Lexer soll viele Texte lexen können
+    ☐ Token speichern zu viele unnütze Daten
+
+
+TODO VERSION 0.1.0 -- Funktionale Scriptsprache:
+    ✔ booleansche Logik &&, || implementieren 
+    ✔ verkettung von conditions 
+    ✔ conditions klammern 
+    ✔ variablen 
+    ✔ while 
+    ✔ do-while 
+    ✔ for
+    ✔ *in for-loop initialisierte var ist im falschen scope!!* 
+    ✔ *ALLE KEYWORDS IN EIGENE TOKENS* 
+    ✔ statische variablentypen 
+    ✔ automatic type-conversion 
+    ✔ type-conversion with loss (int a = 1 / 2 -> a = 0) 
+    ✔ alle primitiven zahlentypen 
+    ✔ Dateiendung in .#s aendern 
+    ✔ curToken.value.equals(value) -> curToken.compare(value) 
+    ✔ manche TokenTypes umbenennen (ADD -> PLUS) 
+    ✔ instanceof durch NodeType(enum) ersetzen   	*140ms für parser* 
+    ✔ MOD operator zu Token.isOP() hinzufuegen 
+    ✔ schleifen erzeugen i Scopes im SymbolTable (stattdessen SymbolTable des scopes clearen un reusen) 
+    ✔ schauen, warum Parser so langsam ist 
+    ✔ ?EqualAssignNode redundant, einfach AssignNode benutzen? 
+    ✔ ++x, x++ Operand (Increment) 
+    ✔ --x, x-- Operand (Decrement) 
+
 
 
 
