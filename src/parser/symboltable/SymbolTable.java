@@ -4,26 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-/*
- TODO
-
-Werte werden nur in den Stackframes gelagert.
-Der Symboltable soll nur informationen beinhalten, da werte
-erst zur laufzeit wichtig sind.
-
- ---Symboltable---
- VariableEntry:
- name
- datatype
- size
-
-
- FunctionEntry
- name
- returntype
- params
- */
-
 public class SymbolTable {
 
     public SymbolTable parent;

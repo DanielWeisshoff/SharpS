@@ -49,7 +49,7 @@ TODO VERSION 0.X.X -- Funktionale Scriptsprache:
     ☐ Enums
     ☐ Structs
     ☐ Namespaces ("::")
-    ☐ statt this -> "::"
+    ☐ statt "this" -> "::"
     ☐ Primitive umbenennen
     ☐ switch
     einfachere arithmetic:
