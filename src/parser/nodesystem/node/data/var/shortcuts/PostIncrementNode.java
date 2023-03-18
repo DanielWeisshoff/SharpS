@@ -25,9 +25,8 @@ public class PostIncrementNode extends AssignNode {
         return new Data(value, DataType.DOUBLE);
     }
 
-    //TODO implementation
     @Override
-    public void print(int depth) {
-        System.out.println(offset(depth) + nodeType);
+    public void print() {
+        super.print();
     }
 }

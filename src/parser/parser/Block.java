@@ -2,8 +2,8 @@ package parser.parser;
 
 import lexer.TokenType;
 import parser.PError.UnimplementedError;
-import parser.nodesystem.node.BlockNode;
 import parser.nodesystem.node.Node;
+import parser.nodesystem.node.diverse.BlockNode;
 
 public class Block {
 

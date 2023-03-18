@@ -1,9 +1,9 @@
 package parser.nodesystem.node.loops;
 
 import parser.nodesystem.Data;
-import parser.nodesystem.node.BlockNode;
 import parser.nodesystem.node.Node;
 import parser.nodesystem.node.NodeType;
+import parser.nodesystem.node.diverse.BlockNode;
 import parser.nodesystem.node.logic.conditions.ConditionNode;
 
 public class DoWhileNode extends Node {
@@ -26,9 +26,8 @@ public class DoWhileNode extends Node {
         return new Data();
     }
 
-    //TODO implementation
     @Override
-    public void print(int depth) {
-        System.out.println(nodeType);
+    public void print() {
+        super.print();
     }
 }

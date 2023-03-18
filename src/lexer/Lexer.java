@@ -3,83 +3,76 @@ package lexer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import logger.Channel;
 import logger.Logger;
-import logger.Logger.Channel;
 
-//TODO? implement RegRex bcause its faster
-//TODO zusammenbau von COMPARISON in Parser verschieben
+//TODO? zusammenbau von COMPARISON in Parser verschieben
 public class Lexer {
 
-    public static String VERSION = "V 0.8.1";
     public static boolean debug = false;
 
-    private final HashMap<Character, TokenType> tokenMap = new HashMap<>();
+    private static HashMap<Character, TokenType> terminals = Terminals.terminals;
     private String text;
-    private int charIndex = -1;
     private char currentChar;
-    private boolean hasNext = true;
 
-    private int line = 1;
-    //the column pos of the current char
-    private int curColumn = 0;
-    //the position at which the current token starts
+    private int absPos;
+    private int linePos;
+    private int colPos;
+    //the col position at which the current token starts
     private int tokenStart = 0;
 
-    public Lexer(String text) {
-        this.text = text;
-        initializeSingleCharTokens();
+    private void reset() {
+        absPos = -1;
+        colPos = -1;
+        linePos = 1;
+
         advance();
     }
 
     private void advance() {
-        curColumn++;
-        charIndex++;
+        colPos++;
+        absPos++;
 
-        if (charIndex < text.length())
-            currentChar = text.charAt(charIndex);
+        currentChar = hasNext() ? text.charAt(absPos) : '\0';
     }
 
-    public Token[] next() {
+    public Token[] tokenize(String text) {
+        this.text = text;
+        reset();
+
         ArrayList<Token> tokens = new ArrayList<>();
 
-        while (charIndex < text.length()) {
+        while (hasNext()) {
             if (currentChar == '\n') {
-                tokens.add(new Token(TokenType.NEWLINE, "", line, tokenStart, curColumn));
+                tokens.add(new Token(TokenType.NEWLINE, "", linePos, tokenStart, colPos));
                 advance();
-                line++;
+                linePos++;
                 tokenStart = 0;
-                curColumn = 0;
-            } else if (tokenMap.containsKey(currentChar)) {
-                tokens.add(new Token(tokenMap.get(currentChar), "", line, tokenStart, curColumn));
+                colPos = 0;
+            } else if (terminals.containsKey(currentChar)) {
+                tokens.add(new Token(terminals.get(currentChar), "", linePos, tokenStart, colPos));
                 advance();
             } else if (Character.isAlphabetic(currentChar)) {
-                tokens.add(buildIdentifierOrKeywordToken());
+                tokens.add(lexIdentifierOrKeyword());
             } else if (Character.isDigit(currentChar)) {
-                tokens.add(buildNumberToken());
+                tokens.add(lexNumber());
             } else if (currentChar == ' ' || currentChar == '\t') {
-                Token t = buildTabToken();
+                Token t = lexWhitespace();
                 if (t != null)
                     tokens.add(t);
             } else {
                 switch (currentChar) {
-                case '"' -> tokens.add(buildStringToken());
-                case '#' -> skipComment();
-                case '=' -> tokens.add(buildComparisonToken('='));
-                case '<' -> tokens.add(buildComparisonToken('<'));
-                case '>' -> tokens.add(buildComparisonToken('>'));
-                case '!' -> tokens.add(buildComparisonToken('!'));
+                case '"' -> tokens.add(lexString());
+                case '#' -> lexComment();
+                case '=' -> tokens.add(lexComparison('='));
+                case '<' -> tokens.add(lexComparison('<'));
+                case '>' -> tokens.add(lexComparison('>'));
+                case '!' -> tokens.add(lexComparison('!'));
                 default -> advance();
                 }
             }
-            tokenStart = curColumn;
+            tokenStart = colPos;
         }
-
-        //Newline skippen
-        advance();
-
-        //check if file at end 
-        if (charIndex >= text.length())
-            hasNext = false;
 
         if (debug)
             for (Token t : tokens)
@@ -88,138 +81,113 @@ public class Lexer {
         return Token.toArray(tokens);
     }
 
-    public boolean hasNextLine() {
-        return hasNext;
-    }
+    //
+    // lexing stuff
+    //
+    private Token lexIdentifierOrKeyword() {
+        int start = absPos;
 
-    //
-    // building stuff
-    //
-    private Token buildIdentifierOrKeywordToken() {
-        int start = charIndex;
-        advance();
-        while (charIndex < text.length()) {
-            if (Character.isLetterOrDigit(currentChar)) {
-                advance();
-            } else
-                break;
-        }
-        String subString = text.substring(start, charIndex);
-        //TODO put this in a separate method
+        while (hasNext() && Character.isLetterOrDigit(currentChar))
+            advance();
+
+        String subString = text.substring(start, absPos);
+
         return switch (subString) {
         //PRIMITIVES
-        case "bte" -> new Token(TokenType.KW_BYTE, null, line, tokenStart, curColumn - 1);
-        case "sht" -> new Token(TokenType.KW_SHORT, null, line, tokenStart, curColumn - 1);
-        case "int" -> new Token(TokenType.KW_INT, null, line, tokenStart, curColumn - 1);
-        case "lng" -> new Token(TokenType.KW_LONG, null, line, tokenStart, curColumn - 1);
-        case "flt" -> new Token(TokenType.KW_FLOAT, null, line, tokenStart, curColumn - 1);
-        case "dbl" -> new Token(TokenType.KW_DOUBLE, null, line, tokenStart, curColumn - 1);
+        case Keywords.BYTE -> new Token(TokenType.KW_BYTE, null, linePos, tokenStart, colPos - 1);
+        case Keywords.SHORT -> new Token(TokenType.KW_SHORT, null, linePos, tokenStart, colPos - 1);
+        case Keywords.INT -> new Token(TokenType.KW_INT, null, linePos, tokenStart, colPos - 1);
+        case Keywords.LONG -> new Token(TokenType.KW_LONG, null, linePos, tokenStart, colPos - 1);
+        case Keywords.FLOAT -> new Token(TokenType.KW_FLOAT, null, linePos, tokenStart, colPos - 1);
+        case Keywords.DOUBLE -> new Token(TokenType.KW_DOUBLE, null, linePos, tokenStart, colPos - 1);
         //BOOLEAN
-        case "true" -> new Token(TokenType.KW_TRUE, null, line, tokenStart, curColumn - 1);
-        case "false" -> new Token(TokenType.KW_FALSE, null, line, tokenStart, curColumn - 1);
-        //
-        case "if" -> new Token(TokenType.KW_IF, null, line, tokenStart, curColumn - 1);
-        case "else" -> new Token(TokenType.KW_ELSE, null, line, tokenStart, curColumn - 1);
-        case "elif" -> new Token(TokenType.KW_ELIF, null, line, tokenStart, curColumn - 1);
-        case "fnc" -> new Token(TokenType.KW_FNC, null, line, tokenStart, curColumn - 1);
-        case "while" -> new Token(TokenType.KW_WHILE, null, line, tokenStart, curColumn - 1);
-        case "for" -> new Token(TokenType.KW_FOR, null, line, tokenStart, curColumn - 1);
-        case "do" -> new Token(TokenType.KW_DO, null, line, tokenStart, curColumn - 1);
-        case "out" -> new Token(TokenType.KW_OUT, null, line, tokenStart, curColumn - 1);
-        default -> new Token(TokenType.IDENTIFIER, subString, line, tokenStart, curColumn - 1);
+        case Keywords.TRUE -> new Token(TokenType.KW_TRUE, null, linePos, tokenStart, colPos - 1);
+        case Keywords.FALSE -> new Token(TokenType.KW_FALSE, null, linePos, tokenStart, colPos - 1);
+        //CONTROL STRUCTURES
+        case Keywords.IF -> new Token(TokenType.KW_IF, null, linePos, tokenStart, colPos - 1);
+        case Keywords.ELSE -> new Token(TokenType.KW_ELSE, null, linePos, tokenStart, colPos - 1);
+        case Keywords.ELSEIF -> new Token(TokenType.KW_ELIF, null, linePos, tokenStart, colPos - 1);
+        //LOOPS
+        case Keywords.WHILE -> new Token(TokenType.KW_WHILE, null, linePos, tokenStart, colPos - 1);
+        case Keywords.FOR -> new Token(TokenType.KW_FOR, null, linePos, tokenStart, colPos - 1);
+        case Keywords.DO -> new Token(TokenType.KW_DO, null, linePos, tokenStart, colPos - 1);
+        //OTHER
+        case Keywords.FUNCTION -> new Token(TokenType.KW_FNC, null, linePos, tokenStart, colPos - 1);
+        case Keywords.OUT -> new Token(TokenType.KW_OUT, null, linePos, tokenStart, colPos - 1);
+        default -> new Token(TokenType.IDENTIFIER, subString, linePos, tokenStart, colPos - 1);
         };
     }
 
-    // "int", "if", "else", "elif", "fnc", "while", "for", "do" 
-    private Token buildTabToken() {
-        Token t = null;
-        int whitespaceCount = 0;
+    private Token lexWhitespace() {
+        int whitespace = 0;
 
-        while (charIndex < text.length()) {
+        while (hasNext()) {
             if (currentChar == ' ')
-                whitespaceCount++;
+                whitespace++;
             else if (currentChar == '\t')
-                whitespaceCount += 4;
+                whitespace += 4;
             else
                 break;
             advance();
         }
-        if (whitespaceCount >= 4)
-            t = new Token(TokenType.TAB, "" + (int) Math.floor(whitespaceCount / 4), line, tokenStart, curColumn - 1);
-        return t;
+
+        if (whitespace >= 4) {
+            String value = "" + (int) Math.floor(whitespace / 4);
+            return new Token(TokenType.TAB, value, linePos, tokenStart, colPos - 1);
+        }
+        return null;
     }
 
-    private Token buildNumberToken() {
-        int start = charIndex;
-        boolean isFloat = false;
+    private Token lexNumber() {
+        TokenType type = TokenType.INTEGER;
+
+        int start = absPos;
         advance();
-        while (charIndex < text.length()) {
-            if (Character.isDigit(currentChar) || currentChar == '.') {
-                if (currentChar == '.')
-                    isFloat = true;
+        while (absPos < text.length()) {
+            if (Character.isDigit(currentChar) || currentChar == '.' || currentChar == '_') {
+                if (currentChar == '_')
+                    advance();
+                else if (currentChar == '.')
+                    if (type == TokenType.FLOATING_POINT)
+                        break;
+                    else
+                        type = TokenType.FLOATING_POINT;
                 advance();
             } else
                 break;
         }
-        if (isFloat)
-            return new Token(TokenType.FLOATING_POINT, text.substring(start, charIndex), line, tokenStart,
-                    curColumn - 1);
-        return new Token(TokenType.INTEGER, text.substring(start, charIndex), line, tokenStart, curColumn - 1);
+        String value = text.substring(start, absPos).replace("_", "");
+        return new Token(type, value, linePos, tokenStart, colPos - 1);
     }
 
-    private Token buildComparisonToken(char c) {
+    private Token lexComparison(char c) {
         advance();
-        if (charIndex < text.length()) {
-            if (currentChar == '=') {
-                advance();
-                return new Token(TokenType.COMPARISON, c + "=", line, tokenStart, curColumn - 1);
-            }
-        }
-        return new Token(TokenType.EQUAL, "" + c, line, tokenStart, curColumn - 1);
+        if (currentChar == '=') {
+            advance();
+            return new Token(TokenType.COMPARISON, c + "=", linePos, tokenStart, colPos - 1);
+        } else
+            return new Token(TokenType.EQUAL, c + "", linePos, tokenStart, colPos - 1);
     }
 
-    private Token buildStringToken() {
+    private Token lexString() {
         advance();
-        int start = charIndex;
+        int start = absPos;
 
-        while (charIndex < text.length()) {
-            if (currentChar != '"') {
-                advance();
-            } else {
-                advance();
-                break;
-            }
-        }
-        return new Token(TokenType.STRING, text.substring(start, charIndex - 1), line, tokenStart, curColumn - 1);
+        while (hasNext() && currentChar != '"')
+            advance();
+        //skip quotation mark
+        advance();
+
+        String value = text.substring(start, absPos - 1);
+        return new Token(TokenType.STRING, value, linePos, tokenStart, colPos - 1);
     }
 
-    private void skipComment() {
-        while (charIndex < text.length()) {
-            if (currentChar != '\n') {
-                advance();
-            } else
-                return;
-        }
+    private void lexComment() {
+        while (hasNext() && currentChar != '\n')
+            advance();
     }
 
-    /*
-     * Hier können alle Einzeltokens eingetragen werden
-     */
-    private void initializeSingleCharTokens() {
-        tokenMap.put('+', TokenType.PLUS);
-        tokenMap.put('-', TokenType.MINUS);
-        tokenMap.put('*', TokenType.STAR);
-        tokenMap.put('/', TokenType.SLASH);
-        tokenMap.put('(', TokenType.O_ROUND_BRACKET);
-        tokenMap.put(')', TokenType.C_ROUND_BRACKET);
-        tokenMap.put('.', TokenType.DOT);
-        tokenMap.put(',', TokenType.COMMA);
-        tokenMap.put(':', TokenType.COLON);
-        tokenMap.put('%', TokenType.PERCENT);
-        tokenMap.put('&', TokenType.AND);
-        tokenMap.put('|', TokenType.PIPE);
-        tokenMap.put('\0', TokenType.EOF);
-        tokenMap.put('[', TokenType.O_BLOCK_BRACKET);
-        tokenMap.put(']', TokenType.C_BLOCK_BRACKET);
+    public boolean hasNext() {
+        return absPos < text.length();
     }
 }

@@ -6,14 +6,11 @@ package parser.nodesystem;
  *  - Maybe Pointer will be a class ?!?
  */
 
-/**
- * Storage for all datatypes.
- * Is used to receive and send data between Nodes
- *
- */
+/**Storage for all datatypes.
+ * Is used to receive and send data between Nodes*/
 public class Data {
     public final DataType dataType;
-    public Number[] value;
+    private final Number[] value;
 
     public Data() {
         this(DataType.INT);
@@ -56,8 +53,7 @@ public class Data {
         case FLOAT -> n = value.floatValue();
         case DOUBLE -> n = value.doubleValue();
         //diverse
-        //TODO could be !=0/1
-        case BOOLEAN -> n = value.byteValue();
+        case BOOLEAN -> n = value.byteValue() != 0 ? 1 : 0;
         case CHAR -> {
             System.out.println("err01 not implemented");
             System.exit(0);
@@ -149,7 +145,7 @@ public class Data {
     }
 
     public boolean asBoolean(int index) {
-        return value[index].byteValue() == 1;
+        return value[index].byteValue() != 0;
     }
 
     public long asPointer() {

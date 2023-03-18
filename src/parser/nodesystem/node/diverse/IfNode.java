@@ -1,7 +1,9 @@
-package parser.nodesystem.node;
+package parser.nodesystem.node.diverse;
 
 import parser.nodesystem.Data;
 import parser.nodesystem.DataType;
+import parser.nodesystem.node.Node;
+import parser.nodesystem.node.NodeType;
 import parser.nodesystem.node.logic.conditions.ConditionNode;
 
 //TODO? elseBlock wird mit null init
@@ -27,16 +29,12 @@ public class IfNode extends Node {
         return new Data();
     }
 
-    //TODO implementation 2.0
     @Override
-    public void print(int depth) {
-        System.out.println(offset(depth) + nodeType);
-
-        printAdvanced("cond: ", depth);
-
-        block.print(depth + 1);
+    public void print() {
+        super.print();
+        block.print();
 
         if (elseBlock != null)
-            elseBlock.print(depth + 1);
+            elseBlock.print();
     }
 }

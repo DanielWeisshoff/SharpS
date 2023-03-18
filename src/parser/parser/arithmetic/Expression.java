@@ -15,12 +15,12 @@ public class Expression {
 
         while (p.curToken.isLineOP()) {
 
-            if (p.curToken.type() == TokenType.PLUS)
+            if (p.curToken.type == TokenType.PLUS)
                 op = new BinaryAddNode();
-            else if (p.curToken.type() == TokenType.MINUS)
+            else if (p.curToken.type == TokenType.MINUS)
                 op = new BinarySubNode();
 
-            p.advance();
+            p.eat();
 
             NumberNode right = Term.parse(p);
             op.left = left;

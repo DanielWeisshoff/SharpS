@@ -11,11 +11,11 @@ public class ArrayGetField {
     public static NumberNode parse(Parser p) {
         // ID [ EXPR ]
         String name = p.curToken.value;
-        p.advance();
+        p.eat();
 
-        p.assume(TokenType.O_BLOCK_BRACKET, "[ missing");
+        p.eat(TokenType.O_BLOCK_BRACKET);
         NumberNode index = Expression.parse(p);
-        p.assume(TokenType.C_BLOCK_BRACKET, "] missing");
+        p.eat(TokenType.C_BLOCK_BRACKET);
 
         ArrGetFieldNode agfn = new ArrGetFieldNode(name, index);
         return agfn;

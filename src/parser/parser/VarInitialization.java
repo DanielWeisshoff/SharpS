@@ -9,17 +9,16 @@ import parser.parser.arithmetic.Expression;
 
 public class VarInitialization {
 
+    /**DECLARATION = EXPR*/
     public static VarInitNode parse(Parser p) {
-        // DECLARATION = EXPR
         DeclareNode declare = VarDeclaration.parse(p);
-        p.assume(TokenType.EQUAL, "init '=' missing");
+        p.eat(TokenType.EQUAL);
 
         NumberNode expr = Expression.parse(p);
 
         DefineNode define = new DefineNode(declare.name, expr);
         VarInitNode in = new VarInitNode(declare, define);
 
-        //p.addInstruction(in);
         return in;
     }
 }

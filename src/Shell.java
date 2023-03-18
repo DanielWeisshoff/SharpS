@@ -4,24 +4,25 @@ import java.util.Scanner;
 import interpreter.Interpreter;
 import lexer.Lexer;
 import lexer.Token;
+import logger.Channel;
 import logger.Logger;
-import logger.Logger.Channel;
-import parser.nodesystem.node.FunctionNode;
+import parser.nodesystem.node.diverse.FunctionNode;
 import parser.parser.Parser;
 import utils.Goethe;
 import utils.stopwatch.StopWatch;
 
 public class Shell {
 
-    public static void main(String[] args) {
+    private static boolean doLogging = false;
 
+    public static void main(String[] args) {
         parseArgs(args);
         FunctionNode AST = compilation();
         interpretation(AST);
 
-        //Logging
-        Logger.clearLogs();
-        Logger.writeLogs();
+        Logger.clearLogFile();
+        if (doLogging)
+            Logger.writeBufferToFile();
     }
 
     public static void parseArgs(String[] args) {
@@ -31,7 +32,7 @@ public class Shell {
                 Lexer.debug = true;
                 Parser.debug = true;
                 Interpreter.debug = true;
-                Logger.enabled = true;
+                doLogging = true;
                 break;
             case "repl":
                 REPL();
@@ -49,11 +50,11 @@ public class Shell {
         watch.start("Compilation");
 
         //LEXING
-        Lexer lexer = new Lexer(Goethe.getText());
+        Lexer lexer = new Lexer();
         Logger.log("starting lexing process...", Channel.LEXER);
 
         watch.start("Lexer");
-        Token[] tokens = lexer.next();
+        Token[] tokens = lexer.tokenize(Goethe.getText());
         watch.stop("Lexer");
         Logger.log("done after " + watch.getRound("Lexer").toMillis() + "ms", Channel.LEXER);
 
@@ -70,7 +71,7 @@ public class Shell {
         if (Parser.debug) {
             parser.printSymbolTable();
             System.out.println("=====NODE STRUCTURE=====");
-            parser.getAST().print(0);
+            parser.getAST().print();
             System.out.println();
         }
 
@@ -109,8 +110,8 @@ public class Shell {
                     break;
                 sb.append(input + "\n");
             }
-            Lexer lexer = new Lexer(sb.toString());
-            Token[] tokens = lexer.next();
+            Lexer lexer = new Lexer();
+            Token[] tokens = lexer.tokenize(sb.toString());
 
             Parser parser = new Parser();
             FunctionNode root = parser.parse(tokens);

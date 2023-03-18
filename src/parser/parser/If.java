@@ -1,8 +1,8 @@
 package parser.parser;
 
 import lexer.TokenType;
-import parser.nodesystem.node.BlockNode;
-import parser.nodesystem.node.IfNode;
+import parser.nodesystem.node.diverse.BlockNode;
+import parser.nodesystem.node.diverse.IfNode;
 import parser.nodesystem.node.logic.conditions.ConditionNode;
 
 public class If {
@@ -10,13 +10,13 @@ public class If {
     /** if ( BOOL ) : BLOCK */
     public static IfNode parse(Parser p) {
 
-        p.assume(TokenType.KW_IF, "Keyword IF missing");
-        p.assume(TokenType.O_ROUND_BRACKET, "Parameterlist not found");
+        p.eat(TokenType.KW_IF);
+        p.eat(TokenType.O_ROUND_BRACKET);
 
         ConditionNode condition = Bool.parse(p);
 
-        p.assume(TokenType.C_ROUND_BRACKET, "Parameterlist not closed");
-        p.assume(TokenType.COLON, "if-block missing");
+        p.eat(TokenType.C_ROUND_BRACKET);
+        p.eat(TokenType.COLON);
 
         IfNode in = new IfNode(condition);
 

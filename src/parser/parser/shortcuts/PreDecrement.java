@@ -7,18 +7,14 @@ import parser.parser.Parser;
 
 public class PreDecrement {
 
-    public static AssignNode parse(Parser p, boolean isStandalone) {
+    public static AssignNode parse(Parser p) {
         // - - ID
-        p.assume(TokenType.MINUS, "Expected - for decrementing");
-        p.assume(TokenType.MINUS, "Expected - for decrementing");
+        p.eat(TokenType.MINUS);
+        p.eat(TokenType.MINUS);
 
         String varName = p.curToken.value;
-        p.assume(TokenType.IDENTIFIER, "pre-decrement-assignment var missing");
+        p.eat(TokenType.IDENTIFIER);
 
-        PreDecrementNode dn = new PreDecrementNode(varName);
-
-        // if (isStandalone)
-        //    p.addInstruction(dn);
-        return dn;
+        return new PreDecrementNode(varName);
     }
 }

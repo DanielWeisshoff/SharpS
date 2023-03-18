@@ -3,7 +3,7 @@ package interpreter;
 import java.util.Stack;
 
 import parser.nodesystem.Data;
-import parser.nodesystem.node.FunctionNode;
+import parser.nodesystem.node.diverse.FunctionNode;
 
 /*
 TODO

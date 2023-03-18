@@ -7,9 +7,9 @@ public class Adress {
 
     public static String parse(Parser p) {
         // & ID
-        p.assume(TokenType.AND, "adress & missing");
+        p.eat(TokenType.AND);
         String name = p.curToken.value;
-        p.assume(TokenType.IDENTIFIER, "adress name missing");
+        p.eat(TokenType.IDENTIFIER);
 
         return name;
     }

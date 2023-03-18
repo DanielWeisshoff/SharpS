@@ -1,7 +1,9 @@
-package parser.nodesystem.node;
+package parser.nodesystem.node.diverse;
 
 import interpreter.builtin.functions.BuiltInFunction;
 import parser.nodesystem.Data;
+import parser.nodesystem.node.Node;
+import parser.nodesystem.node.NodeType;
 
 /**
  * Calls the defined function
@@ -22,9 +24,8 @@ public class CallNode extends Node {
         return new Data();
     }
 
-    //TODO implementation
     @Override
-    public void print(int depth) {
-        System.out.println(offset(depth) + nodeType);
+    public void print() {
+        super.print();
     }
 }

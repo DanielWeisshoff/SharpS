@@ -7,18 +7,14 @@ import parser.parser.Parser;
 
 public class PostIncrement {
 
-    public static AssignNode parse(Parser p, boolean isStandalone) {
+    public static AssignNode parse(Parser p) {
         // ID + +
         String varName = p.curToken.value;
-        p.assume(TokenType.IDENTIFIER, "post-increment-assignment var missing");
+        p.eat(TokenType.IDENTIFIER);
 
-        p.assume(TokenType.PLUS, "Incrementor + missing");
-        p.assume(TokenType.PLUS, "Incrementor + missing");
+        p.eat(TokenType.PLUS);
+        p.eat(TokenType.PLUS);
 
-        PostIncrementNode lin = new PostIncrementNode(varName);
-
-        //if (isStandalone)
-        //p.addInstruction(lin);
-        return lin;
+        return new PostIncrementNode(varName);
     }
 }

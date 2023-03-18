@@ -8,8 +8,7 @@ public abstract class BuiltInFunction {
 
     public static HashMap<String, BuiltInFunction> builtInFunctions = new HashMap<>();
 
-    public static void registerAll() {
-        builtInFunctions.put("print", new printFunction());
+    static {
         builtInFunctions.put("help", new helpFunction());
         builtInFunctions.put("exit", new exitFunction());
     }

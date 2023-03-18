@@ -15,9 +15,8 @@ public class TrueNode extends ConditionNode {
         return new Data(1, DataType.BOOLEAN);
     }
 
-    //TODO implementation
     @Override
-    public void print(int depth) {
-        System.out.println(offset(depth) + nodeType);
+    public void print() {
+        super.print();
     }
 }

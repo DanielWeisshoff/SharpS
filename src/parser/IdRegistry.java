@@ -1,5 +1,6 @@
 package parser;
 
+//TODO? Komplettes Anwendungsgebiet der Klasse fragwuerdig
 public class IdRegistry {
 
     private static long variableID = 0;

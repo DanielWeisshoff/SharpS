@@ -1,14 +1,15 @@
 package parser.nodesystem;
 
 public enum DataType {
-    BYTE, SHORT, INT, LONG, //Ganzzahlen
-    FLOAT, DOUBLE, //Dezimal
-    CHAR, BOOLEAN, //Sonder
-    POINTER, VOID
+    //Ganzzahlen
+    BYTE, SHORT, INT, LONG,
+    //Dezimal
+    FLOAT, DOUBLE,
+    //Sonder
+    CHAR, BOOLEAN, POINTER, VOID
 }
-/*
- *
- * Ganzzahlen
+
+/* Ganzzahlen     bytes
  *      byte        1
  *      short       2
  *      int         4
@@ -20,10 +21,7 @@ public enum DataType {
  *
  * Anderes
  * char             1
- *                                                  #So soll es mal sein
- *                                                  Char             1 -> reicht für standardtexte
- *                                                  wChar            2 -> bei sonderzeichen benötigt
- *
- * boolean          1
+ * wChar            2     Falls ueberhaupt implementiert 
+ * bool             1
  * pointer          4/8   <-- Je nach Betriebssystem
  */

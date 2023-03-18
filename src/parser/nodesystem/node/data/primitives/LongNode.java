@@ -15,8 +15,7 @@ public class LongNode extends PrimitiveNode {
     }
 
     @Override
-    public void print(int depth) {
-        System.out.println(offset(depth) + nodeType);
-        printAdvanced("" + data.asLong(), depth + 1);
+    public void print() {
+        super.print();
     }
 }

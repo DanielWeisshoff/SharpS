@@ -71,22 +71,24 @@ TODO VERSION 0.1.4 -- Diverses:
     ☐ Log wandelt schlecht timestamps um
     ☐ Interface für Builtin functions
     ☐ .utils aufräumen
+    ☐ Logger schreibt nur in logs, wenn das Programm
+       Compilierbar ist
 
 TODO Version 0.1.3 -- Interpreter:
     ☐ Interpreter normen
     ☐ Interpreter nicht mehr static
-
+    
 TODO Version 0.1.2 -- Parser:
-Der Parser beinhaltet so viele Klassen, die entweder nicht
-genutzt werden, einen falschen Namen haben, oder nicht
-wirklich Sinn machen.
+        Der Parser beinhaltet so viele Klassen, die entweder nicht
+        genutzt werden, einen falschen Namen haben, oder nicht
+        wirklich Sinn machen.
     Parser:
         ☐ Errorchecking verbessern  
         ☐ Alle Grammars anpassen und Klassen ggf. umbenennen
         ☐ Grammars in die Klassen integrieren
         ☐ Parser normen
         ☐ assume() braucht in den meisten Fällen keine Fehlererklärung, da nur einzelne Symbole fehlen
-        ☐ ? addInstruction unnütz
+        ✔ ? addInstruction entfernen
         ☐ ?wird Idregistry gebraucht 
         .nodesystem:
             ☐ package in "node" umbenennen
@@ -105,24 +107,25 @@ wirklich Sinn machen.
             .array:
                 ☐ Funktionalität prüfen
                 ☐ Klassen implementieren
-            .pointer:
+                .pointer:
                 ☐ Von Grund auf neu implementieren
-            .shortcuts:
+                .shortcuts:
                 ☐ package umbenennen
-            .parser:
+                .parser:
                 ☐ neu strukturieren
                 ☐ else und elif schlecht gelöst
         .perror:
             ☐ neu implementieren
-        .semantic:
+            .semantic:
             ☐ festlegen, wann conversionchecker genutzt werden soll
-        .symboltable:
-            ☐ ?Ids verwerfen
-
-
+            .symboltable:
+                ☐ ?Ids verwerfen
+                
+                
 TODO VERSION 0.1.1 -- Lexer:
+    ✔ Lexer lässt nurnoch einen Dezimalpunkt bei Gleitkommazahlen zu (BUGFIX) 
     ☐ Lexer normen
-    ☐ Ein Lexer soll viele Texte lexen können
+    ✔ Ein Lexer soll viele Texte lexen können
     ☐ Token speichern zu viele unnütze Daten
 
 

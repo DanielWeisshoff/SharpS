@@ -1,40 +1,32 @@
 package parser.parser;
 
 import lexer.TokenType;
-import parser.nodesystem.node.CallNode;
+import parser.nodesystem.node.diverse.CallNode;
 
 public class FunctionCall {
 
-    private static Parser p;
-
     public static CallNode parse(Parser p) {
-        FunctionCall.p = p;
-
         String name = p.curToken.value;
-        p.assume(TokenType.IDENTIFIER, "Functionname missing");
+        p.eat(TokenType.IDENTIFIER);
+        p.eat(TokenType.O_ROUND_BRACKET);
 
-        p.assume(TokenType.O_ROUND_BRACKET, "Parameterlist not opened");
+        String params = parseParameters(p);
 
-        String params = parseParameters();
+        p.eat(TokenType.C_ROUND_BRACKET);
 
-        p.assume(TokenType.C_ROUND_BRACKET, "Parameterlist not closed");
-
-        CallNode cn = new CallNode(name);
-        //p.addInstruction(cn);
-
-        return cn;
+        return new CallNode(name);
     }
 
-    private static String parseParameters() {
+    private static String parseParameters(Parser p) {
         String params = "";
 
         while (!p.is(TokenType.C_ROUND_BRACKET)) {
             if (p.is(TokenType.INTEGER) || p.is(TokenType.FLOATING_POINT) || p.is(TokenType.IDENTIFIER)) {
                 params += p.curToken.value;
-                p.advance();
+                p.eat();
                 if (p.is(TokenType.COMMA)) {
                     params += ", ";
-                    p.advance();
+                    p.eat();
                 } else
                     break;
             }

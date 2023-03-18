@@ -9,7 +9,7 @@ public class exitFunction extends BuiltInFunction {
     public Data call() {
 
         System.exit(0);
-        return null;
+        return new Data();
     }
 
 }

@@ -26,9 +26,8 @@ public class PreDecrementNode extends AssignNode {
         return data;
     }
 
-    //TODO implementation
     @Override
-    public void print(int depth) {
-        System.out.println(offset(depth) + nodeType);
+    public void print() {
+        super.print();
     }
 }

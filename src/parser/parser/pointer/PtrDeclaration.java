@@ -14,12 +14,12 @@ public class PtrDeclaration {
     public static DeclareNode parse(Parser p) {
         // PRIMITIVE PTR
 
-        TokenType keyword = p.curToken.type();
+        TokenType keyword = p.curToken.type;
         DataType dataType = p.getPrimitiveType(keyword);
         //TODO getting the primitive type of the pointer
         //DataType type = getPrimitiveType(keyword);
 
-        p.advance();
+        p.eat();
         String name = Pointer.parse(p).name;
         //TODO gehört zur Semantik
         //schauen, ob variable schon existiert
@@ -35,8 +35,6 @@ public class PtrDeclaration {
         p.stm.addVariable(id, ve);
 
         //TODO wrong, ptr should have name,datatype and ptr type
-        DeclareNode dn = new DeclareNode(name, DataType.POINTER);
-        //p.addInstruction(dn);
-        return dn;
+        return new DeclareNode(name, DataType.POINTER);
     }
 }

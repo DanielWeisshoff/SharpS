@@ -7,18 +7,14 @@ import parser.parser.Parser;
 
 public class PreIncrement {
 
-    public static AssignNode parse(Parser p, boolean isStandalone) {
+    public static AssignNode parse(Parser p) {
         // + + ID
-        p.assume(TokenType.PLUS, "Expected + for incrementing");
-        p.assume(TokenType.PLUS, "Expected + for incrementing");
+        p.eat(TokenType.PLUS);
+        p.eat(TokenType.PLUS);
 
         String varName = p.curToken.value;
-        p.assume(TokenType.IDENTIFIER, "pre-increment-assignment var missing");
+        p.eat(TokenType.IDENTIFIER);
 
-        PreIncrementNode in = new PreIncrementNode(varName);
-
-        // if (isStandalone)
-        //    p.addInstruction(in);
-        return in;
+        return new PreIncrementNode(varName);
     }
 }

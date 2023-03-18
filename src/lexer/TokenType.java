@@ -2,7 +2,6 @@ package lexer;
 
 public enum TokenType {
 
-    //---TERMINALS---
     O_ROUND_BRACKET, C_ROUND_BRACKET, COLON, DOT, COMMA, O_BLOCK_BRACKET, C_BLOCK_BRACKET, EXCLAMATION, AND, PIPE,
     EQUAL,
     //arithmetic
@@ -10,7 +9,6 @@ public enum TokenType {
     //ESCAPE SEQUENCES
     NEWLINE, TAB, EOF,
 
-    //---NON TERMINALS---
     //NUMBER REPRESENTATION
     INTEGER, FLOATING_POINT,
     // LITERALS

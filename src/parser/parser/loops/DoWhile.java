@@ -11,18 +11,17 @@ public class DoWhile {
 
     public static DoWhileNode parse(Parser p) {
         // do while ( BOOL ) : BLOCK
-        p.assume(TokenType.KW_DO, "Keyword DO missing");
-        p.assume(TokenType.KW_WHILE, "Keyword WHILE missing");
-        p.assume(TokenType.O_ROUND_BRACKET, "Missing open bracket for while-loop");
+        p.eat(TokenType.KW_DO);
+        p.eat(TokenType.KW_WHILE);
+        p.eat(TokenType.O_ROUND_BRACKET);
 
         ConditionNode cn = Bool.parse(p);
 
-        p.assume(TokenType.C_ROUND_BRACKET, "Missing close bracket for while-loop");
-        p.assume(TokenType.COLON, "while-body not defined");
+        p.eat(TokenType.C_ROUND_BRACKET);
+        p.eat(TokenType.COLON);
 
         DoWhileNode dwn = new DoWhileNode(cn);
         dwn.whileBlock = Block.parse(p, "dowhile-block");
-        //p.addInstruction(dwn);
         p.scopeIn("do-while-body");
 
         return dwn;

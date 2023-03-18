@@ -8,9 +8,9 @@ public class Pointer {
 
     public static PointerNode parse(Parser p) {
         // * ID
-        p.assume(TokenType.STAR, "pointer * missing");
+        p.eat(TokenType.STAR);
         String name = p.curToken.value;
-        p.assume(TokenType.IDENTIFIER, "pointer name missing");
+        p.eat(TokenType.IDENTIFIER);
 
         //TODO adresse fuer nullptr anlegen
         return new PointerNode(name, null);

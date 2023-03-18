@@ -27,10 +27,9 @@ public class DefineNode extends AssignNode {
         return new Data();
     }
 
-    //TODO implementation
     @Override
-    public void print(int depth) {
-        System.out.println(offset(depth) + nodeType);
-        expression.print(depth + 1);
+    public void print() {
+        super.print();
+        expression.print();
     }
 }

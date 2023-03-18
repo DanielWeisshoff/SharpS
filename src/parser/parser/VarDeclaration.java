@@ -11,12 +11,12 @@ public class VarDeclaration {
 
     public static DeclareNode parse(Parser p) {
         // PRIMITIVE ID
-        TokenType keyword = p.curToken.type();
+        TokenType keyword = p.curToken.type;
         DataType dataType = p.getPrimitiveType(keyword);
-        p.advance();
+        p.eat();
 
         String name = p.curToken.value;
-        p.assume(TokenType.IDENTIFIER, "Fehler beim Deklarieren einer Variable");
+        p.eat(TokenType.IDENTIFIER);
 
         DeclareNode dn = new DeclareNode(name, dataType);
 
@@ -33,7 +33,6 @@ public class VarDeclaration {
         VariableEntry ve = new VariableEntry(name, id, dataType);
         p.stm.addVariable(id, ve);
 
-        //p.addInstruction(dn);
         return dn;
     }
 }

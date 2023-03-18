@@ -1,22 +1,21 @@
 package parser.parser;
 
 import lexer.TokenType;
-import parser.nodesystem.node.IfNode;
+import parser.nodesystem.node.diverse.IfNode;
 import parser.nodesystem.node.logic.conditions.ConditionNode;
 
 public class Elif {
     public static IfNode parse(Parser p) {
-        p.assume(TokenType.KW_ELIF, "Keyword IF missing");
-        p.assume(TokenType.O_ROUND_BRACKET, "Parameterlist not found");
+        p.eat(TokenType.KW_ELIF);
+        p.eat(TokenType.O_ROUND_BRACKET);
 
         ConditionNode condition = Bool.parse(p);
 
-        p.assume(TokenType.C_ROUND_BRACKET, "Parameterlist not closed");
-        p.assume(TokenType.COLON, "if-block missing");
+        p.eat(TokenType.C_ROUND_BRACKET);
+        p.eat(TokenType.COLON);
 
         IfNode in = new IfNode(condition);
 
-        //p.addInstruction(in);
         in.block = Block.parse(p, "elif-body");
 
         if (p.is(TokenType.KW_ELIF))

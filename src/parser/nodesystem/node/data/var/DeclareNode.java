@@ -25,10 +25,8 @@ public class DeclareNode extends AssignNode {
         return new Data();
     }
 
-    //TODO implementation 2.0
     @Override
-    public void print(int depth) {
-        System.out.println(offset(depth) + nodeType);
-        printAdvanced(name + " : " + dataType, depth + 1);
+    public void print() {
+        super.print();
     }
 }

@@ -42,7 +42,7 @@ public class Highlighter {
                 print(CLASS + t.value + " ");
                 nextIsClass = false;
             } else {
-                switch (t.type()) {
+                switch (t.type) {
                 case PLUS -> print(OPERATOR + " + ");
                 case MINUS -> print(OPERATOR + " - ");
                 case STAR -> print(OPERATOR + " * ");

@@ -1,4 +1,4 @@
-package parser.nodesystem.node;
+package parser.nodesystem.node.diverse;
 
 import java.util.ArrayList;
 
@@ -6,6 +6,8 @@ import interpreter.Interpreter;
 import lexer.Token;
 import lexer.TokenType;
 import parser.nodesystem.Data;
+import parser.nodesystem.node.Node;
+import parser.nodesystem.node.NodeType;
 
 public class OutNode extends Node {
 
@@ -16,13 +18,14 @@ public class OutNode extends Node {
         this.token = args;
     }
 
+    //TODO sollte alles zulassen, was einen Rückgabewert hat
     @Override
     public Data run() {
         StringBuilder output = new StringBuilder();
 
         for (Token t : token) {
 
-            if (t.type() == TokenType.IDENTIFIER) {
+            if (t.type == TokenType.IDENTIFIER) {
                 Data data = Interpreter.instance.findVariable(t.value);
                 if (data == null) {
                     System.out.println("var '" + t.value + "' not found");
@@ -31,26 +34,19 @@ public class OutNode extends Node {
                     output.append(data.asDouble());
             } else if (t.isNumeric())
                 output.append(Double.parseDouble(t.value));
-            else if (t.type() == TokenType.STRING)
+            else if (t.type == TokenType.STRING)
                 output.append(t.value);
-            else if (t.type() == TokenType.COMMA)
+            else if (t.type == TokenType.COMMA)
                 output.append(" ");
             else
-                output.append("can't output type '" + t.type() + "'");
+                output.append("can't output type '" + t.type + "'");
         }
         System.out.println(">> " + output.toString());
         return new Data();
     }
 
-    //TODO implementation 2.0
     @Override
-    public void print(int depth) {
-        System.out.println(offset(depth) + nodeType);
-        for (Token t : token) {
-            if (t.value == "" || t.value == null)
-                printAdvanced("" + t.type(), depth + 1);
-            else
-                printAdvanced(t.value + " : " + t.type(), depth + 1);
-        }
+    public void print() {
+        super.print();
     }
 }

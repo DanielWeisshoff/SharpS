@@ -15,12 +15,12 @@ public class VarDefinition {
 
     public static AssignNode parse(Parser p) {
         if (p.is(TokenType.MINUS))
-            return PreDecrement.parse(p, false);
-        else if (p.is(TokenType.PLUS))
-            return PreIncrement.parse(p, false);
+            return PreDecrement.parse(p);
+        if (p.is(TokenType.PLUS))
+            return PreIncrement.parse(p);
 
         String varName = p.curToken.value;
-        p.assume(TokenType.IDENTIFIER, "var for definition missing");
+        p.eat(TokenType.IDENTIFIER);
 
         //TODO gehört zur Semantik
         //check if var is already defined
@@ -29,10 +29,10 @@ public class VarDefinition {
 
         AssignNode an = null;
         Node expr = null;
-        switch (p.curToken.type()) {
+        switch (p.curToken.type) {
         // ID = EXPR
         case EQUAL:
-            p.advance();
+            p.eat();
             expr = Expression.parse(p);
             an = new DefineNode(varName, expr);
             an.expression = expr;
@@ -41,54 +41,54 @@ public class VarDefinition {
         case PLUS:
             if (p.next(TokenType.PLUS)) {
                 p.retreat();
-                an = PostIncrement.parse(p, false);
+                an = PostIncrement.parse(p);
                 break;
             }
 
-            p.advance();
-            p.assume(TokenType.EQUAL, "+=");
+            p.eat();
+            p.eat(TokenType.EQUAL);
 
             expr = Expression.parse(p);
             an = new DefineNode(varName, expr);
             an.expression = expr;
             break;
-        // ID - =  EXPR || ID - -
+        // ID -=  EXPR || ID --
         case MINUS:
             if (p.next(TokenType.MINUS)) {
                 p.retreat();
-                an = PostDecrement.parse(p, false);
+                an = PostDecrement.parse(p);
                 break;
             }
 
-            p.advance();
-            p.assume(TokenType.EQUAL, "+=");
+            p.eat();
+            p.eat(TokenType.EQUAL);
 
             expr = Expression.parse(p);
             an = new DefineNode(varName, expr);
             an.expression = expr;
             break;
-        // ID * =  EXPR
+        // ID *=  EXPR
         case STAR:
-            p.advance();
-            p.assume(TokenType.EQUAL, "+=");
+            p.eat();
+            p.eat(TokenType.EQUAL);
 
             expr = Expression.parse(p);
             an = new DefineNode(varName, expr);
             an.expression = expr;
             break;
-        // ID / =  EXPR
+        // ID /=  EXPR
         case SLASH:
-            p.advance();
-            p.assume(TokenType.EQUAL, "+=");
+            p.eat();
+            p.eat(TokenType.EQUAL);
 
             expr = Expression.parse(p);
             an = new DefineNode(varName, expr);
             an.expression = expr;
             break;
-        // ID % =  EXPR
+        // ID %=  EXPR
         case PERCENT:
-            p.advance();
-            p.assume(TokenType.EQUAL, "+=");
+            p.eat();
+            p.eat(TokenType.EQUAL);
 
             expr = Expression.parse(p);
             an = new DefineNode(varName, expr);
@@ -99,7 +99,6 @@ public class VarDefinition {
             new UnimplementedError("unknown operation", p.curToken);
         }
 
-        //p.addInstruction(an);
         return an;
     }
 }

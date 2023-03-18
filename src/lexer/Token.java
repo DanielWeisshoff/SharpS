@@ -4,19 +4,19 @@ import java.util.ArrayList;
 
 public class Token {
 
-    private final TokenType type;
+    public final TokenType type;
     public String value;
     public int line;
     public int start;
     public int end;
 
-    /**
-     *  Used by the lexer
-     * @param line specifies the line in the .#s file where
-     * the token is. a value of -1 indicates that the token
-     * doesnt belong to a file and thus was created artificially.
-     * 
-     */
+    /** Use this ctor to create programm independent tokens */
+    public Token(TokenType type, String value) {
+        this(type, value, -1, 0, value.length() - 1);
+    }
+
+    /** @param line a value of -1 indicates that the token
+     *  doesnt belong to a file and thus was created artificially.*/
     public Token(TokenType type, String value, int line, int start, int end) {
         this.type = type;
         this.value = value;
@@ -25,43 +25,22 @@ public class Token {
         this.end = end;
     }
 
-    /**
-     * Use this ctor to create programm independent tokens
-     */
-    public Token(TokenType type, String value) {
-        this.type = type;
-        this.value = value;
-        line = -1;
-        start = 0;
-        end = value.length() - 1;
-    }
-
-    public static boolean areSameCategoryOP(Token t1, Token t2) {
-        return t1.isLineOP() && t2.isLineOP() || t1.isDotOP() && t2.isDotOP();
-    }
-
     public static Token[] toArray(ArrayList<Token> list) {
         Token[] tokens = new Token[list.size()];
         return list.toArray(tokens);
     }
 
+    //TODO bad implementation
     public String getDescription() {
-
-        String position = "";
-
-        if (start == end)
-            position = line + "," + start;
-        else
+        String position = line + "," + start;
+        if (start != end)
             position = line + "," + start + ":" + end;
 
+        String descr = ("[" + type + "] " + position);
         if (value != null)
-            return ("[" + type + ", " + value + "] " + position);
-        else
-            return ("[" + type + "] " + position);
-    }
+            descr = ("[" + type + ", " + value + "] " + position);
 
-    public TokenType type() {
-        return type;
+        return descr;
     }
 
     public boolean isLineOP() {
@@ -84,9 +63,8 @@ public class Token {
         return type == TokenType.INTEGER || type == TokenType.FLOATING_POINT;
     }
 
-    //TODO boolean?
+    //TODO boolean und char
     public boolean isPrimitive() {
-
         return switch (type) {
         case KW_BYTE -> true;
         case KW_SHORT -> true;
@@ -94,14 +72,7 @@ public class Token {
         case KW_LONG -> true;
         case KW_FLOAT -> true;
         case KW_DOUBLE -> true;
-        default -> unknownPrimitiveError();
+        default -> false;
         };
-    }
-
-    //TODO just helper for now
-    private boolean unknownPrimitiveError() {
-        System.out.println("Unknown primitive '" + type + "'");
-        System.exit(0);
-        return false;
     }
 }

@@ -7,19 +7,14 @@ import parser.parser.Parser;
 
 public class PostDecrement {
 
-    public static AssignNode parse(Parser p, boolean isStandalone) {
+    public static AssignNode parse(Parser p) {
         // ID - -
         String varName = p.curToken.value;
-        p.assume(TokenType.IDENTIFIER, "post-decrement-assignment var missing");
+        p.eat(TokenType.IDENTIFIER);
 
-        p.assume(TokenType.MINUS, "Decrementor - missing");
-        p.assume(TokenType.MINUS, "Decrementor - missing");
+        p.eat(TokenType.MINUS);
+        p.eat(TokenType.MINUS);
 
-        System.out.println("currently at: " + p.curToken.type());
-        PostDecrementNode ldn = new PostDecrementNode(varName);
-
-        //if (isStandalone)
-        // p.addInstruction(ldn);
-        return ldn;
+        return new PostDecrementNode(varName);
     }
 }

@@ -1,8 +1,10 @@
-package parser.nodesystem.node;
+package parser.nodesystem.node.diverse;
 
+import logger.Channel;
 import logger.Logger;
-import logger.Logger.Channel;
 import parser.nodesystem.Data;
+import parser.nodesystem.node.Node;
+import parser.nodesystem.node.NodeType;
 
 public class FunctionNode extends Node {
 
@@ -20,12 +22,13 @@ public class FunctionNode extends Node {
         return block.run();
     }
 
-    @Override
-    public void print(int depth) {
-        block.print(depth);
-    }
-
     public void add(Node n) {
         block.add(n);
+    }
+
+    @Override
+    public void print() {
+        super.print();
+        block.print();
     }
 }

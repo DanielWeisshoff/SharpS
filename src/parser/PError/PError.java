@@ -2,6 +2,8 @@ package parser.PError;
 
 import lexer.Token;
 import lexer.TokenType;
+import logger.Channel;
+import logger.Logger;
 import utils.Goethe;
 
 /**
@@ -22,12 +24,15 @@ public abstract class PError {
 
         printInfo();
 
-        //TODO Loggen!!
-        //Logger.log(errorMessage);
+        Logger.log(msg, Channel.PARSER);
+        //TODO temporary
+        Logger.writeBufferToFile();
+
         System.exit(0);
     }
 
     private void printInfo() {
+        //TODO gibt ne Color Klasse, oder den editor nutzen
         String colorRed = "\u001b[31m";
         String colorReset = "\u001B[0m";
 
@@ -35,27 +40,21 @@ public abstract class PError {
         System.out.println(colorRed + msg + ":\n" + colorReset);
 
         //printing the error line
-        if (tokens.length >= 1) {
-            int lineNumber = tokens[0].line;
+        int lineNumber = tokens[0].line;
+        String line = Goethe.getLine(lineNumber);
+        String prefix = lineNumber + " |    ";
 
-            //print previous 2 lines, if existing
-            if (lineNumber >= 3) {
-                System.out.println((lineNumber - 2) + "|" + Goethe.getLine(lineNumber - 2));
-                System.out.println((lineNumber - 1) + "|" + Goethe.getLine(lineNumber - 1));
-            }
-            String line = Goethe.getLine(lineNumber);
+        System.out.println(prefix + line);
 
-            System.out.println(lineNumber + "|" + line);
-        }
-
-        //offset
-        System.out.print("  ");
+        //print offset for line number
+        for (int i = 0; i < prefix.length(); i++)
+            System.out.print(" ");
 
         //printing the markers
         int pos = 0;
         for (Token t : tokens) {
             //TODO generelle funktion fuer whitespace nutzen
-            if (t.type() == TokenType.TAB)
+            if (t.type == TokenType.TAB)
                 continue;
 
             //offset till error token
@@ -63,7 +62,7 @@ public abstract class PError {
                 if (pos < t.start)
                     System.out.print(" ");
                 else
-                    System.out.print(colorRed + "+");
+                    System.out.print(colorRed + "^");
                 pos++;
             }
             System.out.print(colorReset);

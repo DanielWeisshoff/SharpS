@@ -42,12 +42,8 @@ public class VarInitNode extends AssignNode {
         return new Data();
     }
 
-    //TODO implementation
     @Override
-    public void print(int depth) {
-        System.out.println(offset(depth) + nodeType);
-
-        printAdvanced("name: " + name, depth + 1);
-        printAdvanced(expression, depth + 1);
+    public void print() {
+        super.print();
     }
 }

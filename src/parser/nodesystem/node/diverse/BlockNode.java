@@ -1,10 +1,12 @@
-package parser.nodesystem.node;
+package parser.nodesystem.node.diverse;
 
 import java.util.ArrayList;
 
 import interpreter.Interpreter;
 import parser.nodesystem.Data;
 import parser.nodesystem.DataType;
+import parser.nodesystem.node.Node;
+import parser.nodesystem.node.NodeType;
 
 /**
  * Represents a code block.
@@ -35,8 +37,12 @@ public class BlockNode extends Node {
     }
 
     @Override
-    public void print(int depth) {
+    public void print() {
+        Node.depth++;
+
         for (Node n : children)
-            n.print(depth);
+            n.print();
+
+        Node.depth--;
     }
 }

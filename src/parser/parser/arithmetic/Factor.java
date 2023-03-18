@@ -28,44 +28,44 @@ public class Factor {
         Factor.p = p;
 
         NumberNode n = null;
-        switch (p.curToken.type()) {
+        switch (p.curToken.type) {
         case INTEGER:
             n = parseInteger(p.curToken.value);
-            p.advance();
+            p.eat();
             break;
         case FLOATING_POINT:
             n = parseFloatingPoint(p.curToken.value);
-            p.advance();
+            p.eat();
             break;
         case MINUS:
-            p.advance();
-            switch (p.curToken.type()) {
+            p.eat();
+            switch (p.curToken.type) {
             // - DIGIT
             case INTEGER:
                 n = parseInteger('-' + p.curToken.value);
-                p.advance();
+                p.eat();
                 break;
             // - DIGIT
             case FLOATING_POINT:
                 n = parseFloatingPoint('-' + p.curToken.value);
-                p.advance();
+                p.eat();
                 break;
             // - ( EXPR )
             case O_ROUND_BRACKET:
-                p.advance();
+                p.eat();
                 n = Expression.parse(p);
-                p.assume(TokenType.C_ROUND_BRACKET, "Expression error. Bracket not properly closed");
+                p.eat(TokenType.C_ROUND_BRACKET, "Bracket not properly closed");
                 break;
             // - ID
             case IDENTIFIER:
                 String varName = p.curToken.value;
-                p.advance();
+                p.eat();
                 n = new VariableNode(varName);
                 break;
             // - - ID
             case MINUS:
                 p.retreat();
-                n = PreDecrement.parse(p, false);
+                n = PreDecrement.parse(p);
                 break;
             default:
                 new UnimplementedError("error parsing factor with -", p.curToken);
@@ -73,29 +73,29 @@ public class Factor {
             break;
         case PLUS:
             // + + ID	
-            n = PreIncrement.parse(p, false);
+            n = PreIncrement.parse(p);
             break;
         case O_ROUND_BRACKET:
             // ( EXPR )
-            p.advance();
+            p.eat();
 
             n = Expression.parse(p);
-            p.assume(TokenType.C_ROUND_BRACKET, "Expression error. Bracket not properly closed");
+            p.eat(TokenType.C_ROUND_BRACKET, "bracket not properly closed");
             break;
         case IDENTIFIER:
             // ID - -	
             if (p.next(TokenType.MINUS) && p.next(2, TokenType.MINUS))
-                n = PostDecrement.parse(p, false);
+                n = PostDecrement.parse(p);
             // ID + +
             else if (p.next(TokenType.PLUS) && p.next(2, TokenType.PLUS))
-                n = PostIncrement.parse(p, false);
+                n = PostIncrement.parse(p);
             // ID [ EXPR ]
             else if (p.next(TokenType.O_BLOCK_BRACKET)) {
                 n = ArrayGetField.parse(p);
                 // ID
             } else {
                 String varName = p.curToken.value;
-                p.advance();
+                p.eat();
                 VariableEntry ve = p.stm.findVariable(varName);
 
                 //TODO only temporary -> put in semantic part

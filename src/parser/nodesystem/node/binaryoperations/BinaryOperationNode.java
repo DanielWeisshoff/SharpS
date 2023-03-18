@@ -17,11 +17,10 @@ public abstract class BinaryOperationNode extends NumberNode {
         super(inputType, outputType, nodeType);
     }
 
-    //TODO implementation
     @Override
-    public void print(int depth) {
-        System.out.println(offset(depth) + nodeType);
-        left.print(depth + 1);
-        right.print(depth + 1);
+    public void print() {
+        super.print();
+        left.print();
+        right.print();
     }
 }

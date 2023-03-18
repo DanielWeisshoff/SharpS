@@ -15,8 +15,7 @@ public class ShortNode extends PrimitiveNode {
     }
 
     @Override
-    public void print(int depth) {
-        System.out.println(offset(depth) + nodeType);
-        printAdvanced("" + data.asShort(), depth + 1);
+    public void print() {
+        super.print();
     }
 }

@@ -15,8 +15,7 @@ public class DoubleNode extends PrimitiveNode {
     }
 
     @Override
-    public void print(int depth) {
-        System.out.println(offset(depth) + nodeType);
-        printAdvanced("" + data.asDouble(), depth + 1);
+    public void print() {
+        super.print();
     }
 }

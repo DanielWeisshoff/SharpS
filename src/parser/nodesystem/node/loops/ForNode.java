@@ -2,11 +2,11 @@ package parser.nodesystem.node.loops;
 
 import interpreter.Interpreter;
 import parser.nodesystem.Data;
-import parser.nodesystem.node.BlockNode;
 import parser.nodesystem.node.Node;
 import parser.nodesystem.node.NodeType;
 import parser.nodesystem.node.data.var.AssignNode;
 import parser.nodesystem.node.data.var.variable.VarInitNode;
+import parser.nodesystem.node.diverse.BlockNode;
 import parser.nodesystem.node.logic.conditions.ConditionNode;
 
 public class ForNode extends Node {
@@ -24,8 +24,8 @@ public class ForNode extends Node {
     public Data run() {
         //new Stackframe for the index variable
         Interpreter.instance.newStackFrame();
-        init.run();
 
+        init.run();
         while (condition.run().asBoolean()) {
             block.run();
             increment.run();
@@ -37,15 +37,9 @@ public class ForNode extends Node {
         return new Data();
     }
 
-    //TODO implementation
     @Override
-    public void print(int depth) {
-        System.out.println(offset(depth) + nodeType);
-
-        printAdvanced(init, depth + 1);
-        printAdvanced(condition, depth + 1);
-        printAdvanced(increment, depth + 1);
-
-        block.print(depth + 1);
+    public void print() {
+        super.print();
+        block.print();
     }
 }

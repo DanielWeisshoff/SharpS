@@ -27,9 +27,8 @@ public class ArrGetFieldNode extends NumberNode {
         return d;
     }
 
-    //TODO implementation
     @Override
-    public void print(int depth) {
-        System.out.println(nodeType);
+    public void print() {
+        super.print();
     }
 }

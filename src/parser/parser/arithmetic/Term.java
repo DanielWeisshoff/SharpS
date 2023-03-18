@@ -23,7 +23,7 @@ public class Term {
             else if (p.is(TokenType.PERCENT))
                 op = new BinaryModNode();
 
-            p.advance();
+            p.eat();
 
             NumberNode right = Factor.parse(p);
             op.left = left;

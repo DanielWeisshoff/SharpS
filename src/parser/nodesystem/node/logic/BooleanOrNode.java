@@ -24,9 +24,8 @@ public class BooleanOrNode extends ConditionNode {
             return new Data(0, DataType.BOOLEAN);
     }
 
-    //TODO implementation
     @Override
-    public void print(int depth) {
-        System.out.println(nodeType);
+    public void print() {
+        super.print();
     }
 }

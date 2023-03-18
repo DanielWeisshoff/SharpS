@@ -11,20 +11,18 @@ public class ArrayInitialization {
 
     // KW ID [ EXPR ]
     public static ArrInitNode parse(Parser p) {
-        TokenType keyword = p.curToken.type();
-        p.advance();
+        TokenType keyword = p.curToken.type;
+        p.eat();
 
         String name = p.curToken.value;
-        p.advance();
+        p.eat();
 
-        p.assume(TokenType.O_BLOCK_BRACKET, "missing [ for index");
+        p.eat(TokenType.O_BLOCK_BRACKET);
         NumberNode size = Expression.parse(p);
-        p.assume(TokenType.C_BLOCK_BRACKET, "missing ] for index");
+        p.eat(TokenType.C_BLOCK_BRACKET);
 
         DataType dataType = p.getPrimitiveType(keyword);
-        ArrInitNode an = new ArrInitNode(name, dataType, size);
-        // p.addInstruction(an);
 
-        return an;
+        return new ArrInitNode(name, dataType, size);
     }
 }

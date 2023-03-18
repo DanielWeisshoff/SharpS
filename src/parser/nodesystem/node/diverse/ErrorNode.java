@@ -1,3 +1,4 @@
+package parser.nodesystem.node.diverse;
 // package com.danielweisshoff.parser.nodesystem.node;
 
 // import com.danielweisshoff.parser.nodesystem.DataType;

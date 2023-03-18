@@ -16,20 +16,20 @@ public class For {
     // KW_FOR ( INITIALIZATION , BOOL , DEFINITION ) : BLOCK
     public static ForNode parse(Parser p) {
 
-        p.assume(TokenType.KW_FOR, "Keyword FOR missing");
-        p.assume(TokenType.O_ROUND_BRACKET, "Missing open bracket for for-loop");
+        p.eat(TokenType.KW_FOR);
+        p.eat(TokenType.O_ROUND_BRACKET);
 
         p.scopeIn("for-init", true);
         VarInitNode in = VarInitialization.parse(p);
 
-        p.assume(TokenType.COMMA, "comma missing");
+        p.eat(TokenType.COMMA);
         ConditionNode cn = Bool.parse(p);
 
-        p.assume(TokenType.COMMA, "comma missing");
+        p.eat(TokenType.COMMA);
         AssignNode an = VarDefinition.parse(p);
 
-        p.assume(TokenType.C_ROUND_BRACKET, "Missing closed bracket for for-loop");
-        p.assume(TokenType.COLON, "for-body-declarator missing");
+        p.eat(TokenType.C_ROUND_BRACKET);
+        p.eat(TokenType.COLON);
 
         ForNode fn = new ForNode();
         fn.init = in;

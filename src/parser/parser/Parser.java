@@ -1,16 +1,14 @@
 package parser.parser;
 
-import interpreter.builtin.functions.BuiltInFunction;
 import lexer.Token;
 import lexer.TokenType;
 import parser.PError.UnimplementedError;
 import parser.nodesystem.DataType;
-import parser.nodesystem.node.FunctionNode;
+import parser.nodesystem.node.diverse.FunctionNode;
 import parser.symboltable.SymbolTableManager;
 
-// TODO durch for-init wird falsch gescoped -> siehe
-//      symboltable struktur
-
+/** Eats token by token to spit out an AST. This is the most
+ * similiar thing to Pacman you can find. */
 public class Parser {
 
     public static boolean debug = false;
@@ -29,14 +27,9 @@ public class Parser {
     //variables
     public SymbolTableManager stm = new SymbolTableManager();
 
-    public Parser() {
-        //TODO belongs to semantics
-        BuiltInFunction.registerAll();
-    }
-
     public FunctionNode parse(Token[] tokens) {
         this.tokens = tokens;
-        advance();
+        eat();
 
         root = new FunctionNode("global");
         currentFunction = root;
@@ -46,11 +39,12 @@ public class Parser {
         return root;
     }
 
-    public void advance() {
-        advance(1);
+    /**Consumes the current Token and moves to the next */
+    public void eat() {
+        eat(1);
     }
 
-    void advance(int steps) {
+    void eat(int steps) {
         for (int i = 0; i < steps; i++) {
             position++;
             if (position < tokens.length)
@@ -78,7 +72,7 @@ public class Parser {
      * Vergleicht den aktuellen Token
      */
     public boolean is(TokenType type) {
-        return curToken.type() == type;
+        return curToken.type == type;
     }
 
     public boolean is(String value) {
@@ -88,9 +82,15 @@ public class Parser {
     /**
      * Compares the current tokens type
      */
-    public void assume(TokenType t, String error) {
+    public void eat(TokenType t) {
+        eat(t, "Expected symbol '" + t + "'");
+    }
+
+    /** Consumes the current Token and moves to the next
+     * only if the tokentype is correct, else spits out an error*/
+    public void eat(TokenType t, String error) {
         if (is(t))
-            advance();
+            eat();
         else
             new UnimplementedError(error, curToken);
     }
@@ -107,21 +107,21 @@ public class Parser {
     }
 
     public boolean next(int lookahead, TokenType t) {
-        return next(lookahead).type() == t;
+        return next(lookahead).type == t;
     }
 
     public boolean next(TokenType t) {
-        return next().type() == t;
+        return next().type == t;
     }
 
     public void scopeIn(String scope) {
         scopeIn(scope, false);
     }
 
-    public void scopeIn(String name, boolean sameScope) {
-        if (!sameScope)
+    public void scopeIn(String scope, boolean stayInScope) {
+        if (!stayInScope)
             curScope++;
-        stm.newScope(name, curScope);
+        stm.newScope(scope, curScope);
     }
 
     public void scopeOut() {
@@ -161,7 +161,7 @@ public class Parser {
     public void BOI() {
         while (is(TokenType.COMMENT) || is(TokenType.NEWLINE)
                 || (is(TokenType.TAB) && next(TokenType.COMMENT) || (is(TokenType.TAB) && next(TokenType.NEWLINE)))) {
-            advance();
+            eat();
         }
 
         if (is(TokenType.TAB))

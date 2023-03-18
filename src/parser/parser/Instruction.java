@@ -25,9 +25,9 @@ public class Instruction {
         Node instruction = null;
 
         if (p.is(TokenType.TAB))
-            p.advance();
+            p.eat();
 
-        switch (p.curToken.type()) {
+        switch (p.curToken.type) {
         case KW_IF -> instruction = If.parse(p);
         case KW_ELSE -> instruction = Else.parse(p);
         case KW_ELIF -> instruction = Elif.parse(p);
@@ -65,25 +65,24 @@ public class Instruction {
             else if (p.next(TokenType.EQUAL))
                 instruction = VarDefinition.parse(p);
             else if (p.next(TokenType.MINUS))
-                instruction = PostDecrement.parse(p, true);
+                instruction = PostDecrement.parse(p);
             else if (p.next(TokenType.PLUS))
-                instruction = PostIncrement.parse(p, true);
+                instruction = PostIncrement.parse(p);
             else if (p.next(TokenType.O_BLOCK_BRACKET)) {
                 if (p.next(4, TokenType.EQUAL))
                     instruction = ArraySetField.parse(p);
                 else
                     instruction = ArrayGetField.parse(p);
-
             } else
                 new UnimplementedError("Unknown identifier '" + p.curToken.value + "'", p.curToken);
         }
         //
-        case PLUS -> instruction = PreIncrement.parse(p, true);
-        case MINUS -> instruction = PreDecrement.parse(p, true);
+        case PLUS -> instruction = PreIncrement.parse(p);
+        case MINUS -> instruction = PreDecrement.parse(p);
         case STAR -> instruction = PtrDefinition.parse(p);
         case EOF -> instruction = null;
         default -> {
-            String error = "[INSTRUCTION] Action for Token " + p.curToken.type() + " not implemented";
+            String error = "[INSTRUCTION] Action for Token " + p.curToken.type + " not implemented";
             new UnimplementedError(error, p.curToken);
         }
         }

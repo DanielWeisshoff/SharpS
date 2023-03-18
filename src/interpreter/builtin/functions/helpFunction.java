@@ -13,8 +13,9 @@ public class helpFunction extends BuiltInFunction {
     private void printHelp() {
 
         System.out.println("================= HELP =================");
-        System.out.println("Well, this wont help you much right now,\n " + "but im sure it will in the future. \n"
-                + "Anyways please notice me Senpai");
+        System.out.println("Well, this wont help you much right now,");
+        System.out.println("  but im sure it will in the future.    ");
+        System.out.println("        Anyways please donate           ");
         System.out.println("=================      =================");
     }
 }

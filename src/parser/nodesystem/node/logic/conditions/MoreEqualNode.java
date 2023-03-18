@@ -28,12 +28,11 @@ public class MoreEqualNode extends ConditionNode {
             return new Data(0, DataType.BOOLEAN);
     }
 
-    //TODO implementation 2.0
     @Override
-    public void print(int depth) {
-        System.out.println(offset(depth) + nodeType);
+    public void print() {
+        super.print();
 
-        left.print(depth + 1);
-        right.print(depth + 1);
+        left.print();
+        right.print();
     }
 }

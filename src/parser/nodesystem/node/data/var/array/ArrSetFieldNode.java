@@ -34,9 +34,8 @@ public class ArrSetFieldNode extends Node {
         return new Data();
     }
 
-    //TODO implementation
     @Override
-    public void print(int depth) {
-        System.out.println(nodeType);
+    public void print() {
+        super.print();
     }
 }

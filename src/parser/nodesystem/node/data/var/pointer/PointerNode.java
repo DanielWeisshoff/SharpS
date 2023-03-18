@@ -32,9 +32,8 @@ public class PointerNode extends NumberNode {
         return data;
     }
 
-    //TODO implementation
     @Override
-    public void print(int depth) {
-        System.out.println(nodeType);
+    public void print() {
+        super.print();
     }
 }
