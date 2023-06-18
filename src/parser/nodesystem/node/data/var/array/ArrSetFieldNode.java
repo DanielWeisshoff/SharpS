@@ -2,10 +2,12 @@ package parser.nodesystem.node.data.var.array;
 
 import interpreter.Interpreter;
 import logger.Logger;
-import parser.nodesystem.Data;
+import parser.nodesystem.data.Array;
+import parser.nodesystem.data.Data;
+import parser.nodesystem.data.numerical.integer.Bool;
 import parser.nodesystem.node.Node;
 import parser.nodesystem.node.NodeType;
-import parser.nodesystem.node.binaryoperations.NumberNode;
+import parser.nodesystem.node.data.primitives.NumberNode;
 
 public class ArrSetFieldNode extends Node {
 
@@ -23,15 +25,15 @@ public class ArrSetFieldNode extends Node {
 
     @Override
     public Data run() {
-        Data an = Interpreter.instance.findVariable(name);
 
-        int i = index.run().asInt();
-        an.setValue(value.run().asDouble(), i);
+        Array an = (Array) Interpreter.instance.findVariable(name);
+
+        an.setData(value.run(), index.run());
 
         if (Interpreter.debug)
-            Logger.log(an.asDouble(i) + ", " + name + "[" + i + "]");
+            Logger.log(an.getBaseData(index.run()) + ", " + name + "[" + index + "]");
 
-        return new Data();
+        return new Bool(true);
     }
 
     @Override

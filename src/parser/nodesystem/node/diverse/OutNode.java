@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import interpreter.Interpreter;
 import lexer.Token;
 import lexer.TokenType;
-import parser.nodesystem.Data;
+import parser.nodesystem.data.Data;
+import parser.nodesystem.data.VoidPtr;
+import parser.nodesystem.data.numerical.Numerical;
 import parser.nodesystem.node.Node;
 import parser.nodesystem.node.NodeType;
 
@@ -31,7 +33,7 @@ public class OutNode extends Node {
                     System.out.println("var '" + t.value + "' not found");
                     System.exit(1);
                 } else
-                    output.append(data.asDouble());
+                    output.append(((Numerical) data).value);
             } else if (t.isNumeric())
                 output.append(Double.parseDouble(t.value));
             else if (t.type == TokenType.STRING)
@@ -42,7 +44,7 @@ public class OutNode extends Node {
                 output.append("can't output type '" + t.type + "'");
         }
         System.out.println(">> " + output.toString());
-        return new Data();
+        return new VoidPtr();
     }
 
     @Override

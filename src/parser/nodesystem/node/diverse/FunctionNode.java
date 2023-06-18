@@ -2,7 +2,7 @@ package parser.nodesystem.node.diverse;
 
 import logger.Channel;
 import logger.Logger;
-import parser.nodesystem.Data;
+import parser.nodesystem.data.Data;
 import parser.nodesystem.node.Node;
 import parser.nodesystem.node.NodeType;
 

@@ -1,7 +1,8 @@
 package parser.nodesystem.node.data.var.pointer;
 
-import parser.nodesystem.Data;
 import parser.nodesystem.DataType;
+import parser.nodesystem.data.Data;
+import parser.nodesystem.data.numerical.integer.Bool;
 import parser.nodesystem.node.NodeType;
 import parser.nodesystem.node.data.var.AssignNode;
 
@@ -32,7 +33,7 @@ public class PtrInitNode extends AssignNode {
         //     Logger.log(data.value + ", " + dataType);
         // }
 
-        return new Data();
+        return new Bool(true);
     }
 
     @Override

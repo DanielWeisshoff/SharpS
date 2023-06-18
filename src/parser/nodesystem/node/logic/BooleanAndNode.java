@@ -1,7 +1,7 @@
 package parser.nodesystem.node.logic;
 
-import parser.nodesystem.Data;
-import parser.nodesystem.DataType;
+import parser.nodesystem.data.Data;
+import parser.nodesystem.data.numerical.integer.Bool;
 import parser.nodesystem.node.NodeType;
 import parser.nodesystem.node.logic.conditions.ConditionNode;
 
@@ -19,9 +19,9 @@ public class BooleanAndNode extends ConditionNode {
         boolean val = left.run().asBoolean() == true && right.run().asBoolean() == true;
 
         if (val)
-            return new Data(1, DataType.BOOLEAN);
+            return new Bool(true);
         else
-            return new Data(0, DataType.BOOLEAN);
+            return new Bool(false);
     }
 
     @Override

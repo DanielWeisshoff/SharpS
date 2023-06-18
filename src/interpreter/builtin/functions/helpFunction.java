@@ -1,7 +1,7 @@
 package interpreter.builtin.functions;
 
-import parser.nodesystem.Data;
-import parser.nodesystem.DataType;
+import parser.nodesystem.data.Data;
+import parser.nodesystem.data.DataType;
 
 public class helpFunction extends BuiltInFunction {
     @Override

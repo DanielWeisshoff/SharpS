@@ -3,8 +3,8 @@ package parser.nodesystem.node.diverse;
 import java.util.ArrayList;
 
 import interpreter.Interpreter;
-import parser.nodesystem.Data;
 import parser.nodesystem.DataType;
+import parser.nodesystem.data.Data;
 import parser.nodesystem.node.Node;
 import parser.nodesystem.node.NodeType;
 
@@ -17,7 +17,7 @@ public class BlockNode extends Node {
     private String name;
 
     public BlockNode(String name) {
-        super(null, DataType.INT, NodeType.BLOCK_NODE);
+        super(null, null, NodeType.BLOCK_NODE);
         this.name = name;
         children = new ArrayList<>();
     }
@@ -33,7 +33,7 @@ public class BlockNode extends Node {
             n.run();
         Interpreter.instance.popStackFrame();
 
-        return new Data();
+        return Data.New(DataType.VOID);
     }
 
     @Override

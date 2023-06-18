@@ -5,7 +5,7 @@ import parser.nodesystem.node.binaryoperations.BinaryDivNode;
 import parser.nodesystem.node.binaryoperations.BinaryModNode;
 import parser.nodesystem.node.binaryoperations.BinaryMulNode;
 import parser.nodesystem.node.binaryoperations.BinaryOperationNode;
-import parser.nodesystem.node.binaryoperations.NumberNode;
+import parser.nodesystem.node.data.primitives.NumberNode;
 import parser.parser.Parser;
 
 public class Term {

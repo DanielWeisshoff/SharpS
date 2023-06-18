@@ -2,7 +2,7 @@ package interpreter;
 
 import java.util.Stack;
 
-import parser.nodesystem.Data;
+import parser.nodesystem.data.Data;
 import parser.nodesystem.node.diverse.FunctionNode;
 
 /*

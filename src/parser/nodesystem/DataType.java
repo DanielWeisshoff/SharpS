@@ -6,7 +6,7 @@ public enum DataType {
     //Dezimal
     FLOAT, DOUBLE,
     //Sonder
-    CHAR, BOOLEAN, POINTER, VOID
+    CHAR, BOOLEAN, POINTER, VOID, ARRAY
 }
 
 /* Ganzzahlen     bytes

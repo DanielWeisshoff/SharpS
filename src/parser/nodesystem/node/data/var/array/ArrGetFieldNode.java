@@ -1,10 +1,11 @@
 package parser.nodesystem.node.data.var.array;
 
 import interpreter.Interpreter;
-import parser.nodesystem.Data;
 import parser.nodesystem.DataType;
+import parser.nodesystem.data.Array;
+import parser.nodesystem.data.Data;
 import parser.nodesystem.node.NodeType;
-import parser.nodesystem.node.binaryoperations.NumberNode;
+import parser.nodesystem.node.data.primitives.NumberNode;
 
 public class ArrGetFieldNode extends NumberNode {
 
@@ -21,10 +22,11 @@ public class ArrGetFieldNode extends NumberNode {
     public Data run() {
         Data data = Interpreter.instance.findVariable(name);
 
-        //TODO idk
-        double value = data.asDouble(index.run().asInt());
-        Data d = new Data(value, DataType.DOUBLE);
-        return d;
+        if (data.type != DataType.ARRAY)
+            throw new Error("Expected Array type but got " + data.type);
+
+        Array array = (Array) data;
+        return array.getBaseData(index.run());
     }
 
     @Override

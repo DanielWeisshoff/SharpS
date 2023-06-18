@@ -1,8 +1,9 @@
 package parser.nodesystem.node.binaryoperations;
 
-import parser.nodesystem.Data;
-import parser.nodesystem.DataType;
+import parser.nodesystem.data.Data;
+import parser.nodesystem.data.numerical.Numerical;
 import parser.nodesystem.node.NodeType;
+import parser.parser.Arithmetic;
 
 /**
  * Divides two values and returns the result
@@ -10,12 +11,13 @@ import parser.nodesystem.node.NodeType;
 public class BinaryDivNode extends BinaryOperationNode {
 
     public BinaryDivNode() {
-        super(new DataType[] { DataType.DOUBLE, DataType.DOUBLE }, DataType.DOUBLE, NodeType.BINARY_DIV_NODE);
+        super(null, null, NodeType.BINARY_DIV_NODE);
     }
 
     @Override
     public Data run() {
-        double val = left.run().asDouble() / right.run().asDouble();
-        return new Data(val, DataType.DOUBLE);
+        Numerical a = (Numerical) left.run();
+        Numerical b = (Numerical) right.run();
+        return Arithmetic.div(a, b);
     }
 }

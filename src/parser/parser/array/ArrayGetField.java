@@ -1,7 +1,7 @@
 package parser.parser.array;
 
 import lexer.TokenType;
-import parser.nodesystem.node.binaryoperations.NumberNode;
+import parser.nodesystem.node.data.primitives.NumberNode;
 import parser.nodesystem.node.data.var.array.ArrGetFieldNode;
 import parser.parser.Parser;
 import parser.parser.arithmetic.Expression;

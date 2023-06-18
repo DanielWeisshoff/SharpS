@@ -1,9 +1,11 @@
 package parser.nodesystem.node.binaryoperations;
 
-import parser.nodesystem.Data;
-import parser.nodesystem.DataType;
+import parser.nodesystem.data.Data;
+import parser.nodesystem.data.numerical.Numerical;
 import parser.nodesystem.node.NodeType;
+import parser.nodesystem.node.data.primitives.NumberNode;
 
+//TODO? sollte es von NumberNode erben?
 /**
  * Divides two values and returns the result
  */
@@ -11,10 +13,10 @@ public abstract class BinaryOperationNode extends NumberNode {
 
     public NumberNode left;
     public NumberNode right;
-    protected Data result;
+    protected Numerical result;
 
-    public BinaryOperationNode(DataType[] inputType, DataType outputType, NodeType nodeType) {
-        super(inputType, outputType, nodeType);
+    public BinaryOperationNode(Data[] inputType, Data outputType, NodeType nodeType) {
+        super(null, inputType, outputType, nodeType);
     }
 
     @Override

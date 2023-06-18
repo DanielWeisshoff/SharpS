@@ -1,7 +1,8 @@
 package parser.nodesystem.node.data.var;
 
 import interpreter.Interpreter;
-import parser.nodesystem.Data;
+import parser.nodesystem.data.Data;
+import parser.nodesystem.data.VoidPtr;
 import parser.nodesystem.node.Node;
 import parser.nodesystem.node.NodeType;
 
@@ -19,12 +20,12 @@ public class DefineNode extends AssignNode {
     @Override
     public Data run() {
 
-        double value = expression.run().asDouble();
+        Data value = expression.run();
 
         Data data = Interpreter.instance.findVariable(name);
         data.setValue(value);
 
-        return new Data();
+       return new VoidPtr();
     }
 
     @Override

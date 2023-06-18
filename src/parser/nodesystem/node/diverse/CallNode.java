@@ -1,7 +1,8 @@
 package parser.nodesystem.node.diverse;
 
 import interpreter.builtin.functions.BuiltInFunction;
-import parser.nodesystem.Data;
+import parser.nodesystem.DataType;
+import parser.nodesystem.data.Data;
 import parser.nodesystem.node.Node;
 import parser.nodesystem.node.NodeType;
 
@@ -21,7 +22,7 @@ public class CallNode extends Node {
         if (BuiltInFunction.builtInFunctions.containsKey(name)) {
             return BuiltInFunction.builtInFunctions.get(name).call();
         }
-        return new Data();
+        return Data.New(DataType.VOID);
     }
 
     @Override

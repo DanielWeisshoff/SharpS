@@ -1,8 +1,8 @@
-package parser.parser;
+package parser.parser.pointer;
 
 import parser.nodesystem.node.data.var.DeclareNode;
 import parser.nodesystem.node.data.var.pointer.PtrInitNode;
-import parser.parser.pointer.PtrDeclaration;
+import parser.parser.Parser;
 
 public class PtrInitialization {
 

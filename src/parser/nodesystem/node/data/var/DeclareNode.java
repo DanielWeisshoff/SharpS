@@ -1,8 +1,9 @@
 package parser.nodesystem.node.data.var;
 
 import interpreter.Interpreter;
-import parser.nodesystem.Data;
 import parser.nodesystem.DataType;
+import parser.nodesystem.data.Data;
+import parser.nodesystem.data.numerical.integer.Bool;
 import parser.nodesystem.node.NodeType;
 
 // <PRIMITIVE> <ID>
@@ -19,10 +20,9 @@ public class DeclareNode extends AssignNode {
 
     @Override
     public Data run() {
-        //TODO
-        Interpreter.instance.addVariable(name, new Data(dataType));
+        Interpreter.instance.addVariable(name, Data.New(dataType));
 
-        return new Data();
+        return new Bool(true);
     }
 
     @Override

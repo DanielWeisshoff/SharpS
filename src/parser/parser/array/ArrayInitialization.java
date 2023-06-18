@@ -2,7 +2,7 @@ package parser.parser.array;
 
 import lexer.TokenType;
 import parser.nodesystem.DataType;
-import parser.nodesystem.node.binaryoperations.NumberNode;
+import parser.nodesystem.node.data.primitives.NumberNode;
 import parser.nodesystem.node.data.var.array.ArrInitNode;
 import parser.parser.Parser;
 import parser.parser.arithmetic.Expression;

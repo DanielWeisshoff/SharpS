@@ -2,14 +2,14 @@ package parser.parser.arithmetic;
 
 import lexer.TokenType;
 import parser.PError.UnimplementedError;
-import parser.nodesystem.node.binaryoperations.NumberNode;
-import parser.nodesystem.node.data.primitives.ByteNode;
-import parser.nodesystem.node.data.primitives.DoubleNode;
-import parser.nodesystem.node.data.primitives.FloatNode;
-import parser.nodesystem.node.data.primitives.IntegerNode;
-import parser.nodesystem.node.data.primitives.LongNode;
+import parser.nodesystem.node.data.primitives.NumberNode;
 import parser.nodesystem.node.data.primitives.PrimitiveNode;
-import parser.nodesystem.node.data.primitives.ShortNode;
+import parser.nodesystem.node.data.primitives.floatingpoint.DoubleNode;
+import parser.nodesystem.node.data.primitives.floatingpoint.FloatNode;
+import parser.nodesystem.node.data.primitives.integer.ByteNode;
+import parser.nodesystem.node.data.primitives.integer.IntegerNode;
+import parser.nodesystem.node.data.primitives.integer.LongNode;
+import parser.nodesystem.node.data.primitives.integer.ShortNode;
 import parser.nodesystem.node.data.var.VariableNode;
 import parser.parser.Parser;
 import parser.parser.array.ArrayGetField;
@@ -18,7 +18,6 @@ import parser.parser.shortcuts.PostIncrement;
 import parser.parser.shortcuts.PreDecrement;
 import parser.parser.shortcuts.PreIncrement;
 import parser.semantic.ConversionChecker;
-import parser.symboltable.VariableEntry;
 
 public class Factor {
 
@@ -96,15 +95,7 @@ public class Factor {
             } else {
                 String varName = p.curToken.value;
                 p.eat();
-                VariableEntry ve = p.stm.findVariable(varName);
-
-                //TODO only temporary -> put in semantic part
-                if (ve == null) {
-
-                    System.out.println("ERROR: var " + varName + " not declared");
-                    System.exit(1);
-                } else
-                    n = new VariableNode(varName);
+                n = new VariableNode(varName);
             }
             break;
         default:

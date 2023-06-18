@@ -1,7 +1,7 @@
 package parser.nodesystem.node.loops;
 
 import interpreter.Interpreter;
-import parser.nodesystem.Data;
+import parser.nodesystem.data.Data;
 import parser.nodesystem.node.Node;
 import parser.nodesystem.node.NodeType;
 import parser.nodesystem.node.data.var.AssignNode;

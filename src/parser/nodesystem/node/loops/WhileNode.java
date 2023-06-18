@@ -1,6 +1,7 @@
 package parser.nodesystem.node.loops;
 
-import parser.nodesystem.Data;
+import parser.nodesystem.data.Data;
+import parser.nodesystem.data.VoidPtr;
 import parser.nodesystem.node.Node;
 import parser.nodesystem.node.NodeType;
 import parser.nodesystem.node.diverse.BlockNode;
@@ -22,7 +23,7 @@ public class WhileNode extends Node {
             whileBlock.run();
 
         //TODO empty
-        return new Data();
+        return new VoidPtr();
     }
 
     @Override

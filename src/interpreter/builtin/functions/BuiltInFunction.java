@@ -2,7 +2,7 @@ package interpreter.builtin.functions;
 
 import java.util.HashMap;
 
-import parser.nodesystem.Data;
+import parser.nodesystem.data.Data;
 
 public abstract class BuiltInFunction {
 

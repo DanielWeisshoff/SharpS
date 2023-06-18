@@ -22,11 +22,6 @@ public class VarDefinition {
         String varName = p.curToken.value;
         p.eat(TokenType.IDENTIFIER);
 
-        //TODO gehört zur Semantik
-        //check if var is already defined
-        if (!p.stm.lookupVariable(varName))
-            new UnimplementedError("var '" + varName + "' not declared", p.curToken);
-
         AssignNode an = null;
         Node expr = null;
         switch (p.curToken.type) {

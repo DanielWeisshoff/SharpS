@@ -1,11 +1,11 @@
 # Ignore Gradle project-specific cache directory
-.gradle
 .vscode
-.out
-.tags
-# Ignore Gradle build output directory
-build
 bin/
+documentation/
 out/
-/src/log.log
-/src/lexer.log
+build
+
+.tags
+
+#all logs
+*.log

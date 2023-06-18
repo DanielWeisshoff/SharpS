@@ -3,7 +3,7 @@ package interpreter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import parser.nodesystem.Data;
+import parser.nodesystem.data.Data;
 
 public class StackFrame {
 

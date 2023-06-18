@@ -67,9 +67,9 @@ public class Shell {
         watch.stop("Parser");
         Logger.log("done after " + watch.getRound("Parser").toMillis() + "ms", Channel.PARSER);
 
-        //TODOstoopid
+        //TODO stoopid
         if (Parser.debug) {
-            parser.printSymbolTable();
+            parser.getSymbolTable().print();
             System.out.println("=====NODE STRUCTURE=====");
             parser.getAST().print();
             System.out.println();

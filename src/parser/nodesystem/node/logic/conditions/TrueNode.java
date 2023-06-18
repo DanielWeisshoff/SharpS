@@ -1,7 +1,7 @@
 package parser.nodesystem.node.logic.conditions;
 
-import parser.nodesystem.Data;
-import parser.nodesystem.DataType;
+import parser.nodesystem.data.Data;
+import parser.nodesystem.data.numerical.integer.Bool;
 import parser.nodesystem.node.NodeType;
 
 public class TrueNode extends ConditionNode {
@@ -12,7 +12,7 @@ public class TrueNode extends ConditionNode {
 
     @Override
     public Data run() {
-        return new Data(1, DataType.BOOLEAN);
+        return new Bool(true);
     }
 
     @Override

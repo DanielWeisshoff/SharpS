@@ -1,6 +1,6 @@
 package interpreter.builtin.functions;
 
-import parser.nodesystem.Data;
+import parser.nodesystem.data.Data;
 
 public class exitFunction extends BuiltInFunction {
 

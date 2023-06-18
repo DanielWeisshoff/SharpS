@@ -11,6 +11,7 @@ import parser.parser.loops.For;
 import parser.parser.loops.While;
 import parser.parser.pointer.PtrDeclaration;
 import parser.parser.pointer.PtrDefinition;
+import parser.parser.pointer.PtrInitialization;
 import parser.parser.shortcuts.PostDecrement;
 import parser.parser.shortcuts.PostIncrement;
 import parser.parser.shortcuts.PreDecrement;

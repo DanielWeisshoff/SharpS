@@ -5,7 +5,7 @@ import lexer.TokenType;
 import parser.PError.UnimplementedError;
 import parser.nodesystem.DataType;
 import parser.nodesystem.node.diverse.FunctionNode;
-import parser.symboltable.SymbolTableManager;
+import parser.symboltable.SymbolTable;
 
 /** Eats token by token to spit out an AST. This is the most
  * similiar thing to Pacman you can find. */
@@ -25,7 +25,7 @@ public class Parser {
     public int curScope = -1;
 
     //variables
-    public SymbolTableManager stm = new SymbolTableManager();
+    public SymbolTable stm = new SymbolTable();
 
     public FunctionNode parse(Token[] tokens) {
         this.tokens = tokens;
@@ -68,20 +68,16 @@ public class Parser {
             curToken = tokens[position];
     }
 
-    /**
-     * Vergleicht den aktuellen Token
-     */
-    public boolean is(TokenType type) {
-        return curToken.type == type;
-    }
-
     public boolean is(String value) {
         return is(value);
     }
 
-    /**
-     * Compares the current tokens type
-     */
+    /** Vergleicht den aktuellen Token*/
+    public boolean is(TokenType type) {
+        return curToken.type == type;
+    }
+
+    /** Eats current Token if its type = t*/
     public void eat(TokenType t) {
         eat(t, "Expected symbol '" + t + "'");
     }
@@ -114,14 +110,16 @@ public class Parser {
         return next().type == t;
     }
 
+    //TODO remove param
     public void scopeIn(String scope) {
         scopeIn(scope, false);
     }
 
+    //TODO remove, ScopeNode will do this
     public void scopeIn(String scope, boolean stayInScope) {
         if (!stayInScope)
             curScope++;
-        stm.newScope(scope, curScope);
+        stm.enterScope();
     }
 
     public void scopeOut() {
@@ -129,13 +127,9 @@ public class Parser {
     }
 
     public void scopeOut(boolean sameScope) {
-        stm.endScope();
+        stm.exitScope();
         if (!sameScope)
             curScope--;
-    }
-
-    public void printSymbolTable() {
-        stm.print();
     }
 
     //TODO? in Helferklasse auslagern
@@ -160,10 +154,10 @@ public class Parser {
      */
     public void BOI() {
         while (is(TokenType.COMMENT) || is(TokenType.NEWLINE)
-                || (is(TokenType.TAB) && next(TokenType.COMMENT) || (is(TokenType.TAB) && next(TokenType.NEWLINE)))) {
+                || (is(TokenType.TAB) && (next(TokenType.COMMENT) && next(TokenType.NEWLINE)))) {
             eat();
         }
-
+        //TODO? ???
         if (is(TokenType.TAB))
             curInstructionScope = Integer.parseInt(curToken.value);
         else
@@ -172,5 +166,9 @@ public class Parser {
 
     public FunctionNode getAST() {
         return root;
+    }
+
+    public SymbolTable getSymbolTable() {
+        return stm;
     }
 }

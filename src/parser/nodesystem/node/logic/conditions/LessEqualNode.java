@@ -1,7 +1,7 @@
 package parser.nodesystem.node.logic.conditions;
 
-import parser.nodesystem.Data;
-import parser.nodesystem.DataType;
+import parser.nodesystem.data.Data;
+import parser.nodesystem.data.numerical.integer.Bool;
 import parser.nodesystem.node.Node;
 import parser.nodesystem.node.NodeType;
 
@@ -20,12 +20,12 @@ public class LessEqualNode extends ConditionNode {
 
     @Override
     public Data run() {
-        boolean val = left.run().asDouble() <= right.run().asDouble();
+        boolean val = left.run() <= right.run();
 
         if (val)
-            return new Data(1, DataType.BOOLEAN);
+            return new Bool(true);
         else
-            return new Data(0, DataType.BOOLEAN);
+            return new Bool(false);
     }
 
     @Override

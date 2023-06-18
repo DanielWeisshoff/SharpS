@@ -73,6 +73,8 @@ TODO VERSION 0.1.4 -- Diverses:
     ☐ .utils aufräumen
     ☐ Logger schreibt nur in logs, wenn das Programm
        Compilierbar ist
+    ☐ DAG (Directed Acyclic Graph)
+    ☐ Chapter 6 lesen      und Section 6.5.2
 
 TODO Version 0.1.3 -- Interpreter:
     ☐ Interpreter normen
@@ -87,7 +89,7 @@ TODO Version 0.1.2 -- Parser:
         ☐ Alle Grammars anpassen und Klassen ggf. umbenennen
         ☐ Grammars in die Klassen integrieren
         ☐ Parser normen
-        ☐ assume() braucht in den meisten Fällen keine Fehlererklärung, da nur einzelne Symbole fehlen
+        ✔ assume() braucht in den meisten Fällen keine Fehlererklärung, da nur einzelne Symbole fehlen
         ✔ ? addInstruction entfernen
         ☐ ?wird Idregistry gebraucht 
         .nodesystem:
@@ -102,6 +104,7 @@ TODO Version 0.1.2 -- Parser:
             ☐ ?NumberNode -> DataNode
         .parser:
             ☐ Instruction unübersichtlich
+            ☐ Instruction in Statement umbenennen
             .arithmetic:
                 ☐ Factor unübersichtlich
             .array:
@@ -123,7 +126,7 @@ TODO Version 0.1.2 -- Parser:
                 
                 
 TODO VERSION 0.1.1 -- Lexer:
-    ✔ Lexer lässt nurnoch einen Dezimalpunkt bei Gleitkommazahlen zu (BUGFIX) 
+    ✔ [BUG] Lexer lässt nurnoch einen Dezimalpunkt bei Gleitkommazahlen zu 
     ☐ Lexer normen
     ✔ Ein Lexer soll viele Texte lexen können
     ☐ Token speichern zu viele unnütze Daten

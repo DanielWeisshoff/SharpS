@@ -2,9 +2,9 @@ package parser.nodesystem.node.data.var;
 
 import interpreter.Interpreter;
 import parser.PError.UnimplementedError;
-import parser.nodesystem.Data;
+import parser.nodesystem.data.Data;
 import parser.nodesystem.node.NodeType;
-import parser.nodesystem.node.binaryoperations.NumberNode;
+import parser.nodesystem.node.data.primitives.NumberNode;
 
 /**Represents a variable and returns the stored data*/
 public class VariableNode extends NumberNode {

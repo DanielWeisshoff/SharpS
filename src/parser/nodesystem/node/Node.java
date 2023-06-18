@@ -1,7 +1,6 @@
 package parser.nodesystem.node;
 
-import parser.nodesystem.Data;
-import parser.nodesystem.DataType;
+import parser.nodesystem.data.Data;
 
 /**Foundation of all other nodes*/
 public abstract class Node {
@@ -17,7 +16,7 @@ public abstract class Node {
     public static boolean advancedInfo = false;
     public static int depth = 0;
 
-    public Node(DataType[] inputType, DataType outputType, NodeType nodeType) {
+    public Node(Data[] inputType, Data outputType, NodeType nodeType) {
         // this.inputType = inputType;
         // this.outputType = outputType;
         this.nodeType = nodeType;
